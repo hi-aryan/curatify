@@ -19,10 +19,20 @@ export function DashboardView(props) {
         <div className="min-h-screen">
             {/* Header with user info */}
             <header className="p-8 flex justify-between items-center">
-                <div>
-                    <h1 className="text-3xl font-bold">
-                        Welcome, {props.profile?.display_name || "User"}
-                    </h1>
+                <div className="flex items-center gap-4">
+                    {props.profile?.images?.[0]?.url && (
+                        <img 
+                            src={props.profile.images[0].url} 
+                            alt="Profile" 
+                            className="w-12 h-12 rounded-full"
+                        />
+                    )}
+                    <div>
+                        <h1 className="text-3xl font-bold">
+                            Welcome, {props.profile?.display_name || "User"}
+                        </h1>
+                        <p className="text-sm opacity-70">{props.profile?.email}</p>
+                    </div>
                 </div>
                 <button 
                     onClick={logoutClickHandlerACB}

@@ -5,7 +5,7 @@ import { LandingPresenter } from './presenters/LandingPresenter.jsx';
 import { DashboardPresenter } from './presenters/DashboardPresenter.jsx';
 import { CallbackPresenter } from './presenters/CallbackPresenter.jsx';
 import { login } from './store/userSlice.js';
-import { getStoredToken } from './api/spotifyAuth.js';
+import { getValidAccessToken } from './api/spotifyAuth.js';
 import { getUserProfile } from './api/spotifySource.js';
 import { SuspenseView } from './views/SuspenseView.jsx';
 
@@ -29,17 +29,18 @@ export function App() {
     const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
     const [isRestoring, setIsRestoring] = useState(true);
 
-    // Restore session from stored token on mount
+    // Restore session from stored token on mount (refreshes if expired)
     useEffect(() => {
         async function restoreSessionACB() {
-            const storedToken = getStoredToken();
-            if (storedToken) {
-                try {
-                    const profile = await getUserProfile(storedToken);
-                    dispatch(login({ profile, accessToken: storedToken }));
-                } catch {
-                    // Token invalid/expired - ignore, user will need to re-login
+            try {
+                // getValidAccessToken returns stored token or refreshes if expired
+                const accessToken = await getValidAccessToken();
+                if (accessToken) {
+                    const profile = await getUserProfile(accessToken);
+                    dispatch(login({ profile, accessToken }));
                 }
+            } catch {
+                // Token invalid or refresh failed - user will need to re-login
             }
             setIsRestoring(false);
         }

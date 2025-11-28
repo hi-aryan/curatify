@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux'; /* instead of mobx observer and mobx actions */
 import { logout } from '../store/userSlice.js';
-import { clearToken } from '../api/spotifyAuth.js';
+import { clearTokenData } from '../api/spotifyAuth.js';
 import { DashboardView } from '../views/DashboardView.jsx';
 
 /*
@@ -16,7 +16,7 @@ export function DashboardPresenter() {
     const profile = useSelector((state) => state.user.profile);
 
     function logoutACB() {
-        clearToken();
+        clearTokenData();
         dispatch(logout());
         window.location.href = window.location.origin;
     }

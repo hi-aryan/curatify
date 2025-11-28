@@ -11,7 +11,8 @@ export const SPOTIFY_REDIRECT_URI = "http://127.0.0.1:5173/callback";
 export const SPOTIFY_AUTH_URL = "https://accounts.spotify.com/authorize";
 export const SPOTIFY_API_URL = "https://api.spotify.com/v1";
 
-// LLM API (OpenAI or Gemini)
+// LLM API (currently Gemini)
+// VITE_LLM_API_KEY should be your Google AI Studio API key
 export const LLM_API_URL = import.meta.env.VITE_LLM_API_URL;
 export const LLM_API_KEY = import.meta.env.VITE_LLM_API_KEY;
 

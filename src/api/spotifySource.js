@@ -32,7 +32,7 @@ export function getPlaylistTracks(playlistId, accessToken) {
 }
 
 export function getUserTopArtists(accessToken, ) {
-    return fetch(`${SPOTIFY_API_URL}/me/top/artists?time_range=short_term&limit=1`, {
+    return fetch(`${SPOTIFY_API_URL}/me/top/artists?time_range=short_term&limit=50`, {
         headers: { Authorization: `Bearer ${accessToken}` },
     }).then(gotResponseACB);
 }

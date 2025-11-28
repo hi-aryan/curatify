@@ -43,7 +43,7 @@ export function DashboardView(props) {
                             className="w-12 h-12 rounded-full border border-light/40"
                         />
                     )}
-                    <div className="text-right">
+                    <div >
                         <p className="text-xs uppercase tracking-wide opacity-70">Favourite artist</p>
                         <p className="text-lg font-semibold">
                             {props.favoriteArtist?.name || "Not available"}

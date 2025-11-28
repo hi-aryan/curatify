@@ -31,6 +31,13 @@ export function getPlaylistTracks(playlistId, accessToken) {
     }).then(gotResponseACB);
 }
 
+export function getUserTopArtists(accessToken, ) {
+    return fetch(`${SPOTIFY_API_URL}/me/top/artists?time_range=short_term&limit=1`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+    }).then(gotResponseACB);
+}
+
+
 // TODO: Add more Spotify API functions as needed
 // - getTopCharts(countryCode)
 // - getUserPlaylists(accessToken)

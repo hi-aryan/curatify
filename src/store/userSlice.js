@@ -12,6 +12,7 @@ const userSlice = createSlice({
         isLoggedIn: false,
         profile: null,
         accessToken: null,
+        topArtist: null,
     },
     reducers: {
         login(state, action) {
@@ -24,9 +25,12 @@ const userSlice = createSlice({
             state.profile = null;
             state.accessToken = null;
         },
+        setTopArtist(state, action) {
+            state.topArtist = action.payload;
+        },
     },
 });
 
-export const { login, logout } = userSlice.actions;
+export const { login, logout, setTopArtist } = userSlice.actions;
 export default userSlice.reducer;
 

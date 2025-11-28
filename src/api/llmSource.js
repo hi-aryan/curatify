@@ -33,6 +33,48 @@ export function analyzeCharts(chartsData) {
     }).then(gotResponseACB);
 }
 
+// Test Gemini API with a simple prompt
+export function callGeminiAPI(prompt) {
+    if (!LLM_API_KEY) {
+        return Promise.reject(new Error("API key is missing. Please set VITE_LLM_API_KEY in your .env file"));
+    }
+    
+    if (!LLM_API_URL) {
+        return Promise.reject(new Error("API URL is missing. Please set VITE_LLM_API_URL in your .env file"));
+    }
+    
+    // Gemini API uses API key as query parameter
+    const url = `${LLM_API_URL}?key=${LLM_API_KEY}`;
+    
+    return fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            contents: [{
+                parts: [{
+                    text: prompt
+                }]
+            }]
+        }),
+    }).then(async (response) => {
+        if (!response.ok) {
+            // Try to get more error details from the response
+            let errorMessage = `LLM API error: ${response.status}`;
+            try {
+                const errorData = await response.json();
+                errorMessage = errorData.error?.message || errorMessage;
+            } catch {
+                // If response isn't JSON, use status text
+                errorMessage = `${errorMessage} - ${response.statusText}`;
+            }
+            throw new Error(errorMessage);
+        }
+        return response.json();
+    });
+}
+
 // TODO: Add more LLM functions as needed
 // - getSongRecommendations(userSongs)
 // - getPersonalityReview(listeningHistory)

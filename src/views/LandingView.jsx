@@ -27,8 +27,12 @@ export function LandingView(props) {
                 <p className="mt-2 text-lg">Discover Nordic music charts</p>
                 <button 
                     onClick={loginClickHandlerACB}
-                    className="mt-4 px-6 py-2 bg-green text-dark rounded-full"
-                >
+                    // button styles
+                    // className="mt-4 px-6 py-2 bg-green text-dark rounded-full hover:scale-105 transition-all duration-200 ease-out"  
+                    // className="mt-4 px-6 py-2 bg-green text-dark rounded-full hover:rotate-2 transition-transform duration-200"
+                    className="mt-4 px-6 py-2 bg-green text-dark rounded-full hover:rotate-2 hover:scale-105 transition-all duration-200"
+                    >
+
                     Sign in with Spotify
                 </button>
             </header>

@@ -26,7 +26,7 @@ export function DashboardView(props) {
                 </div>
                 <button 
                     onClick={logoutClickHandlerACB}
-                    className="px-4 py-2 border border-gray-300 rounded"
+                    className="px-4 py-2 border border-light rounded"
                 >
                     Logout
                 </button>
@@ -34,24 +34,24 @@ export function DashboardView(props) {
 
             {/* Features grid - placeholders */}
             <section className="p-8 grid gap-6 md:grid-cols-2">
-                <div className="border-2 border-dashed border-gray-300 p-6">
+                <div className="border-2 border-dashed border-light p-6">
                     <h2 className="text-xl font-semibold mb-2">Sort Playlists</h2>
-                    <p className="text-gray-500">Organize your playlists</p>
+                    <p className="text-light">Organize your playlists</p>
                 </div>
 
-                <div className="border-2 border-dashed border-gray-300 p-6">
+                <div className="border-2 border-dashed border-light p-6">
                     <h2 className="text-xl font-semibold mb-2">Recommendations</h2>
-                    <p className="text-gray-500">AI-powered song suggestions</p>
+                    <p className="text-light">AI-powered song suggestions</p>
                 </div>
 
-                <div className="border-2 border-dashed border-gray-300 p-6">
+                <div className="border-2 border-dashed border-light p-6">
                     <h2 className="text-xl font-semibold mb-2">Personality</h2>
-                    <p className="text-gray-500">Your music personality</p>
+                    <p className="text-light">Your music personality</p>
                 </div>
 
-                <div className="border-2 border-dashed border-gray-300 p-6">
+                <div className="border-2 border-dashed border-light p-6">
                     <h2 className="text-xl font-semibold mb-2">Stats</h2>
-                    <p className="text-gray-500">Your listening stats</p>
+                    <p className="text-light">Your listening stats</p>
                 </div>
             </section>
         </div>

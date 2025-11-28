@@ -13,6 +13,7 @@ import { LandingView } from '../views/LandingView.jsx';
 */
 export function LandingPresenter() {
     const dispatch = useDispatch();
+    /* get the selected country from the charts slice (gets entire state object and extracts the selected country) */
     const selectedCountry = useSelector((state) => state.charts.selectedCountry);
 
     function countryHoverACB(countryCode) {

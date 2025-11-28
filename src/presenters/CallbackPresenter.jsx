@@ -3,17 +3,16 @@ import { useDispatch } from 'react-redux';
 import { login } from '../store/userSlice.js';
 import { getAccessToken, storeToken } from '../api/spotifyAuth.js';
 import { getUserProfile } from '../api/spotifySource.js';
-import { SuspenseView } from '../views/SuspenseView.jsx';
+import { CallbackView } from '../views/CallbackView.jsx';
 
 /*
     CallbackPresenter: handles Spotify OAuth callback
-    
-    Flow:
-    1. Extract authorization code from URL
-    2. Exchange code for access token
-    3. Fetch user profile
-    4. Dispatch login action and redirect to dashboard
-    
+
+    Pattern:
+    - Extract authorization code from URL and handle OAuth flow
+    - Dispatch login action and redirect to dashboard on success
+    - Pass error state and callbacks to CallbackView
+
     Note: Rendered outside RouterProvider, so we use window.location for navigation
 */
 export function CallbackPresenter() {
@@ -23,7 +22,7 @@ export function CallbackPresenter() {
     useEffect(() => {
         async function handleCallbackACB() {
             console.log("[Callback] Starting OAuth callback handling...");
-            
+
             const params = new URLSearchParams(window.location.search);
             const code = params.get("code");
             console.log("[Callback] Authorization code:", code ? "received" : "missing");
@@ -55,23 +54,15 @@ export function CallbackPresenter() {
         handleCallbackACB();
     }, [dispatch]);
 
-    if (error) {
-        return (
-            <div className="min-h-screen flex items-center justify-center">
-                <div className="text-center">
-                    <p className="text-red-500 mb-4">Authentication failed</p>
-                    <p className="text-sm text-gray-500">{error.message}</p>
-                    <button 
-                        onClick={() => window.location.href = window.location.origin}
-                        className="mt-4 px-4 py-2 bg-green text-dark rounded"
-                    >
-                        Back to Home
-                    </button>
-                </div>
-            </div>
-        );
+    function backToHomeACB() {
+        window.location.href = window.location.origin;
     }
 
-    return <SuspenseView promise={{}} error={null} />;
+    return (
+        <CallbackView
+            error={error}
+            onBackToHome={backToHomeACB}
+        />
+    );
 }
 

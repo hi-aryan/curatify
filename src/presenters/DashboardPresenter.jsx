@@ -1,5 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux'; /* instead of mobx observer and mobx actions */
 import { logout } from '../store/userSlice.js';
+import { clearToken } from '../api/spotifyAuth.js';
 import { DashboardView } from '../views/DashboardView.jsx';
 
 /*
@@ -15,8 +16,9 @@ export function DashboardPresenter() {
     const profile = useSelector((state) => state.user.profile);
 
     function logoutACB() {
+        clearToken();
         dispatch(logout());
-        // TODO: Clear Spotify tokens, redirect to landing
+        window.location.href = window.location.origin;
     }
 
     return (

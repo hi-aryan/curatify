@@ -1,5 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { setSelectedCountry } from '../store/chartsSlice.js';
+import { redirectToSpotifyAuth } from '../api/spotifyAuth.js';
 import { LandingView } from '../views/LandingView.jsx';
 
 /*
@@ -19,8 +20,7 @@ export function LandingPresenter() {
     }
 
     function loginClickACB() {
-        // TODO: Implement Spotify OAuth flow
-        console.log("Login clicked - implement Spotify OAuth");
+        redirectToSpotifyAuth();
     }
 
     return (

@@ -36,10 +36,10 @@ export function LandingView(props) {
             {/* Map section - placeholder */}
             <section className="p-8">
                 <h2 className="text-2xl font-semibold mb-4">Nordic Charts</h2>
-                <div className="border-2 border-dashed border-gray-300 p-8 text-center">
+                <div className="border-2 border-dashed border-light p-8 text-center">
                     {/* TODO: Add interactive map component */}
                     <p>Nordic Map Placeholder</p>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-light">
                         Selected: {props.selectedCountry || "None"}
                     </p>
                 </div>
@@ -48,7 +48,7 @@ export function LandingView(props) {
             {/* Playlist creator section - placeholder */}
             <section className="p-8">
                 <h2 className="text-2xl font-semibold mb-4">Create Playlist</h2>
-                <div className="border-2 border-dashed border-gray-300 p-8 text-center">
+                <div className="border-2 border-dashed border-light p-8 text-center">
                     {/* TODO: Add drag-and-drop playlist creator */}
                     <p>Playlist Creator Placeholder</p>
                 </div>

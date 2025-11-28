@@ -129,8 +129,12 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
+<<<<<<< HEAD
 # MacOS
 .DS_Store
 
 # IntelliJ IDEA
 .idea/
+=======
+.cursor/
+>>>>>>> 68aa58338966042881efe8c2e8c99adbfdf4d592

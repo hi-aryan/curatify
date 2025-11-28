@@ -1,5 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { setSelectedCountry } from '../store/chartsSlice.js';
+import { redirectToSpotifyAuth } from '../api/spotifyAuth.js';
 import { LandingView } from '../views/LandingView.jsx';
 
 /*
@@ -12,6 +13,7 @@ import { LandingView } from '../views/LandingView.jsx';
 */
 export function LandingPresenter() {
     const dispatch = useDispatch();
+    /* get the selected country from the charts slice (gets entire state object and extracts the selected country) */
     const selectedCountry = useSelector((state) => state.charts.selectedCountry);
 
     function countryHoverACB(countryCode) {
@@ -19,8 +21,7 @@ export function LandingPresenter() {
     }
 
     function loginClickACB() {
-        // TODO: Implement Spotify OAuth flow
-        console.log("Login clicked - implement Spotify OAuth");
+        redirectToSpotifyAuth();
     }
 
     return (

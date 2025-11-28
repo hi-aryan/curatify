@@ -36,6 +36,7 @@ export function DashboardView(props) {
                     </div>
                 </div>
                 <div className="flex items-center gap-3">
+                    {/* conditionally render link if .url is available */}
                     {props.favoriteArtist?.image && (
                         props.favoriteArtist?.url ? (
                             <a
@@ -47,14 +48,14 @@ export function DashboardView(props) {
                                 <img
                                     src={props.favoriteArtist.image}
                                     alt={props.favoriteArtist.name}
-                                    className="w-12 h-12 rounded-full border border-light/40"
+                                    className="w-12 h-12 rounded-full object-cover border border-light/40"
                                 />
                             </a>
                         ) : (
                             <img
                                 src={props.favoriteArtist.image}
                                 alt={props.favoriteArtist.name}
-                                className="w-12 h-12 rounded-full border border-light/40"
+                                className="w-12 h-12 rounded-full object-cover border border-light/40"
                             />
                         )
                     )}

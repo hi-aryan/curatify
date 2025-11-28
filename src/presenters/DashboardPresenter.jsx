@@ -33,6 +33,7 @@ export function DashboardPresenter() {
                     dispatch(setTopArtist({
                         name: favorite.name,
                         image: favorite.images?.[0]?.url || null,
+                        url: favorite.external_urls?.spotify || null,
                     }));
                 }
             } catch (error) {

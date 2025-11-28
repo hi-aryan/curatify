@@ -8,7 +8,7 @@
     
     Props:
     - profile: user's Spotify profile
-    - favoriteArtist: top artist info { name, image }
+    - favoriteArtist: top artist info { name, image, url }
     - onLogout: callback when user logs out
 */
 export function DashboardView(props) {
@@ -37,13 +37,28 @@ export function DashboardView(props) {
                 </div>
                 <div className="flex items-center gap-3">
                     {props.favoriteArtist?.image && (
-                        <img
-                            src={props.favoriteArtist.image}
-                            alt={props.favoriteArtist.name}
-                            className="w-12 h-12 rounded-full border border-light/40"
-                        />
+                        props.favoriteArtist?.url ? (
+                            <a
+                                href={props.favoriteArtist.url}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="inline-block transition-opacity hover:opacity-80"
+                            >
+                                <img
+                                    src={props.favoriteArtist.image}
+                                    alt={props.favoriteArtist.name}
+                                    className="w-12 h-12 rounded-full border border-light/40"
+                                />
+                            </a>
+                        ) : (
+                            <img
+                                src={props.favoriteArtist.image}
+                                alt={props.favoriteArtist.name}
+                                className="w-12 h-12 rounded-full border border-light/40"
+                            />
+                        )
                     )}
-                    <div >
+                    <div>
                         <p className="text-xs uppercase tracking-wide opacity-70">Favourite artist</p>
                         <p className="text-lg font-semibold">
                             {props.favoriteArtist?.name || "Not available"}

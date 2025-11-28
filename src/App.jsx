@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { RouterProvider, createHashRouter } from 'react-router-dom';
-import { LandingPresenter } from './presenters/LandingPresenter.jsx';
-import { DashboardPresenter } from './presenters/DashboardPresenter.jsx';
-import { CallbackPresenter } from './presenters/CallbackPresenter.jsx';
-import { login } from './store/userSlice.js';
-import { getValidAccessToken } from './api/spotifyAuth.js';
-import { getUserProfile } from './api/spotifySource.js';
-import { SuspenseView } from './views/SuspenseView.jsx';
+import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { RouterProvider, createHashRouter } from "react-router-dom";
+import { LandingPresenter } from "./presenters/LandingPresenter.jsx";
+import { DashboardPresenter } from "./presenters/DashboardPresenter.jsx";
+import { CallbackPresenter } from "./presenters/CallbackPresenter.jsx";
+import { login } from "./store/userSlice.js";
+import { getValidAccessToken } from "./api/spotifyAuth.js";
+import { getUserProfile } from "./api/spotifySource.js";
+import { SuspenseView } from "./views/SuspenseView.jsx";
 
 /*
     App: root component with routing
@@ -25,49 +25,51 @@ import { SuspenseView } from './views/SuspenseView.jsx';
     and restore the session if valid.
 */
 export function App() {
-    const dispatch = useDispatch();
-    const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
-    const [isRestoring, setIsRestoring] = useState(true);
+  // DEBUG: View SuspenseView in isolation
+  // return <SuspenseView promise={{}} error={null} />;
 
-    // Restore session from stored token on mount (refreshes if expired)
-    useEffect(() => {
-        async function restoreSessionACB() {
-            try {
-                // getValidAccessToken returns stored token or refreshes if expired
-                const accessToken = await getValidAccessToken();
-                if (accessToken) {
-                    const profile = await getUserProfile(accessToken);
-                    dispatch(login({ profile, accessToken }));
-                }
-            } catch {
-                // Token invalid or refresh failed - user will need to re-login
-            }
-            setIsRestoring(false);
+  const dispatch = useDispatch();
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const [isRestoring, setIsRestoring] = useState(true);
+
+  // Restore session from stored token on mount (refreshes if expired)
+  useEffect(() => {
+    async function restoreSessionACB() {
+      try {
+        // getValidAccessToken returns stored token or refreshes if expired
+        const accessToken = await getValidAccessToken();
+        if (accessToken) {
+          const profile = await getUserProfile(accessToken);
+          dispatch(login({ profile, accessToken }));
         }
-        restoreSessionACB();
-    }, [dispatch]);
-
-    // Handle OAuth callback (Spotify redirects to /callback?code=xxx)
-    const params = new URLSearchParams(window.location.search);
-    if (params.get("code")) {
-        return <CallbackPresenter />;
+      } catch {
+        // Token invalid or refresh failed - user will need to re-login
+      }
+      setIsRestoring(false);
     }
+    restoreSessionACB();
+  }, [dispatch]);
 
-    // Show loading while restoring session
-    if (isRestoring) {
-        return <SuspenseView promise={{}} error={null} />;
-    }
+  // Handle OAuth callback (Spotify redirects to /callback?code=xxx)
+  const params = new URLSearchParams(window.location.search);
+  if (params.get("code")) {
+    return <CallbackPresenter />;
+  }
 
-    const routes = [
-        { path: "/", element: <LandingPresenter /> },
-        { 
-            path: "/dashboard", 
-            element: isLoggedIn ? <DashboardPresenter /> : <LandingPresenter /> 
-        },
-    ];
+  // Show loading while restoring session
+  if (isRestoring) {
+    return <SuspenseView promise={{}} error={null} />;
+  }
 
-    const router = createHashRouter(routes);
+  const routes = [
+    { path: "/", element: <LandingPresenter /> },
+    {
+      path: "/dashboard",
+      element: isLoggedIn ? <DashboardPresenter /> : <LandingPresenter />,
+    },
+  ];
 
-    return <RouterProvider router={router} />;
+  const router = createHashRouter(routes);
+
+  return <RouterProvider router={router} />;
 }
-

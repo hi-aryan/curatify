@@ -3,7 +3,8 @@ import { useDispatch } from 'react-redux';
 import { login } from '../store/userSlice.js';
 import { getAccessToken } from '../api/spotifyAuth.js';
 import { getUserProfile } from '../api/spotifySource.js';
-import { CallbackView } from '../views/CallbackView.jsx';
+import { SuspenseView } from '../views/SuspenseView.jsx';
+import { resolvePromise } from '../resolvePromise.js';
 
 /*
     CallbackPresenter: handles Spotify OAuth callback
@@ -11,34 +12,37 @@ import { CallbackView } from '../views/CallbackView.jsx';
     Pattern:
     - Extract authorization code from URL and handle OAuth flow
     - Dispatch login action and redirect to dashboard on success
-    - Pass error state and callbacks to CallbackView
+    - Use SuspenseView for loading/error states
 
     Note: Rendered outside RouterProvider, so we use window.location for navigation
 */
 export function CallbackPresenter() {
     const dispatch = useDispatch();
-    const [error, setError] = useState(null);
+    const [promiseState, setPromiseState] = useState({});
 
     useEffect(() => {
-        async function handleCallbackACB() {
+        function handleCallbackACB() {
             const params = new URLSearchParams(window.location.search);
             const code = params.get("code");
 
             if (!code) {
-                setError(new Error("No authorization code found"));
+                // No code found - immediately resolve with error
+                resolvePromise(Promise.reject(new Error("No authorization code found")), promiseState);
                 return;
             }
 
-            try {
+            // Create promise for OAuth flow
+            const oauthPromise = (async () => {
                 // getAccessToken exchanges code and stores all token data internally
                 const accessToken = await getAccessToken(code);
                 const profile = await getUserProfile(accessToken);
 
                 dispatch(login({ profile, accessToken }));
+                // Redirect to dashboard on success
                 window.location.href = window.location.origin + "/#/dashboard";
-            } catch (err) {
-                setError(err);
-            }
+            })();
+
+            resolvePromise(oauthPromise, promiseState);
         }
 
         handleCallbackACB();
@@ -49,9 +53,11 @@ export function CallbackPresenter() {
     }
 
     return (
-        <CallbackView
-            error={error}
-            onBackToHome={backToHomeACB}
+        <SuspenseView
+            promise={promiseState.promise}
+            error={promiseState.error}
+            onRetry={backToHomeACB}
+            loadingMessage="Processing authentication..."
         />
     );
 }

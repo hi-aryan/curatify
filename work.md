@@ -32,7 +32,7 @@ new-project/
     │   └── DashboardPresenter.jsx
     │
     └── views/              # Views (pure presentation)
-        ├── SuspenseView.jsx    # Loading/error states
+        ├── SuspenseView.jsx    # Loading/error states (reusable)
         ├── LandingView.jsx     # Public landing page
         └── DashboardView.jsx   # Authenticated dashboard
 ```

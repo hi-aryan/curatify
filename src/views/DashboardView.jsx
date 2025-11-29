@@ -9,6 +9,8 @@
     Props:
     - profile: user's Spotify profile
     - favoriteArtist: top artist info { name, image, url }
+    - topTracks: array of top 3 tracks from Spotify
+    - topArtists: array of top artists from Spotify
     - onLogout: callback when user logs out
     - geminiPrompt: current prompt input for Gemini test
     - geminiResponse: response text from Gemini API
@@ -98,8 +100,73 @@ export function DashboardView(props) {
                 </div>
 
                 <div className="border-2 border-dashed border-light p-6">
-                    <h2 className="text-xl font-semibold mb-2">Stats</h2>
-                    <p className="text-light opacity-60">Your listening stats</p>
+                    <h2 className="text-xl font-semibold mb-4">Stats</h2>
+                    <div className="space-y-6">
+                        {/* Top 3 Tracks */}
+                        <div>
+                            <h3 className="text-sm uppercase tracking-wide opacity-70 mb-3">Top 3 Tracks</h3>
+                            {props.topTracks && props.topTracks.length > 0 ? (
+                                <div className="space-y-2">
+                                    {props.topTracks.map((track, index) => (
+                                        <div key={track.id} className="flex items-center gap-3">
+                                            <span className="text-2xl font-bold text-light/40 w-6">{index + 1}</span>
+                                            {track.album?.images?.[2]?.url && (
+                                                <img
+                                                    src={track.album.images[2].url}
+                                                    alt={track.name}
+                                                    className="w-10 h-10 rounded object-cover"
+                                                />
+                                            )}
+                                            <div className="flex-1 min-w-0">
+                                                <a
+                                                    href={track.external_urls?.spotify}
+                                                    target="_blank"
+                                                    rel="noreferrer"
+                                                    className="block font-semibold hover:underline truncate"
+                                                >
+                                                    {track.name}
+                                                </a>
+                                                <p className="text-sm opacity-70 truncate">
+                                                    {track.artists?.map(a => a.name).join(', ')}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <p className="text-sm opacity-60">Loading tracks...</p>
+                            )}
+                        </div>
+
+                        {/* Top Artists */}
+                        <div>
+                            <h3 className="text-sm uppercase tracking-wide opacity-70 mb-3">Top Artists</h3>
+                            {props.topArtists && props.topArtists.length > 0 ? (
+                                <div className="flex flex-wrap gap-2">
+                                    {props.topArtists.slice(0, 5).map((artist) => (
+                                        <a
+                                            key={artist.id}
+                                            href={artist.external_urls?.spotify}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                            className="flex items-center gap-2 px-3 py-1.5 border border-light/30 rounded-full hover:bg-light/10 transition-colors"
+                                        >
+                                            {artist.images?.[2]?.url && (
+                                                <img
+                                                    src={artist.images[2].url}
+                                                    alt={artist.name}
+                                                    className="w-6 h-6 rounded-full object-cover"
+                                                />
+                                            )}
+                                            <span className="text-sm font-medium">{artist.name}</span>
+                                        </a>
+                                    ))}
+                                </div>
+                            ) : (
+                                <p className="text-sm opacity-60">Loading artists...</p>
+                            )}
+                        </div>
+                    </div>
                 </div>
 
                 <div className="border-2 border-dashed border-light p-6">

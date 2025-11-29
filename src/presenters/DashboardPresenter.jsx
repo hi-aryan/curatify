@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'; /* instead of mobx observer and mobx actions */
-import { logout, setTopArtist } from '../store/userSlice.js';
+import { logout, setTopArtist, setTopTracks, setTopArtists } from '../store/userSlice.js';
 import { clearTokenData } from '../api/spotifyAuth.js';
 import { DashboardView } from '../views/DashboardView.jsx';
-import { getUserTopArtists } from '../api/spotifySource.js';
+import { getUserTopArtists, getUserTopTracks } from '../api/spotifySource.js';
 import { callGeminiAPI } from '../api/llmSource.js';
 
 /*
@@ -19,6 +19,8 @@ export function DashboardPresenter() {
     const profile = useSelector((state) => state.user.profile);
     const accessToken = useSelector((state) => state.user.accessToken);
     const topArtist = useSelector((state) => state.user.topArtist);
+    const topTracks = useSelector((state) => state.user.topTracks);
+    const topArtists = useSelector((state) => state.user.topArtists);
     
     // Gemini state
     const [geminiPrompt, setGeminiPrompt] = useState("");
@@ -27,11 +29,12 @@ export function DashboardPresenter() {
     const [geminiError, setGeminiError] = useState(null);
 
     useEffect(() => {
-        if (!accessToken || topArtist) {
+        if (!accessToken) {
             return;
         }
 
         async function fetchTopArtistACB() {
+            if (topArtist) return;
             try {
                 const response = await getUserTopArtists(accessToken, { limit: 1 });
                 const favorite = response?.items?.[0];
@@ -48,8 +51,32 @@ export function DashboardPresenter() {
             }
         }
 
+        async function fetchTopTracksACB() {
+            if (topTracks) return;
+            try {
+                const response = await getUserTopTracks(accessToken, { limit: 3 });
+                const tracks = response?.items?.slice(0, 3) || [];
+                dispatch(setTopTracks(tracks));
+            } catch (error) {
+                console.error('Failed to fetch top tracks:', error);
+            }
+        }
+
+        async function fetchTopArtistsACB() {
+            if (topArtists) return;
+            try {
+                const response = await getUserTopArtists(accessToken, { limit: 10 });
+                const artists = response?.items || [];
+                dispatch(setTopArtists(artists));
+            } catch (error) {
+                console.error('Failed to fetch top artists:', error);
+            }
+        }
+
         fetchTopArtistACB();
-    }, [accessToken, topArtist, dispatch]);
+        fetchTopTracksACB();
+        fetchTopArtistsACB();
+    }, [accessToken, topArtist, topTracks, topArtists, dispatch]);
 
     function logoutACB() {
         clearTokenData();
@@ -83,6 +110,8 @@ export function DashboardPresenter() {
         <DashboardView
             profile={profile}
             favoriteArtist={topArtist}
+            topTracks={topTracks}
+            topArtists={topArtists}
             onLogout={logoutACB}
             geminiPrompt={geminiPrompt}
             geminiResponse={geminiResponse}

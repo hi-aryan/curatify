@@ -31,12 +31,27 @@ export function getPlaylistTracks(playlistId, accessToken) {
     }).then(gotResponseACB);
 }
 
-export function getUserTopArtists(accessToken, ) {
-    return fetch(`${SPOTIFY_API_URL}/me/top/artists?time_range=short_term&limit=50`, {
+export function getUserTopArtists(accessToken, options = {}) {
+    const { limit = 50, time_range = 'short_term' } = options;
+    const params = new URLSearchParams({
+        limit: String(limit),
+        time_range: time_range,
+    });
+    return fetch(`${SPOTIFY_API_URL}/me/top/artists?${params.toString()}`, {
         headers: { Authorization: `Bearer ${accessToken}` },
     }).then(gotResponseACB);
 }
 
+export function getUserTopTracks(accessToken, options = {}) {
+    const { limit = 50, time_range = 'short_term' } = options;
+    const params = new URLSearchParams({
+        limit: String(limit),
+        time_range: time_range,
+    });
+    return fetch(`${SPOTIFY_API_URL}/me/top/tracks?${params.toString()}`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+    }).then(gotResponseACB);
+}
 
 // TODO: Add more Spotify API functions as needed
 // - getTopCharts(countryCode)

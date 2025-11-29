@@ -13,6 +13,8 @@ const userSlice = createSlice({
         profile: null,
         accessToken: null,
         topArtist: null,
+        topTracks: null,
+        topArtists: null,
     },
     reducers: {
         login(state, action) {
@@ -24,13 +26,22 @@ const userSlice = createSlice({
             state.isLoggedIn = false;
             state.profile = null;
             state.accessToken = null;
+            state.topArtist = null;
+            state.topTracks = null;
+            state.topArtists = null;
         },
         setTopArtist(state, action) {
             state.topArtist = action.payload;
         },
+        setTopTracks(state, action) {
+            state.topTracks = action.payload;
+        },
+        setTopArtists(state, action) {
+            state.topArtists = action.payload;
+        },
     },
 });
 
-export const { login, logout, setTopArtist } = userSlice.actions;
+export const { login, logout, setTopArtist, setTopTracks, setTopArtists } = userSlice.actions;
 export default userSlice.reducer;
 

@@ -53,6 +53,24 @@ export function getUserTopTracks(accessToken, options = {}) {
     }).then(gotResponseACB);
 }
 
+// Get multiple artists by their IDs (up to 50 at once)
+// @param {string} accessToken - Spotify access token
+// @param {Array<string>} artistIds - Array of artist IDs
+// @returns {Promise} - Promise that resolves to { artists: [...] }
+export function getArtists(accessToken, artistIds) {
+    if (!artistIds || artistIds.length === 0) {
+        return Promise.resolve({ artists: [] });
+    }
+    
+    // Spotify API allows up to 50 IDs per request
+    const ids = artistIds.slice(0, 50).join(',');
+    const params = new URLSearchParams({ ids });
+    
+    return fetch(`${SPOTIFY_API_URL}/artists?${params.toString()}`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+    }).then(gotResponseACB);
+}
+
 // TODO: Add more Spotify API functions as needed
 // - getTopCharts(countryCode)
 // - getUserPlaylists(accessToken)

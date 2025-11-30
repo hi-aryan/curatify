@@ -15,6 +15,7 @@ const userSlice = createSlice({
         topArtist: null,
         topTracks: null,
         topArtists: null,
+        topGenre: null,
     },
     reducers: {
         login(state, action) {
@@ -29,6 +30,7 @@ const userSlice = createSlice({
             state.topArtist = null;
             state.topTracks = null;
             state.topArtists = null;
+            state.topGenre = null;
         },
         setTopArtist(state, action) {
             state.topArtist = action.payload;
@@ -39,9 +41,12 @@ const userSlice = createSlice({
         setTopArtists(state, action) {
             state.topArtists = action.payload;
         },
+        setTopGenre(state, action) {
+            state.topGenre = action.payload;
+        },
     },
 });
 
-export const { login, logout, setTopArtist, setTopTracks, setTopArtists } = userSlice.actions;
+export const { login, logout, setTopArtist, setTopTracks, setTopArtists, setTopGenre } = userSlice.actions;
 export default userSlice.reducer;
 

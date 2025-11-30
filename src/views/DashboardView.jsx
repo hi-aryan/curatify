@@ -11,6 +11,7 @@
     - favoriteArtist: top artist info { name, image, url }
     - topTracks: array of top 3 tracks from Spotify
     - topArtists: array of top artists from Spotify
+    - topGenre: favorite genre calculated from top 50 tracks
     - onLogout: callback when user logs out
     - geminiPrompt: current prompt input for Gemini test
     - geminiResponse: response text from Gemini API
@@ -102,6 +103,22 @@ export function DashboardView(props) {
                 <div className="border-2 border-dashed border-light p-6">
                     <h2 className="text-xl font-semibold mb-4">Stats</h2>
                     <div className="space-y-6">
+                        {/* Favorite Genre */}
+                        {props.topGenre ? (
+                            <div className="bg-gradient-to-r from-green/20 to-blue/20 border border-green/40 rounded-lg p-4">
+                                <p className="text-xs uppercase tracking-wide opacity-70 mb-2">Your Favorite Genre</p>
+                                <p className="text-2xl font-bold capitalize bg-gradient-to-r from-green to-blue bg-clip-text text-transparent">
+                                    {props.topGenre}
+                                </p>
+                                <p className="text-xs opacity-60 mt-1">Based on your top 50 tracks</p>
+                            </div>
+                        ) : (
+                            <div className="border border-light/20 rounded-lg p-4">
+                                <p className="text-xs uppercase tracking-wide opacity-70 mb-2">Your Favorite Genre</p>
+                                <p className="text-sm opacity-60">Calculating...</p>
+                            </div>
+                        )}
+
                         {/* Top 3 Tracks */}
                         <div>
                             <h3 className="text-sm uppercase tracking-wide opacity-70 mb-3">Top 3 Tracks</h3>

@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'; /* instead of mobx observer and mobx actions */
-import { logout, setTopArtist, setTopTracks, setTopArtists } from '../store/userSlice.js';
+import { logout, setTopArtist, setTopTracks, setTopArtists, setTopGenre } from '../store/userSlice.js';
 import { clearTokenData } from '../api/spotifyAuth.js';
 import { DashboardView } from '../views/DashboardView.jsx';
-import { getUserTopArtists, getUserTopTracks } from '../api/spotifySource.js';
+import { getUserTopArtists, getUserTopTracks, getArtists } from '../api/spotifySource.js';
 import { callGeminiAPI } from '../api/llmSource.js';
+import { calculateTopGenreFromTracks } from '../utils/statsUtils.js';
 
 /*
     DashboardPresenter: connects Redux store to DashboardView
@@ -21,6 +22,7 @@ export function DashboardPresenter() {
     const topArtist = useSelector((state) => state.user.topArtist);
     const topTracks = useSelector((state) => state.user.topTracks);
     const topArtists = useSelector((state) => state.user.topArtists);
+    const topGenre = useSelector((state) => state.user.topGenre);
     
     // Gemini state
     const [geminiPrompt, setGeminiPrompt] = useState("");
@@ -73,10 +75,48 @@ export function DashboardPresenter() {
             }
         }
 
+        async function fetchTopGenreACB() {
+            if (topGenre) return;
+            try {
+                // Step 1: Fetch top 50 tracks
+                const tracksResponse = await getUserTopTracks(accessToken, { limit: 50 });
+                const tracks = tracksResponse?.items || [];
+                
+                if (tracks.length === 0) return;
+                
+                // Step 2: Extract unique artist IDs from tracks
+                const artistIdsSet = new Set();
+                tracks.forEach(track => {
+                    if (track.artists && track.artists.length > 0) {
+                        track.artists.forEach(artist => {
+                            artistIdsSet.add(artist.id);
+                        });
+                    }
+                });
+                
+                const artistIds = Array.from(artistIdsSet);
+                if (artistIds.length === 0) return;
+                
+                // Step 3: Fetch full artist details (including genres)
+                const artistsResponse = await getArtists(accessToken, artistIds);
+                const artists = artistsResponse?.artists || [];
+                
+                // Step 4: Calculate top genre using utility function
+                const favoriteGenre = calculateTopGenreFromTracks(tracks, artists);
+                
+                if (favoriteGenre) {
+                    dispatch(setTopGenre(favoriteGenre));
+                }
+            } catch (error) {
+                console.error('Failed to fetch top genre:', error);
+            }
+        }
+
         fetchTopArtistACB();
         fetchTopTracksACB();
         fetchTopArtistsACB();
-    }, [accessToken, topArtist, topTracks, topArtists, dispatch]);
+        fetchTopGenreACB();
+    }, [accessToken, topArtist, topTracks, topArtists, topGenre, dispatch]);
 
     function logoutACB() {
         clearTokenData();
@@ -112,6 +152,7 @@ export function DashboardPresenter() {
             favoriteArtist={topArtist}
             topTracks={topTracks}
             topArtists={topArtists}
+            topGenre={topGenre}
             onLogout={logoutACB}
             geminiPrompt={geminiPrompt}
             geminiResponse={geminiResponse}

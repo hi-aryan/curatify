@@ -2,6 +2,7 @@
     LandingView: the public landing page for non-signed-in users
     
     Displays:
+    - Hero section with login
     - Nordic map with chart data
     - Custom playlist creator (drag songs)
     
@@ -10,11 +11,10 @@
     - onCountryHover: callback when user hovers a country
     - onLoginClick: callback when user clicks sign in
 */
-export function LandingView(props) {
-    function countryHoverHandlerACB(countryCode) {
-        props.onCountryHover(countryCode);
-    }
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
+export function LandingView(props) {
     function loginClickHandlerACB() {
         props.onLoginClick();
     }
@@ -24,38 +24,46 @@ export function LandingView(props) {
             {/* Hero section */}
             <header className="p-8">
                 <h1 className="text-4xl font-bold">Curatify</h1>
-                <p className="mt-2 text-lg">Discover Nordic music charts</p>
-                <button 
+                <p className="mt-2 text-lg opacity-70">Discover Nordic music charts</p>
+                <Button 
                     onClick={loginClickHandlerACB}
-                    // button styles
-                    // className="mt-4 px-6 py-2 bg-green text-dark rounded-full hover:scale-105 transition-all duration-200 ease-out"  
-                    // className="mt-4 px-6 py-2 bg-green text-dark rounded-full hover:rotate-2 transition-transform duration-200"
-                    className="mt-4 px-6 py-2 bg-green text-dark rounded-full hover:rotate-2 hover:scale-105 transition-all duration-200"
-                    >
-
+                    variant="outline"
+                    className="mt-4 rounded-full border-green/50 text-green hover:bg-green/10 hover:rotate-1 hover:scale-105 transition-all duration-200"
+                >
                     Sign in with Spotify
-                </button>
+                </Button>
             </header>
 
-            {/* Map section - placeholder */}
-            <section className="p-8">
-                <h2 className="text-2xl font-semibold mb-4">Nordic Charts</h2>
-                <div className="border-2 border-dashed border-light p-8 text-center">
-                    {/* TODO: Add interactive map component */}
-                    <p>Nordic Map Placeholder</p>
-                    <p className="text-sm text-light">
-                        Selected: {props.selectedCountry || "None"}
-                    </p>
-                </div>
-            </section>
+            {/* Features grid */}
+            <section className="p-8 grid gap-6 md:grid-cols-2">
+                {/* Nordic Charts Card */}
+                <Card className="border-light/40 bg-dark/40">
+                    <CardHeader>
+                        <CardTitle className="text-xl font-semibold">Nordic Charts</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="border border-light/30 rounded p-8 text-center bg-dark/30">
+                            {/* TODO: Add interactive map component */}
+                            <p className="text-light opacity-60 mb-2">Nordic Map Placeholder</p>
+                            <p className="text-sm text-light/60">
+                                Selected: {props.selectedCountry || "None"}
+                            </p>
+                        </div>
+                    </CardContent>
+                </Card>
 
-            {/* Playlist creator section - placeholder */}
-            <section className="p-8">
-                <h2 className="text-2xl font-semibold mb-4">Create Playlist</h2>
-                <div className="border-2 border-dashed border-light p-8 text-center">
-                    {/* TODO: Add drag-and-drop playlist creator */}
-                    <p>Playlist Creator Placeholder</p>
-                </div>
+                {/* Playlist Creator Card */}
+                <Card className="border-light/40 bg-dark/40">
+                    <CardHeader>
+                        <CardTitle className="text-xl font-semibold">Create Playlist</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="border border-light/30 rounded p-8 text-center bg-dark/30">
+                            {/* TODO: Add drag-and-drop playlist creator */}
+                            <p className="text-light opacity-60">Playlist Creator Placeholder</p>
+                        </div>
+                    </CardContent>
+                </Card>
             </section>
         </div>
     );

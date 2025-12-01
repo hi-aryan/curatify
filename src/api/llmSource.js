@@ -29,9 +29,10 @@ export function extractGeminiText(response) {
 /**
  * Call Gemini API with a prompt
  * @param {string} prompt - The prompt to send
+ * @param {boolean} useGoogleSearch - Whether to enable Google Search grounding
  * @returns {Promise<Object>} - Raw Gemini API response
  */
-export function callGeminiAPI(prompt) {
+export function callGeminiAPI(prompt, useGoogleSearch = false) {
     if (!LLM_API_KEY) {
         return Promise.reject(new Error("API key is missing. Please set VITE_LLM_API_KEY in your .env file"));
     }
@@ -42,18 +43,25 @@ export function callGeminiAPI(prompt) {
     
     const url = `${LLM_API_URL}?key=${LLM_API_KEY}`;
     
+    const requestBody = {
+        contents: [{
+            parts: [{
+                text: prompt
+            }]
+        }]
+    };
+    
+    // Enable Google Search grounding for real-time web information
+    if (useGoogleSearch) {
+        requestBody.tools = [{ googleSearch: {} }];
+    }
+    
     return fetch(url, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-            contents: [{
-                parts: [{
-                    text: prompt
-                }]
-            }]
-        }),
+        body: JSON.stringify(requestBody),
     }).then(async (response) => {
         if (!response.ok) {
             let errorMessage = `LLM API error: ${response.status}`;

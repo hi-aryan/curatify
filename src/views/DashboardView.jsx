@@ -124,7 +124,7 @@ export function DashboardView(props) {
                     <div className="space-y-6">
                         {/* Favorite Genre */}
                         {props.topGenre ? (
-                            <div className="border border-light/30 rounded-lg p-4 bg-dark/30">
+                            <div className="border border-light/30 rounded p-4 bg-dark/30">
                                 <p className="text-xs uppercase tracking-wide text-light/70 mb-2">
                                     Your Favorite Genre
                                 </p>
@@ -142,7 +142,7 @@ export function DashboardView(props) {
                                 <p className="text-xs text-light/60 mt-2">Based on your top 50 tracks</p>
                             </div>
                         ) : (
-                            <div className="border border-light/30 rounded-lg p-4 bg-dark/20">
+                            <div className="border border-light/30 rounded p-4 bg-dark/20">
                                 <p className="text-xs uppercase tracking-wide text-light/70 mb-2">Your Favorite Genre</p>
                                 <p className="text-sm text-light/60">Calculating...</p>
                             </div>

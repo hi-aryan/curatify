@@ -19,6 +19,13 @@
     - geminiError: error message if Gemini API call failed
     - onGeminiPromptChange: callback when prompt input changes
     - onTestGemini: callback to trigger Gemini API test
+    - playlists: array of user's playlists
+    - selectedPlaylistId: currently selected playlist ID
+    - onPlaylistSelect: callback when playlist is selected
+    - onAnalyzePlaylist: callback to trigger playlist analysis
+    - moodboardAnalysis: analysis result object
+    - moodboardLoading: whether analysis is in progress
+    - moodboardError: error message if analysis failed
 */
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -109,10 +116,74 @@ export function DashboardView(props) {
 
                 <Card className="border-light/40 bg-dark/40">
                     <CardHeader>
-                        <CardTitle className="text-xl font-semibold">Personality</CardTitle>
+                        <CardTitle className="text-xl font-semibold">Personality - Moodboard</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-light opacity-60">Your music personality</p>
+                        <div className="space-y-4">
+                            <div className="flex gap-2">
+                                <select
+                                    value={props.selectedPlaylistId || ""}
+                                    onChange={(e) => props.onPlaylistSelect(e.target.value)}
+                                    disabled={props.moodboardLoading || !props.playlists?.length}
+                                    className="flex-1 px-3 py-2 border border-light/30 rounded bg-dark text-light focus:outline-none focus:border-green/50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    <option value="">Choose a playlist...</option>
+                                    {props.playlists?.map((playlist) => (
+                                        <option key={playlist.id} value={playlist.id}>
+                                            {playlist.name}
+                                        </option>
+                                    ))}
+                                </select>
+                                <Button
+                                    onClick={props.onAnalyzePlaylist}
+                                    disabled={props.moodboardLoading || !props.selectedPlaylistId}
+                                    className="hover:bg-green/20 hover:border-green/50"
+                                    variant="outline"
+                                >
+                                    {props.moodboardLoading ? "Analyzing..." : "Analyze"}
+                                </Button>
+                            </div>
+
+                            {props.moodboardError && (
+                                <p className="text-sm text-pink">Error: {props.moodboardError}</p>
+                            )}
+
+                            {props.moodboardAnalysis && (
+                                <div className="space-y-4 mt-4">
+                                    <div className="flex gap-4 text-sm">
+                                        {[
+                                            { key: 'happiness', label: 'Happiness', color: 'text-green' },
+                                            { key: 'sadness', label: 'Sadness', color: 'text-blue' },
+                                            { key: 'energy', label: 'Energy', color: 'text-pink' },
+                                            { key: 'aura', label: 'Aura', color: 'text-green' }
+                                        ].map(({ key, label, color }) => (
+                                            <div key={key} className="flex-1 text-center">
+                                                <p className="text-xs opacity-60 mb-1">{label}</p>
+                                                <p className={`text-lg font-bold ${color}`}>
+                                                    {(props.moodboardAnalysis.averages?.[key] * 100).toFixed(0)}%
+                                                </p>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    {props.moodboardAnalysis.top_three && Object.entries(props.moodboardAnalysis.top_three).map(([category, songs]) => {
+                                        const topSong = songs[0];
+                                        if (!topSong) return null;
+                                        return (
+                                            <div key={category} className="flex items-center justify-between">
+                                                <div className="flex-1 min-w-0">
+                                                    <p className="text-xs uppercase tracking-wide opacity-70 capitalize">{category}</p>
+                                                    <p className="text-sm font-medium truncate text-light">{topSong.track_name}</p>
+                                                </div>
+                                                <span className="text-sm font-bold text-green ml-4">
+                                                    {(topSong.score * 100).toFixed(0)}%
+                                                </span>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            )}
+                        </div>
                     </CardContent>
                 </Card>
 

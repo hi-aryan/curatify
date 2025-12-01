@@ -3,8 +3,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { logout, setTopArtist, setTopTracks, setTopArtists, setTopGenre } from '../store/userSlice.js';
 import { clearTokenData } from '../api/spotifyAuth.js';
 import { DashboardView } from '../views/DashboardView.jsx';
-import { fetchTopArtist, fetchTopTracks, fetchTopArtists, fetchTopGenre } from '../utils/dashboardUtils.js';
+import { fetchTopArtist, fetchTopTracks, fetchTopArtists, fetchTopGenre, analyzePlaylistMood } from '../utils/dashboardUtils.js';
 import { callGeminiAPI, extractGeminiText } from '../api/llmSource.js';
+import { getUserPlaylists } from '../api/spotifySource.js';
 
 /*
     DashboardPresenter: connects Redux store to DashboardView
@@ -29,6 +30,13 @@ export function DashboardPresenter() {
     const [geminiResponse, setGeminiResponse] = useState("");
     const [geminiLoading, setGeminiLoading] = useState(false);
     const [geminiError, setGeminiError] = useState(null);
+    
+    // Moodboard state
+    const [playlists, setPlaylists] = useState([]);
+    const [selectedPlaylistId, setSelectedPlaylistId] = useState("");
+    const [moodboardAnalysis, setMoodboardAnalysis] = useState(null);
+    const [moodboardLoading, setMoodboardLoading] = useState(false);
+    const [moodboardError, setMoodboardError] = useState(null);
 
     useEffect(() => {
         if (!accessToken) return;
@@ -74,6 +82,22 @@ export function DashboardPresenter() {
         loadDashboardDataACB();
     }, [accessToken, topArtist, topTracks, topArtists, topGenre, dispatch]);
 
+    // Fetch user playlists
+    useEffect(() => {
+        if (!accessToken) return;
+        
+        async function loadPlaylistsACB() {
+            try {
+                const response = await getUserPlaylists(accessToken, { limit: 50 });
+                setPlaylists(response?.items || []);
+            } catch (error) {
+                console.error('Failed to fetch playlists:', error);
+            }
+        }
+        
+        loadPlaylistsACB();
+    }, [accessToken]);
+
     function logoutACB() {
         clearTokenData();
         dispatch(logout());
@@ -82,21 +106,32 @@ export function DashboardPresenter() {
 
     async function callGeminiACB() {
         if (!geminiPrompt.trim()) return;
-        
         setGeminiLoading(true);
         setGeminiError(null);
         setGeminiResponse("");
-        
         try {
             const response = await callGeminiAPI(geminiPrompt);
-            // Extract text from Gemini API response format
             const text = response?.candidates?.[0]?.content?.parts?.[0]?.text || "No response text found";
             setGeminiResponse(text);
         } catch (error) {
             setGeminiError(error.message || "Failed to get response from Gemini API");
-            console.error('Gemini API error:', error);
         } finally {
             setGeminiLoading(false);
+        }
+    }
+
+    async function analyzePlaylistACB() {
+        if (!selectedPlaylistId || !accessToken) return;
+        setMoodboardLoading(true);
+        setMoodboardError(null);
+        setMoodboardAnalysis(null);
+        try {
+            const analysis = await analyzePlaylistMood(selectedPlaylistId, accessToken);
+            setMoodboardAnalysis(analysis);
+        } catch (error) {
+            setMoodboardError(error.message || "Failed to analyze playlist");
+        } finally {
+            setMoodboardLoading(false);
         }
     }
 
@@ -114,6 +149,13 @@ export function DashboardPresenter() {
             geminiError={geminiError}
             onGeminiPromptChange={setGeminiPrompt}
             onTestGemini={callGeminiACB}
+            playlists={playlists}
+            selectedPlaylistId={selectedPlaylistId}
+            onPlaylistSelect={setSelectedPlaylistId}
+            onAnalyzePlaylist={analyzePlaylistACB}
+            moodboardAnalysis={moodboardAnalysis}
+            moodboardLoading={moodboardLoading}
+            moodboardError={moodboardError}
         />
     );
 }

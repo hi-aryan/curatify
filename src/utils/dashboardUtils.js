@@ -8,7 +8,6 @@
     - Keeps presenters thin
 */
 import { getUserTopArtists, getUserTopTracks, getArtists } from '../api/spotifySource.js';
-import { calculateTopGenreFromTracks } from './statsUtils.js';
 
 /**
  * Fetch and transform user's top artist

@@ -105,17 +105,27 @@ export function DashboardView(props) {
                     <div className="space-y-6">
                         {/* Favorite Genre */}
                         {props.topGenre ? (
-                            <div className="bg-gradient-to-r from-green/20 to-blue/20 border border-green/40 rounded-lg p-4">
-                                <p className="text-xs uppercase tracking-wide opacity-70 mb-2">Your Favorite Genre</p>
-                                <p className="text-2xl font-bold capitalize bg-gradient-to-r from-green to-blue bg-clip-text text-transparent">
-                                    {props.topGenre}
+                            <div className="border border-light/30 rounded-lg p-4 bg-dark/30">
+                                <p className="text-xs uppercase tracking-wide text-light/70 mb-2">
+                                    Your Favorite Genre
                                 </p>
-                                <p className="text-xs opacity-60 mt-1">Based on your top 50 tracks</p>
+                                <p className="text-2xl font-semibold capitalize text-light group">
+                                    {props.topGenre.split('').map((char, index) => (
+                                        <span
+                                            key={`${char}-${index}`}
+                                            className="inline-block transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:text-green"
+                                            style={{ transitionDelay: `${index * 30}ms` }}
+                                        >
+                                            {char === ' ' ? '\u00A0' : char}
+                                        </span>
+                                    ))}
+                                </p>
+                                <p className="text-xs text-light/60 mt-2">Based on your top 50 tracks</p>
                             </div>
                         ) : (
-                            <div className="border border-light/20 rounded-lg p-4">
-                                <p className="text-xs uppercase tracking-wide opacity-70 mb-2">Your Favorite Genre</p>
-                                <p className="text-sm opacity-60">Calculating...</p>
+                            <div className="border border-light/30 rounded-lg p-4 bg-dark/20">
+                                <p className="text-xs uppercase tracking-wide text-light/70 mb-2">Your Favorite Genre</p>
+                                <p className="text-sm text-light/60">Calculating...</p>
                             </div>
                         )}
 
@@ -139,7 +149,7 @@ export function DashboardView(props) {
                                                     href={track.external_urls?.spotify}
                                                     target="_blank"
                                                     rel="noreferrer"
-                                                    className="block font-semibold hover:underline truncate"
+                                                    className="block font-semibold truncate transition-colors duration-150 hover:text-green"
                                                 >
                                                     {track.name}
                                                 </a>

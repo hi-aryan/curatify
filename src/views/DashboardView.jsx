@@ -22,6 +22,7 @@
 */
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+
 export function DashboardView(props) {
     function logoutClickHandlerACB() {
         props.onLogout();
@@ -194,7 +195,7 @@ export function DashboardView(props) {
                                             href={artist.external_urls?.spotify}
                                             target="_blank"
                                             rel="noreferrer"
-                                            className="flex items-center gap-2 px-3 py-1.5 border border-light/30 rounded-full hover:bg-light/10 transition-colors"
+                                            className="flex items-center gap-2 px-3 py-1.5 border border-light/30 rounded-full hover:bg-green/10 hover:border-green/50 hover:text-green transition-all duration-200"
                                         >
                                             {artist.images?.[2]?.url && (
                                                 <img

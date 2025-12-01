@@ -1,18 +1,18 @@
 import { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux'; /* instead of mobx observer and mobx actions */
+import { useSelector, useDispatch } from 'react-redux';
 import { logout, setTopArtist, setTopTracks, setTopArtists, setTopGenre } from '../store/userSlice.js';
 import { clearTokenData } from '../api/spotifyAuth.js';
 import { DashboardView } from '../views/DashboardView.jsx';
-import { getUserTopArtists, getUserTopTracks, getArtists } from '../api/spotifySource.js';
-import { callGeminiAPI } from '../api/llmSource.js';
-import { calculateTopGenreFromTracks } from '../utils/statsUtils.js';
+import { fetchTopArtist, fetchTopTracks, fetchTopArtists, fetchTopGenre } from '../utils/dashboardUtils.js';
+import { callGeminiAPI, extractGeminiText } from '../api/llmSource.js';
 
 /*
     DashboardPresenter: connects Redux store to DashboardView
     
     Pattern:
     - Read user state from Redux
-    - Define ACB functions for user actions
+    - Call utils for data fetching/orchestration
+    - Dispatch actions to update state
     - Pass to View as props
 */
 export function DashboardPresenter() {
@@ -24,98 +24,54 @@ export function DashboardPresenter() {
     const topArtists = useSelector((state) => state.user.topArtists);
     const topGenre = useSelector((state) => state.user.topGenre);
     
-    // Gemini state
+    // Gemini state (local - ephemeral UI state, not persisted in Redux)
     const [geminiPrompt, setGeminiPrompt] = useState("");
     const [geminiResponse, setGeminiResponse] = useState("");
     const [geminiLoading, setGeminiLoading] = useState(false);
     const [geminiError, setGeminiError] = useState(null);
 
     useEffect(() => {
-        if (!accessToken) {
-            return;
-        }
-
-        async function fetchTopArtistACB() {
-            if (topArtist) return;
-            try {
-                const response = await getUserTopArtists(accessToken, { limit: 1 });
-                const favorite = response?.items?.[0];
-
-                if (favorite) {
-                    dispatch(setTopArtist({
-                        name: favorite.name,
-                        image: favorite.images?.[0]?.url || null,
-                        url: favorite.external_urls?.spotify || null,
-                    }));
+        if (!accessToken) return;
+        
+        async function loadDashboardDataACB() {
+            if (!topArtist) {
+                try {
+                    const artist = await fetchTopArtist(accessToken);
+                    if (artist) dispatch(setTopArtist(artist));
+                } catch (error) {
+                    console.error('Failed to fetch top artist:', error);
                 }
-            } catch (error) {
-                console.error('Failed to fetch top artist:', error);
             }
-        }
-
-        async function fetchTopTracksACB() {
-            if (topTracks) return;
-            try {
-                const response = await getUserTopTracks(accessToken, { limit: 3 });
-                const tracks = response?.items?.slice(0, 3) || [];
-                dispatch(setTopTracks(tracks));
-            } catch (error) {
-                console.error('Failed to fetch top tracks:', error);
-            }
-        }
-
-        async function fetchTopArtistsACB() {
-            if (topArtists) return;
-            try {
-                const response = await getUserTopArtists(accessToken, { limit: 10 });
-                const artists = response?.items || [];
-                dispatch(setTopArtists(artists));
-            } catch (error) {
-                console.error('Failed to fetch top artists:', error);
-            }
-        }
-
-        async function fetchTopGenreACB() {
-            if (topGenre) return;
-            try {
-                // Step 1: Fetch top 50 tracks
-                const tracksResponse = await getUserTopTracks(accessToken, { limit: 50 });
-                const tracks = tracksResponse?.items || [];
-                
-                if (tracks.length === 0) return;
-                
-                // Step 2: Extract unique artist IDs from tracks
-                const artistIdsSet = new Set();
-                tracks.forEach(track => {
-                    if (track.artists && track.artists.length > 0) {
-                        track.artists.forEach(artist => {
-                            artistIdsSet.add(artist.id);
-                        });
-                    }
-                });
-                
-                const artistIds = Array.from(artistIdsSet);
-                if (artistIds.length === 0) return;
-                
-                // Step 3: Fetch full artist details (including genres)
-                const artistsResponse = await getArtists(accessToken, artistIds);
-                const artists = artistsResponse?.artists || [];
-                
-                // Step 4: Calculate top genre using utility function
-                const favoriteGenre = calculateTopGenreFromTracks(tracks, artists);
-                
-                if (favoriteGenre) {
-                    dispatch(setTopGenre(favoriteGenre));
+            
+            if (!topTracks) {
+                try {
+                    const tracks = await fetchTopTracks(accessToken, 3);
+                    dispatch(setTopTracks(tracks));
+                } catch (error) {
+                    console.error('Failed to fetch top tracks:', error);
                 }
-            } catch (error) {
-                console.error('Failed to fetch top genre:', error);
+            }
+            
+            if (!topArtists) {
+                try {
+                    const artists = await fetchTopArtists(accessToken, 10);
+                    dispatch(setTopArtists(artists));
+                } catch (error) {
+                    console.error('Failed to fetch top artists:', error);
+                }
+            }
+            
+            if (!topGenre) {
+                try {
+                    const genre = await fetchTopGenre(accessToken);
+                    if (genre) dispatch(setTopGenre(genre));
+                } catch (error) {
+                    console.error('Failed to fetch top genre:', error);
+                }
             }
         }
-
-        fetchTopArtistACB();
-        fetchTopTracksACB();
-        fetchTopArtistsACB();
-        fetchTopGenreACB();
+        
+        loadDashboardDataACB();
     }, [accessToken, topArtist, topTracks, topArtists, topGenre, dispatch]);
 
     function logoutACB() {
@@ -125,9 +81,7 @@ export function DashboardPresenter() {
     }
 
     async function callGeminiACB() {
-        if (!geminiPrompt.trim()) {
-            return;
-        }
+        if (!geminiPrompt.trim()) return;
         
         setGeminiLoading(true);
         setGeminiError(null);
@@ -163,4 +117,3 @@ export function DashboardPresenter() {
         />
     );
 }
-

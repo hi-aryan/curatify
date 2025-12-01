@@ -9,6 +9,7 @@
 */
 import { getUserTopArtists, getUserTopTracks, getArtists } from '../api/spotifySource.js';
 
+
 /**
  * Fetch and transform user's top artist
  * @returns {Object|null} - { name, image, url } or null

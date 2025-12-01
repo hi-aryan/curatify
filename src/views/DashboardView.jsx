@@ -20,6 +20,8 @@
     - onGeminiPromptChange: callback when prompt input changes
     - onTestGemini: callback to trigger Gemini API test
 */
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 export function DashboardView(props) {
     function logoutClickHandlerACB() {
         props.onLogout();
@@ -75,33 +77,49 @@ export function DashboardView(props) {
                         </p>
                     </div>
                 </div>
-                <button 
+                <Button 
                     onClick={logoutClickHandlerACB}
-                    className="px-4 py-2 border border-light rounded hover:-rotate-2 hover:scale-105 transition-all duration-200"
+                    variant="outline"
+                    className="hover:-rotate-2 hover:scale-105 transition-all duration-200"
                 >
                     Logout
-                </button>
+                </Button>
             </header>
 
             {/* Features grid - placeholders */}
             <section className="p-8 grid gap-6 md:grid-cols-2">
-                <div className="border-2 border-dashed border-light p-6">
-                    <h2 className="text-xl font-semibold mb-2">Sort Playlists</h2>
-                    <p className="text-light opacity-60">Organize your playlists</p>
-                </div>
+                <Card className="border-light/40 bg-dark/40">
+                    <CardHeader>
+                        <CardTitle className="text-xl font-semibold">Sort Playlists</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <p className="text-light opacity-60">Organize your playlists</p>
+                    </CardContent>
+                </Card>
 
-                <div className="border-2 border-dashed border-light p-6">
-                    <h2 className="text-xl font-semibold mb-2">Recommendations</h2>
-                    <p className="text-light opacity-60">AI-powered song suggestions</p>
-                </div>
+                <Card className="border-light/40 bg-dark/40">
+                    <CardHeader>
+                        <CardTitle className="text-xl font-semibold">Recommendations</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <p className="text-light opacity-60">AI-powered song suggestions</p>
+                    </CardContent>
+                </Card>
 
-                <div className="border-2 border-dashed border-light p-6">
-                    <h2 className="text-xl font-semibold mb-2">Personality</h2>
-                    <p className="text-light opacity-60">Your music personality</p>
-                </div>
+                <Card className="border-light/40 bg-dark/40">
+                    <CardHeader>
+                        <CardTitle className="text-xl font-semibold">Personality</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <p className="text-light opacity-60">Your music personality</p>
+                    </CardContent>
+                </Card>
 
-                <div className="border-2 border-dashed border-light p-6">
-                    <h2 className="text-xl font-semibold mb-4">Stats</h2>
+                <Card className="border-light/40 bg-dark/40">
+                    <CardHeader>
+                        <CardTitle className="text-xl font-semibold mb-4">Stats</CardTitle>
+                    </CardHeader>
+                    <CardContent>
                     <div className="space-y-6">
                         {/* Favorite Genre */}
                         {props.topGenre ? (
@@ -194,10 +212,14 @@ export function DashboardView(props) {
                             )}
                         </div>
                     </div>
-                </div>
+                    </CardContent>
+                </Card>
 
-                <div className="border-2 border-dashed border-light p-6">
-                    <h2 className="text-xl font-semibold mb-2">Gemini API Test</h2>
+                <Card className="border-light/40 bg-dark/40">
+                    <CardHeader>
+                        <CardTitle className="text-xl font-semibold">Gemini API Test</CardTitle>
+                    </CardHeader>
+                    <CardContent>
                     <div className="space-y-4">
                         <div>
                             <input
@@ -227,7 +249,8 @@ export function DashboardView(props) {
                             </div>
                         )}
                     </div>
-                </div>
+                    </CardContent>
+                </Card>
 
             </section>
         </div>

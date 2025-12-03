@@ -27,6 +27,47 @@ export function extractGeminiText(response) {
 }
 
 /**
+ * Parse JSON from Gemini API response, handling markdown and extra text
+ * @param {string} responseText - Raw text response from Gemini
+ * @returns {Object} - Parsed JSON object
+ */
+export function parseGeminiJSON(responseText) {
+    let jsonText = responseText.trim()
+        .replace(/^```json\s*/i, '').replace(/^```\s*/, '').replace(/\s*```$/g, '');
+    
+    const firstBrace = jsonText.indexOf('{');
+    const lastBrace = jsonText.lastIndexOf('}');
+    if (firstBrace !== -1 && lastBrace > firstBrace) {
+        jsonText = jsonText.substring(firstBrace, lastBrace + 1);
+    }
+    
+    jsonText = jsonText.replace(/,(\s*[}\]])/g, '$1');
+    
+    try {
+        return JSON.parse(jsonText);
+    } catch (error) {
+        console.error('Failed to parse Gemini JSON. Raw response:', responseText.substring(0, 500));
+        throw new Error(`Failed to parse JSON: ${error.message}`);
+    }
+}
+
+/**
+ * Call Gemini API and return parsed JSON
+ * Handles the full workflow: call → extract → parse
+ * @param {string} prompt - The prompt to send
+ * @param {boolean} useGoogleSearch - Whether to enable Google Search grounding
+ * @returns {Promise<Object>} - Parsed JSON object from Gemini response
+ */
+export async function callGeminiJSON(prompt, useGoogleSearch = false) {
+    const response = await callGeminiAPI(prompt, useGoogleSearch);
+    const text = extractGeminiText(response);
+    if (!text) {
+        throw new Error("No response from Gemini API");
+    }
+    return parseGeminiJSON(text);
+}
+
+/**
  * Call Gemini API with a prompt
  * @param {string} prompt - The prompt to send
  * @param {boolean} useGoogleSearch - Whether to enable Google Search grounding

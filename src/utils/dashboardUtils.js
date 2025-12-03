@@ -7,7 +7,9 @@
     - Returns clean data ready for Redux dispatch
     - Keeps presenters thin
 */
-import { getUserTopArtists, getUserTopTracks, getArtists } from '../api/spotifySource.js';
+import { getUserTopArtists, getUserTopTracks, getArtists, getPlaylistTracks } from '../api/spotifySource.js';
+import { callGeminiJSON } from '../api/llmSource.js';
+import { MOODBOARD_PROMPT } from '../constants/moodboardPrompt.js';
 
 
 /**
@@ -135,4 +137,44 @@ function extractArtistIdsFromTracks(tracks) {
     });
     
     return Array.from(artistIds);
+}
+
+/**
+ * Analyze playlist mood using Gemini API
+ * Returns simplified structure with only averages and top song per category
+ * @param {string} playlistId - Spotify playlist ID
+ * @param {string} accessToken - Spotify access token
+ * @returns {Promise<Object>} - { averages: {...}, topSongs: {...} }
+ */
+export async function analyzePlaylistMood(playlistId, accessToken) {
+    // 1. Get playlist tracks
+    const playlistData = await getPlaylistTracks(playlistId, accessToken);
+    const tracks = playlistData?.items?.filter(item => 
+        item.track && !item.track.is_local && item.track.name
+    ) || [];
+    
+    if (tracks.length === 0) {
+        throw new Error("No valid tracks found in playlist");
+    }
+    
+    // 2. Pass raw Spotify track data directly to Gemini (no transformation needed)
+    const prompt = MOODBOARD_PROMPT + JSON.stringify({ tracks: { items: tracks } }, null, 2);
+    const result = await callGeminiJSON(prompt);
+    
+    // 4. Validate response
+    if (!result.averages || !result.top_three) {
+        throw new Error("Analysis result missing required fields");
+    }
+    
+    // 5. Simplify: only return what we need (averages + top song per category)
+    const topSongs = Object.fromEntries(
+        Object.entries(result.top_three || {})
+            .map(([category, songs]) => [category, songs?.[0] || null])
+            .filter(([_, song]) => song !== null)
+    );
+    
+    return {
+        averages: result.averages,
+        topSongs
+    };
 }

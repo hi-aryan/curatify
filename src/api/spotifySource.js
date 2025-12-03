@@ -71,7 +71,18 @@ export function getArtists(accessToken, artistIds) {
   }).then(gotResponseACB);
 }
 
+// Get user's playlists
+export function getUserPlaylists(accessToken, options = {}) {
+    const { limit = 50, offset = 0 } = options;
+    const params = new URLSearchParams({
+        limit: String(limit),
+        offset: String(offset),
+    });
+    return fetch(`${SPOTIFY_API_URL}/me/playlists?${params.toString()}`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+    }).then(gotResponseACB);
+}
+
 // TODO: Add more Spotify API functions as needed
 // - getTopCharts(countryCode)
-// - getUserPlaylists(accessToken)
 // - createPlaylist(accessToken, name, tracks)

@@ -19,10 +19,18 @@
     - geminiError: error message if Gemini API call failed
     - onGeminiPromptChange: callback when prompt input changes
     - onTestGemini: callback to trigger Gemini API test
+    - playlists: array of user's playlists
+    - selectedPlaylistId: currently selected playlist ID
+    - onPlaylistSelect: callback when playlist is selected
+    - onAnalyzePlaylist: callback to trigger playlist analysis
+    - moodboardAnalysis: analysis result object
+    - moodboardLoading: whether analysis is in progress
+    - moodboardError: error message if analysis failed
 */
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CollapsibleCard } from "@/components/ui/collapsible-card";
+import { MoodboardCard } from "@/components/MoodboardCard";
 
 export function DashboardView(props) {
     function logoutClickHandlerACB() {
@@ -103,14 +111,15 @@ export function DashboardView(props) {
                     <p className="text-light opacity-60">AI-powered song suggestions</p>
                 </CollapsibleCard>
 
-                <Card className="border-light/40 bg-dark/40">
-                    <CardHeader>
-                        <CardTitle className="text-xl font-semibold">Personality</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <p className="text-light opacity-60">Your music personality</p>
-                    </CardContent>
-                </Card>
+                <MoodboardCard
+                    playlists={props.playlists}
+                    selectedPlaylistId={props.selectedPlaylistId}
+                    onPlaylistSelect={props.onPlaylistSelect}
+                    onAnalyze={props.onAnalyzePlaylist}
+                    analysis={props.moodboardAnalysis}
+                    loading={props.moodboardLoading}
+                    error={props.moodboardError}
+                />
 
                 <CollapsibleCard title="Stats">
                     <div className="space-y-6">

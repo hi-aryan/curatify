@@ -135,4 +135,6 @@ dist
 # IntelliJ IDEA
 .idea/
 
-.cursor/
+# kept on purpose
+#.cursor/
+#.cursorrules

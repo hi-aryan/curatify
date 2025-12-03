@@ -13,6 +13,7 @@
     - topArtists: array of top artists from Spotify
     - topGenre: favorite genre calculated from top 50 tracks
     - onLogout: callback when user logs out
+    - onNavigateToLanding: callback when user clicks to go to landing page
     - geminiPrompt: current prompt input for Gemini test
     - geminiResponse: response text from Gemini API
     - geminiLoading: whether Gemini API call is in progress
@@ -35,6 +36,10 @@ import { MoodboardCard } from "@/components/MoodboardCard";
 export function DashboardView(props) {
     function logoutClickHandlerACB() {
         props.onLogout();
+    }
+
+    function navigateToLandingHandlerACB() {
+        props.onNavigateToLanding();
     }
 
     return (
@@ -87,13 +92,22 @@ export function DashboardView(props) {
                         </p>
                     </div>
                 </div>
-                <Button 
-                    onClick={logoutClickHandlerACB}
-                    variant="outline"
-                    className="hover:-rotate-2 hover:scale-105 transition-all duration-200"
-                >
-                    Logout
-                </Button>
+                <div className="flex items-center gap-3">
+                    <Button 
+                        onClick={navigateToLandingHandlerACB}
+                        variant="outline"
+                        className="hover:-rotate-2 hover:scale-105 transition-all duration-200"
+                    >
+                        Home
+                    </Button>
+                    <Button 
+                        onClick={logoutClickHandlerACB}
+                        variant="outline"
+                        className="hover:-rotate-2 hover:scale-105 transition-all duration-200"
+                    >
+                        Logout
+                    </Button>
+                </div>
             </header>
 
             {/* Features grid - placeholders */}

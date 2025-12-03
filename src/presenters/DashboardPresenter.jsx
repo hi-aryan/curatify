@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { logout, setTopArtist, setTopTracks, setTopArtists, setTopGenre } from '../store/userSlice.js';
 import { clearTokenData, getValidAccessToken } from '../api/spotifyAuth.js';
 import { DashboardView } from '../views/DashboardView.jsx';
@@ -19,6 +20,7 @@ import { useMoodboard } from '../hooks/useMoodboard.js';
 */
 export function DashboardPresenter() {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const profile = useSelector((state) => state.user.profile);
     const topArtist = useSelector((state) => state.user.topArtist);
     const topTracks = useSelector((state) => state.user.topTracks);
@@ -120,6 +122,10 @@ export function DashboardPresenter() {
         analyzePlaylist(selectedPlaylistId);
     }
 
+    function navigateToLandingACB() {
+        navigate('/');
+    }
+
     return (
         <DashboardView
             profile={profile}
@@ -128,6 +134,7 @@ export function DashboardPresenter() {
             topArtists={topArtists}
             topGenre={topGenre}
             onLogout={logoutACB}
+            onNavigateToLanding={navigateToLandingACB}
             geminiPrompt={geminiPrompt}
             geminiResponse={geminiResponse}
             geminiLoading={geminiLoading}

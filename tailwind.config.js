@@ -11,6 +11,9 @@ export default {
                 blue: '#2757B2',
                 pink: '#EF476F',
             },
+            borderRadius: {
+                DEFAULT: 'var(--radius)',
+            },
             animation: {
                 'equalizer-1': 'equalizer 0.8s ease-in-out infinite',
                 'equalizer-2': 'equalizer 1s ease-in-out 0.1s infinite',

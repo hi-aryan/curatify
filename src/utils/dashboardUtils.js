@@ -161,15 +161,47 @@ export async function analyzePlaylistMood(playlistId, accessToken) {
     const prompt = MOODBOARD_PROMPT + JSON.stringify({ tracks: { items: tracks } }, null, 2);
     const result = await callGeminiJSON(prompt);
     
-    // 4. Validate response
+    // 3. Validate response
     if (!result.averages || !result.top_three) {
         throw new Error("Analysis result missing required fields");
     }
     
-    // 5. Simplify: only return what we need (averages + top song per category)
+    // 4. Create lookup map: "track_name|artist_name" -> full track object
+    const trackMap = new Map();
+    tracks.forEach(item => {
+        const track = item.track;
+        const artistNames = track.artists?.map(a => a.name).join(', ') || '';
+        const key = `${track.name}|${artistNames}`.toLowerCase();
+        trackMap.set(key, track);
+    });
+    
+    // 5. Match Gemini results back to original tracks
     const topSongs = Object.fromEntries(
         Object.entries(result.top_three || {})
-            .map(([category, songs]) => [category, songs?.[0] || null])
+            .map(([category, songs]) => {
+                const topSong = songs?.[0];
+                if (!topSong) return [category, null];
+                
+                // Match by track name + artist name
+                const key = `${topSong.track_name}|${topSong.artist_name}`.toLowerCase();
+                const matchedTrack = trackMap.get(key);
+                
+                if (matchedTrack) {
+                    return [category, {
+                        ...matchedTrack,
+                        score: topSong.score
+                    }];
+                }
+                
+                // Fallback: return Gemini data if no match found
+                return [category, {
+                    name: topSong.track_name,
+                    artists: topSong.artist_name.split(', ').map(name => ({ name })),
+                    external_urls: { spotify: null },
+                    album: { images: [] },
+                    score: topSong.score
+                }];
+            })
             .filter(([_, song]) => song !== null)
     );
     

@@ -40,7 +40,7 @@ export function App() {
         const accessToken = await getValidAccessToken();
         if (accessToken) {
           const profile = await getUserProfile(accessToken);
-          dispatch(login({ profile, accessToken }));
+          dispatch(login({ profile }));
         }
       } catch {
         // Token invalid or refresh failed - user will need to re-login

@@ -43,6 +43,8 @@ export async function redirectToSpotifyAuth() {
   const verifier = generateCodeVerifier(128);
   const challenge = await generateCodeChallenge(verifier);
 
+  // Store verifier in localStorage to persist across OAuth redirect
+  // The verifier is single-use and deleted after token exchange
   localStorage.setItem("spotify_verifier", verifier);
 
   const params = new URLSearchParams({
@@ -60,6 +62,12 @@ export async function redirectToSpotifyAuth() {
 // Exchange authorization code for tokens
 export async function getAccessToken(code) {
   const verifier = localStorage.getItem("spotify_verifier");
+
+  if (!verifier) {
+    throw new Error(
+      "Missing code verifier. Please try logging in again from the home page."
+    );
+  }
 
   const params = new URLSearchParams({
     client_id: SPOTIFY_CLIENT_ID,

@@ -22,6 +22,7 @@
 */
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { CollapsibleCard } from "@/components/ui/collapsible-card";
 
 export function DashboardView(props) {
     function logoutClickHandlerACB() {
@@ -98,14 +99,9 @@ export function DashboardView(props) {
                     </CardContent>
                 </Card>
 
-                <Card className="border-light/40 bg-dark/40">
-                    <CardHeader>
-                        <CardTitle className="text-xl font-semibold">Recommendations</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <p className="text-light opacity-60">AI-powered song suggestions</p>
-                    </CardContent>
-                </Card>
+                <CollapsibleCard title="Recommendations">
+                    <p className="text-light opacity-60">AI-powered song suggestions</p>
+                </CollapsibleCard>
 
                 <Card className="border-light/40 bg-dark/40">
                     <CardHeader>
@@ -116,11 +112,7 @@ export function DashboardView(props) {
                     </CardContent>
                 </Card>
 
-                <Card className="border-light/40 bg-dark/40">
-                    <CardHeader>
-                        <CardTitle className="text-xl font-semibold mb-4">Stats</CardTitle>
-                    </CardHeader>
-                    <CardContent>
+                <CollapsibleCard title="Stats">
                     <div className="space-y-6">
                         {/* Favorite Genre */}
                         {props.topGenre ? (
@@ -213,8 +205,7 @@ export function DashboardView(props) {
                             )}
                         </div>
                     </div>
-                    </CardContent>
-                </Card>
+                </CollapsibleCard>
 
                 <Card className="border-light/40 bg-dark/40">
                     <CardHeader>

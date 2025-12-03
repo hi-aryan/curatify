@@ -3,9 +3,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { logout, setTopArtist, setTopTracks, setTopArtists, setTopGenre } from '../store/userSlice.js';
 import { clearTokenData } from '../api/spotifyAuth.js';
 import { DashboardView } from '../views/DashboardView.jsx';
-import { fetchTopArtist, fetchTopTracks, fetchTopArtists, fetchTopGenre, analyzePlaylistMood } from '../utils/dashboardUtils.js';
+import { fetchTopArtist, fetchTopTracks, fetchTopArtists, fetchTopGenre } from '../utils/dashboardUtils.js';
 import { callGeminiAPI, extractGeminiText } from '../api/llmSource.js';
 import { getUserPlaylists } from '../api/spotifySource.js';
+import { useMoodboard } from '../hooks/useMoodboard.js';
 
 /*
     DashboardPresenter: connects Redux store to DashboardView
@@ -31,12 +32,10 @@ export function DashboardPresenter() {
     const [geminiLoading, setGeminiLoading] = useState(false);
     const [geminiError, setGeminiError] = useState(null);
     
-    // Moodboard state
+    // Moodboard state - using custom hook
     const [playlists, setPlaylists] = useState([]);
     const [selectedPlaylistId, setSelectedPlaylistId] = useState("");
-    const [moodboardAnalysis, setMoodboardAnalysis] = useState(null);
-    const [moodboardLoading, setMoodboardLoading] = useState(false);
-    const [moodboardError, setMoodboardError] = useState(null);
+    const { analysis: moodboardAnalysis, loading: moodboardLoading, error: moodboardError, analyze: analyzePlaylist } = useMoodboard(accessToken);
 
     useEffect(() => {
         if (!accessToken) return;
@@ -111,7 +110,7 @@ export function DashboardPresenter() {
         setGeminiResponse("");
         try {
             const response = await callGeminiAPI(geminiPrompt);
-            const text = response?.candidates?.[0]?.content?.parts?.[0]?.text || "No response text found";
+            const text = extractGeminiText(response) || "No response text found";
             setGeminiResponse(text);
         } catch (error) {
             setGeminiError(error.message || "Failed to get response from Gemini API");
@@ -120,19 +119,8 @@ export function DashboardPresenter() {
         }
     }
 
-    async function analyzePlaylistACB() {
-        if (!selectedPlaylistId || !accessToken) return;
-        setMoodboardLoading(true);
-        setMoodboardError(null);
-        setMoodboardAnalysis(null);
-        try {
-            const analysis = await analyzePlaylistMood(selectedPlaylistId, accessToken);
-            setMoodboardAnalysis(analysis);
-        } catch (error) {
-            setMoodboardError(error.message || "Failed to analyze playlist");
-        } finally {
-            setMoodboardLoading(false);
-        }
+    function analyzePlaylistACB() {
+        analyzePlaylist(selectedPlaylistId);
     }
 
     return (

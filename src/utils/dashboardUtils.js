@@ -8,7 +8,8 @@
     - Keeps presenters thin
 */
 import { getUserTopArtists, getUserTopTracks, getArtists, getPlaylistTracks } from '../api/spotifySource.js';
-import { callGeminiAPI } from '../api/llmSource.js';
+import { callGeminiJSON } from '../api/llmSource.js';
+import { MOODBOARD_PROMPT } from '../constants/moodboardPrompt.js';
 
 
 /**
@@ -138,107 +139,42 @@ function extractArtistIdsFromTracks(tracks) {
     return Array.from(artistIds);
 }
 
-const MOODBOARD_PROMPT = `**Role:** You are a musicologist and data processing engine.
-
-**Input Data:** I will provide a JSON object representing a Spotify Playlist.
-
-**Task:**
-1. Parse the \`tracks.items\` array from the provided JSON.
-2. For every single track, analyze the song title and artist. Based on your knowledge of the song's audio features and lyrics, assign a float score from 0.00 to 1.00 for the following four categories:
-   - **Happiness:** (0.0 = Depressing, 1.0 = Ecstatic/Joyful)
-   - **Sadness:** (0.0 = Not sad, 1.0 = Devastating/Melancholic)
-   - **Energy:** (0.0 = Acoustic/Sleepy, 1.0 = High tempo/Intense)
-   - **Aura:** (0.0 = Weak presence, 1.0 = High confidence/Swagger/"Main Character Energy" or atmospheric vibe)
-3. Calculate the **Average Score** for each category (Sum of all scores in category / Total number of tracks).
-4. Identify the **Top 3 Songs** for each category based on the highest scores.
-
-**Constraints:**
-- You must analyze EVERY song in the list.
-- Return ONLY valid JSON. Do not include markdown formatting (like \`\`\`json), explanations, or conversational text.
-- Do not add any text before or after the JSON object.
-- Start your response with { and end with }.
-
-**Output JSON Structure:**
-{
-  "playlist_analysis": [
-    {
-      "track_name": "String",
-      "artist_name": "String",
-      "scores": {
-        "happiness": Float,
-        "sadness": Float,
-        "energy": Float,
-        "aura": Float
-      }
-    }
-  ],
-  "averages": {
-    "happiness": Float,
-    "sadness": Float,
-    "energy": Float,
-    "aura": Float
-  },
-  "top_three": {
-    "happiness": [
-      { "track_name": "String", "artist_name": "String", "score": Float },
-      { "track_name": "String", "artist_name": "String", "score": Float },
-      { "track_name": "String", "artist_name": "String", "score": Float }
-    ],
-    "sadness": [ ... ],
-    "energy": [ ... ],
-    "aura": [ ... ]
-  }
-}
-
-**Playlist Data:**
-`;
-
-function parseGeminiJSON(responseText) {
-    let jsonText = responseText.trim()
-        .replace(/^```json\s*/i, '').replace(/^```\s*/, '').replace(/\s*```$/g, '');
-    
-    const firstBrace = jsonText.indexOf('{');
-    const lastBrace = jsonText.lastIndexOf('}');
-    if (firstBrace !== -1 && lastBrace > firstBrace) {
-        jsonText = jsonText.substring(firstBrace, lastBrace + 1);
-    }
-    
-    jsonText = jsonText.replace(/,(\s*[}\]])/g, '$1');
-    return JSON.parse(jsonText);
-}
-
 /**
  * Analyze playlist mood using Gemini API
+ * Returns simplified structure with only averages and top song per category
+ * @param {string} playlistId - Spotify playlist ID
+ * @param {string} accessToken - Spotify access token
+ * @returns {Promise<Object>} - { averages: {...}, topSongs: {...} }
  */
 export async function analyzePlaylistMood(playlistId, accessToken) {
+    // 1. Get playlist tracks
     const playlistData = await getPlaylistTracks(playlistId, accessToken);
-    const tracks = playlistData?.items?.filter(item => item.track && !item.track.is_local && item.track.name) || [];
+    const tracks = playlistData?.items?.filter(item => 
+        item.track && !item.track.is_local && item.track.name
+    ) || [];
     
     if (tracks.length === 0) {
         throw new Error("No valid tracks found in playlist");
     }
     
-    const tracksForAnalysis = tracks.map(item => ({
-        track_name: item.track.name,
-        artist_name: item.track.artists?.map(a => a.name).join(', ') || 'Unknown Artist'
-    }));
+    // 2. Pass raw Spotify track data directly to Gemini (no transformation needed)
+    const prompt = MOODBOARD_PROMPT + JSON.stringify({ tracks: { items: tracks } }, null, 2);
+    const result = await callGeminiJSON(prompt);
     
-    const prompt = MOODBOARD_PROMPT + JSON.stringify({ tracks: { items: tracksForAnalysis } }, null, 2);
-    const response = await callGeminiAPI(prompt);
-    const responseText = response?.candidates?.[0]?.content?.parts?.[0]?.text;
-    
-    if (!responseText) {
-        throw new Error("No response from Gemini API");
+    // 4. Validate response
+    if (!result.averages || !result.top_three) {
+        throw new Error("Analysis result missing required fields");
     }
     
-    try {
-        const result = parseGeminiJSON(responseText);
-        if (!result.playlist_analysis || !result.averages || !result.top_three) {
-            throw new Error("Analysis result missing required fields");
-        }
-        return result;
-    } catch (error) {
-        console.error('Failed to parse Gemini response:', responseText.substring(0, 500));
-        throw new Error(`Failed to parse analysis result: ${error.message}`);
-    }
+    // 5. Simplify: only return what we need (averages + top song per category)
+    const topSongs = Object.fromEntries(
+        Object.entries(result.top_three || {})
+            .map(([category, songs]) => [category, songs?.[0] || null])
+            .filter(([_, song]) => song !== null)
+    );
+    
+    return {
+        averages: result.averages,
+        topSongs
+    };
 }

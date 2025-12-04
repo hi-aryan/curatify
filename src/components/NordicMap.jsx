@@ -54,7 +54,7 @@ export function NordicMap({ selectedCountry, onCountryClick }) {
   }
 
   return (
-    <div className="w-full max-w-[300px]">
+    <div className="w-full">
       <svg viewBox="0 0 2884 4047" className="w-full h-auto">
         <g transform={OUTER_TRANSFORM}>
           {Object.keys(COUNTRY_PATHS).map(renderCountryCB)}

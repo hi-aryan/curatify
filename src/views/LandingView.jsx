@@ -25,6 +25,11 @@ import { NordicMap } from "../components/NordicMap.jsx";
 import { SongCard } from "../components/SongCard.jsx";
 import { PlaylistDropZone } from "../components/PlaylistDropZone.jsx";
 import { COUNTRY_NAMES } from "../data/nordicCharts.js";
+import {
+  CardBody,
+  CardContainer,
+  CardItem,
+} from "../components/ui/3d-card.jsx";
 
 export function LandingView(props) {
   function loginClickHandlerACB() {
@@ -64,26 +69,31 @@ export function LandingView(props) {
         )}
       </header>
 
-      {/* Main content: Map + Songs + Playlist */}
-      <section className="p-8">
-        <div className="grid gap-6 lg:grid-cols-3">
-          {/* Nordic Map */}
-          <Card className="border-light/40 bg-dark/40">
-            <CardHeader>
-              <CardTitle className="text-xl font-semibold">
-                Nordic Charts
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="flex justify-center">
-              <NordicMap
-                selectedCountry={props.selectedCountry}
-                onCountryClick={props.onCountryClick}
-              />
-            </CardContent>
-          </Card>
+      {/* Main content */}
+      <section className="px-8 pb-8">
+        {/* Nordic Map - Centerpiece with 3D effect */}
+        <div className="flex flex-col items-center mb-12">
+          <h2 className="text-3xl font-bold text-light mb-2">Nordic Charts</h2>
+          <p className="text-light/50 mb-8">
+            Click a country to explore its top songs
+          </p>
 
-          {/* Country Songs List */}
-          <Card className="border-light/40 bg-dark/40">
+          <CardContainer className="w-full max-w-3xl" containerClassName="py-0">
+            <CardBody className="w-full h-auto">
+              <CardItem translateZ="80" className="w-full">
+                <NordicMap
+                  selectedCountry={props.selectedCountry}
+                  onCountryClick={props.onCountryClick}
+                />
+              </CardItem>
+            </CardBody>
+          </CardContainer>
+        </div>
+
+        {/* Playlist Maker Cards - Below Map */}
+        <div className="grid gap-6 md:grid-cols-2 max-w-4xl mx-auto">
+          {/* Country Songs List - drag source */}
+          <Card className="border-light/40 bg-dark/40 hover:shadow-xl hover:shadow-green/[0.05] transition-shadow">
             <CardHeader>
               <CardTitle className="text-xl font-semibold">
                 {props.selectedCountry
@@ -93,7 +103,7 @@ export function LandingView(props) {
             </CardHeader>
             <CardContent>
               {props.selectedCountry ? (
-                <div className="max-h-[400px] overflow-y-auto space-y-2 pr-2">
+                <div className="max-h-[350px] overflow-y-auto space-y-2 pr-2">
                   {props.countryTracks.map(renderSongCardCB)}
                 </div>
               ) : (
@@ -104,8 +114,8 @@ export function LandingView(props) {
             </CardContent>
           </Card>
 
-          {/* Playlist Builder */}
-          <Card className="border-light/40 bg-dark/40">
+          {/* Playlist Builder - drop target */}
+          <Card className="border-light/40 bg-dark/40 hover:shadow-xl hover:shadow-green/[0.05] transition-shadow">
             <CardHeader>
               <CardTitle className="text-xl font-semibold">
                 Your Playlist

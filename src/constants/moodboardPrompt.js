@@ -31,35 +31,47 @@ export const MOODBOARD_PROMPT = `Return ONLY valid JSON. Do not include markdown
 {
   "playlist_analysis": [
     {
-      "track_name": "String",
-      "artist_name": "String",
+      "track_name": "Example Song",
+      "artist_name": "Example Artist",
       "scores": {
-        "happiness": Float,
-        "sadness": Float,
-        "energy": Float,
-        "aura": Float
+        "happiness": 0.857,
+        "sadness": 0.234,
+        "energy": 0.723,
+        "aura": 0.641
       }
     }
   ],
   "averages": {
-    "happiness": Float,
-    "sadness": Float,
-    "energy": Float,
-    "aura": Float
+    "happiness": 0.723,
+    "sadness": 0.456,
+    "energy": 0.834,
+    "aura": 0.567
   },
   "top_three": {
     "happiness": [
-      { "track_name": "String", "artist_name": "String", "score": Float },
-      { "track_name": "String", "artist_name": "String", "score": Float },
-      { "track_name": "String", "artist_name": "String", "score": Float }
+      { "track_name": "Happy Song", "artist_name": "Happy Artist", "score": 0.957 },
+      { "track_name": "Joyful Song", "artist_name": "Joyful Artist", "score": 0.934 },
+      { "track_name": "Upbeat Song", "artist_name": "Upbeat Artist", "score": 0.912 }
     ],
-    "sadness": [ ... ],
-    "energy": [ ... ],
-    "aura": [ ... ]
+    "sadness": [
+      { "track_name": "Sad Song", "artist_name": "Sad Artist", "score": 0.876 },
+      { "track_name": "Melancholic Song", "artist_name": "Melancholic Artist", "score": 0.843 },
+      { "track_name": "Emotional Song", "artist_name": "Emotional Artist", "score": 0.821 }
+    ],
+    "energy": [
+      { "track_name": "Energetic Song", "artist_name": "Energetic Artist", "score": 0.945 },
+      { "track_name": "Intense Song", "artist_name": "Intense Artist", "score": 0.923 },
+      { "track_name": "Powerful Song", "artist_name": "Powerful Artist", "score": 0.901 }
+    ],
+    "aura": [
+      { "track_name": "Confident Song", "artist_name": "Confident Artist", "score": 0.967 },
+      { "track_name": "Bold Song", "artist_name": "Bold Artist", "score": 0.945 },
+      { "track_name": "Strong Song", "artist_name": "Strong Artist", "score": 0.923 }
+    ]
   }
 }
 
-**Note:** All numeric values in the example above show the required format: exactly 3 decimal places. Follow this format exactly.
+**CRITICAL:** Every single numeric value MUST have exactly 3 decimal places. Use values like 0.857, 0.723, 0.641 - NEVER use 0.86, 0.72, 0.64, 0.9, or 1.0. The examples above show the EXACT format required.
 
 **Playlist Data:**
 `;

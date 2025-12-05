@@ -15,10 +15,10 @@ import { Button } from "@/components/ui/button";
  */
 export function MoodboardCard({ playlists, selectedPlaylistId, onPlaylistSelect, onAnalyze, analysis, loading, error }) {
     const categories = [
-        { key: 'happiness', label: 'Happiness', color: 'text-green' },
-        { key: 'sadness', label: 'Sadness', color: 'text-blue' },
-        { key: 'energy', label: 'Energy', color: 'text-pink' },
-        { key: 'aura', label: 'Aura', color: 'text-green' }
+        { key: 'happiness', label: 'Happiness', topLabel: 'Happiest song', color: 'text-green' },
+        { key: 'sadness', label: 'Sadness', topLabel: 'Saddest song', color: 'text-blue' },
+        { key: 'energy', label: 'Energy', topLabel: 'Most energetic song', color: 'text-pink' },
+        { key: 'aura', label: 'Aura', topLabel: 'Strongest aura song', color: 'text-green/80' }
     ];
 
     return (
@@ -71,16 +71,40 @@ export function MoodboardCard({ playlists, selectedPlaylistId, onPlaylistSelect,
                             </div>
 
                             {/* Top Songs */}
-                            {analysis.topSongs && Object.entries(analysis.topSongs).map(([category, song]) => {
-                                if (!song) return null;
+                            {analysis.topSongs && Object.entries(analysis.topSongs).map(([category, track]) => {
+                                if (!track) return null;
+                                const categoryInfo = categories.find(cat => cat.key === category);
+                                const categoryLabel = categoryInfo?.topLabel || category;
+                                
                                 return (
-                                    <div key={category} className="flex items-center justify-between">
+                                    <div key={category} className="flex items-center gap-3">
+                                        {track.album?.images?.[2]?.url && (
+                                            <img
+                                                src={track.album.images[2].url}
+                                                alt={track.name}
+                                                className="w-10 h-10 rounded object-cover"
+                                            />
+                                        )}
                                         <div className="flex-1 min-w-0">
-                                            <p className="text-xs uppercase tracking-wide opacity-70 capitalize">{category}</p>
-                                            <p className="text-sm font-medium truncate text-light">{song.track_name}</p>
+                                            <p className={`text-xs uppercase tracking-wide font-semibold opacity-90 mb-1.5 ${categoryInfo?.color || 'text-light'}`}>{categoryLabel}</p>
+                                            {track.external_urls?.spotify ? (
+                                                <a
+                                                    href={track.external_urls.spotify}
+                                                    target="_blank"
+                                                    rel="noreferrer"
+                                                    className="block font-semibold truncate transition-colors duration-150 hover:text-green"
+                                                >
+                                                    {track.name}
+                                                </a>
+                                            ) : (
+                                                <p className="text-sm font-medium truncate text-light">{track.name}</p>
+                                            )}
+                                            <p className="text-sm opacity-70 truncate">
+                                                {track.artists?.map(a => a.name).join(', ')}
+                                            </p>
                                         </div>
-                                        <span className="text-sm font-bold text-green ml-4">
-                                            {(song.score * 100).toFixed(1)}%
+                                        <span className={`text-sm font-bold ml-4 ${categoryInfo?.color || 'text-green'}`}>
+                                            {(track.score * 100).toFixed(1)}%
                                         </span>
                                     </div>
                                 );

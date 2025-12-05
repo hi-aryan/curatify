@@ -40,6 +40,18 @@ async function generateCodeChallenge(verifier) {
 
 // Redirect user to Spotify login
 export async function redirectToSpotifyAuth() {
+  if (!SPOTIFY_CLIENT_ID) {
+    throw new Error(
+      "Spotify Client ID is missing. Please set VITE_SPOTIFY_CLIENT_ID in your environment variables."
+    );
+  }
+
+  if (!SPOTIFY_REDIRECT_URI) {
+    throw new Error(
+      "Spotify Redirect URI is missing. Please set VITE_SPOTIFY_REDIRECT_URI in your environment variables."
+    );
+  }
+
   const verifier = generateCodeVerifier(128);
   const challenge = await generateCodeChallenge(verifier);
 
@@ -61,12 +73,28 @@ export async function redirectToSpotifyAuth() {
 
 // Exchange authorization code for tokens
 export async function getAccessToken(code) {
+  if (!SPOTIFY_CLIENT_ID) {
+    throw new Error(
+      "Spotify Client ID is missing. Please set VITE_SPOTIFY_CLIENT_ID in your environment variables."
+    );
+  }
+
+  if (!SPOTIFY_REDIRECT_URI) {
+    throw new Error(
+      "Spotify Redirect URI is missing. Please set VITE_SPOTIFY_REDIRECT_URI in your environment variables."
+    );
+  }
+
   const verifier = localStorage.getItem("spotify_verifier");
 
   if (!verifier) {
     throw new Error(
       "Missing code verifier. Please try logging in again from the home page."
     );
+  }
+
+  if (!code) {
+    throw new Error("Authorization code is missing.");
   }
 
   const params = new URLSearchParams({
@@ -102,6 +130,12 @@ export async function getAccessToken(code) {
 
 // Refresh an expired access token
 export async function refreshAccessToken() {
+  if (!SPOTIFY_CLIENT_ID) {
+    throw new Error(
+      "Spotify Client ID is missing. Please set VITE_SPOTIFY_CLIENT_ID in your environment variables."
+    );
+  }
+
   const refreshToken = localStorage.getItem("spotify_refresh_token");
   if (!refreshToken) {
     throw new Error("No refresh token available");

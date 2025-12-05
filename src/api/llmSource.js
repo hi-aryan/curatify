@@ -131,16 +131,8 @@ export function callGeminiAPI(prompt, useGoogleSearch = false) {
 }
 
 // Analyze charts data and return insights
+// NOTE: This function is currently unused. If needed, implement using callGeminiAPI or callGeminiJSON
 export function analyzeCharts(chartsData) {
-  // TODO: Implement actual LLM API call
-  return fetch(LLM_API_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${LLM_API_KEY}`,
-    },
-    body: JSON.stringify({
-      prompt: `Analyze these charts: ${JSON.stringify(chartsData)}`,
-    }),
-  }).then(gotResponseACB);
+  // TODO: Implement actual LLM API call using callGeminiAPI or callGeminiJSON
+  throw new Error("analyzeCharts is not implemented. Use callGeminiAPI or callGeminiJSON instead.");
 }

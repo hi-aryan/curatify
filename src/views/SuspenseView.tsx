@@ -2,7 +2,18 @@
     SuspenseView: displays loading state or error
     Pattern from TW1-3: check promise state to decide what to show
 */
-export function SuspenseView(props) {
+import type { ReactElement } from "react";
+
+interface SuspenseViewProps {
+  promise: Promise<unknown> | null;
+  error: Error | null;
+}
+
+export function SuspenseView({
+  props,
+}: {
+  props: SuspenseViewProps;
+}): ReactElement {
   // no promise = no data requested
   if (!props.promise) {
     return <span className="text-light">No data</span>;

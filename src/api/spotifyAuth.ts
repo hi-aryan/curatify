@@ -2,7 +2,7 @@ import {
   SPOTIFY_CLIENT_ID,
   SPOTIFY_REDIRECT_URI,
   SPOTIFY_AUTH_URL,
-} from "../apiConfig.js";
+} from "../apiConfig";
 
 /*
     Spotify PKCE Authentication

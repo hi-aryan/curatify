@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import {
@@ -6,10 +6,10 @@ import {
   addToPlaylist,
   removeFromPlaylist,
   reorderPlaylist,
-} from "../store/chartsSlice.js";
-import { redirectToSpotifyAuth } from "../api/spotifyAuth.js";
-import { LandingView } from "../views/LandingView.jsx";
-import { getCountryTracks } from "../data/nordicCharts.js";
+} from "../store/chartsSlice";
+import { redirectToSpotifyAuth } from "../api/spotifyAuth";
+import { LandingView } from "../views/LandingView";
+import { getCountryTracks } from "../data/nordicCharts";
 
 /*
     LandingPresenter: connects Redux store to LandingView

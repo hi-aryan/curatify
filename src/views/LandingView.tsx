@@ -21,15 +21,11 @@
 */
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { NordicMap } from "../components/NordicMap.jsx";
-import { SongCard } from "../components/SongCard.jsx";
-import { PlaylistDropZone } from "../components/PlaylistDropZone.jsx";
-import { COUNTRY_NAMES } from "../data/nordicCharts.js";
-import {
-  CardBody,
-  CardContainer,
-  CardItem,
-} from "../components/ui/3d-card.jsx";
+import { NordicMap } from "../components/NordicMap";
+import { SongCard } from "../components/SongCard";
+import { PlaylistDropZone } from "../components/PlaylistDropZone";
+import { COUNTRY_NAMES } from "../data/nordicCharts";
+import { CardBody, CardContainer, CardItem } from "../components/ui/3d-card";
 
 export function LandingView(props) {
   function loginClickHandlerACB() {

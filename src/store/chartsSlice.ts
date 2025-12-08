@@ -1,5 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+export interface ChartsState {
+  selectedCountry: string | null;
+  chartsPromiseState: {
+    promise: Promise<any> | null;
+    data: any | null;
+    error: any | null;
+  };
+  dummyPlaylist: any[] | null;
+}
 /*
     Charts slice: manages Nordic charts data
     - selectedCountry: currently hovered/selected country code

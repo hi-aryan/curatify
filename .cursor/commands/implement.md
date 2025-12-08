@@ -14,3 +14,5 @@ Follow these rules when you write code:
 - Always use Tailwind classes for styling HTML elements; avoid using CSS or tags.
 - Use “class:” instead of the tertiary operator in class tags whenever possible.
 - Use descriptive variable and function/const names. Follow the naming conventions already applied in the codebase.
+
+note that it seems any file that uses hooks, event handlers, browser APIs, or state management needs 'use client' at the top. 

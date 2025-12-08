@@ -42,13 +42,13 @@ async function generateCodeChallenge(verifier) {
 export async function redirectToSpotifyAuth() {
   if (!SPOTIFY_CLIENT_ID) {
     throw new Error(
-      "Spotify Client ID is missing. Please set VITE_SPOTIFY_CLIENT_ID in your environment variables."
+      "Spotify Client ID is missing. Please set NEXT_PUBLIC_SPOTIFY_CLIENT_ID in your environment variables."
     );
   }
 
   if (!SPOTIFY_REDIRECT_URI) {
     throw new Error(
-      "Spotify Redirect URI is missing. Please set VITE_SPOTIFY_REDIRECT_URI in your environment variables."
+      "Spotify Redirect URI is missing. Please set NEXT_PUBLIC_SPOTIFY_REDIRECT_URI in your environment variables."
     );
   }
 
@@ -75,13 +75,13 @@ export async function redirectToSpotifyAuth() {
 export async function getAccessToken(code) {
   if (!SPOTIFY_CLIENT_ID) {
     throw new Error(
-      "Spotify Client ID is missing. Please set VITE_SPOTIFY_CLIENT_ID in your environment variables."
+      "Spotify Client ID is missing. Please set NEXT_PUBLIC_SPOTIFY_CLIENT_ID in your environment variables."
     );
   }
 
   if (!SPOTIFY_REDIRECT_URI) {
     throw new Error(
-      "Spotify Redirect URI is missing. Please set VITE_SPOTIFY_REDIRECT_URI in your environment variables."
+      "Spotify Redirect URI is missing. Please set NEXT_PUBLIC_SPOTIFY_REDIRECT_URI in your environment variables."
     );
   }
 
@@ -132,7 +132,7 @@ export async function getAccessToken(code) {
 export async function refreshAccessToken() {
   if (!SPOTIFY_CLIENT_ID) {
     throw new Error(
-      "Spotify Client ID is missing. Please set VITE_SPOTIFY_CLIENT_ID in your environment variables."
+      "Spotify Client ID is missing. Please set NEXT_PUBLIC_SPOTIFY_CLIENT_ID in your environment variables."
     );
   }
 

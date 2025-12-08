@@ -77,7 +77,7 @@ export function callGeminiAPI(prompt, useGoogleSearch = false) {
   if (!LLM_API_KEY) {
     return Promise.reject(
       new Error(
-        "API key is missing. Please set VITE_LLM_API_KEY in your .env file"
+        "API key is missing. Please set NEXT_PUBLIC_LLM_API_KEY in your .env file"
       )
     );
   }
@@ -85,7 +85,7 @@ export function callGeminiAPI(prompt, useGoogleSearch = false) {
   if (!LLM_API_URL) {
     return Promise.reject(
       new Error(
-        "API URL is missing. Please set VITE_LLM_API_URL in your .env file"
+        "API URL is missing. Please set NEXT_PUBLIC_LLM_API_URL in your .env file"
       )
     );
   }

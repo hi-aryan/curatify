@@ -5,10 +5,10 @@
     Data is bundled with the app - no API calls required.
 */
 
-import seCsv from "./regional-se-weekly-2025-11-27.csv?raw";
-import noCsv from "./regional-no-weekly-2025-11-27.csv?raw";
-import fiCsv from "./regional-fi-weekly-2025-11-27.csv?raw";
-import dkCsv from "./regional-dk-weekly-2025-11-27.csv?raw";
+import seCsv from "./regional-se-weekly-2025-11-27.csv";
+import noCsv from "./regional-no-weekly-2025-11-27.csv";
+import fiCsv from "./regional-fi-weekly-2025-11-27.csv";
+import dkCsv from "./regional-dk-weekly-2025-11-27.csv";
 
 // Parse CSV into structured data
 function parseCSV(csv) {

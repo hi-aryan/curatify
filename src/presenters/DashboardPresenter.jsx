@@ -1,6 +1,7 @@
+'use client';
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { logout, setTopArtist, setTopTracks, setTopArtists, setTopGenre } from '../store/userSlice.js';
 import { clearTokenData, getValidAccessToken } from '../api/spotifyAuth.js';
 import { DashboardView } from '../views/DashboardView.jsx';
@@ -20,19 +21,27 @@ import { useMoodboard } from '../hooks/useMoodboard.js';
 */
 export function DashboardPresenter() {
     const dispatch = useDispatch();
-    const navigate = useNavigate();
+    const router = useRouter();
     const profile = useSelector((state) => state.user.profile);
+    const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+
+    // Auth Protection
+    useEffect(() => {
+        if (!isLoggedIn) {
+            router.push('/');
+        }
+    }, [isLoggedIn, router]);
     const topArtist = useSelector((state) => state.user.topArtist);
     const topTracks = useSelector((state) => state.user.topTracks);
     const topArtists = useSelector((state) => state.user.topArtists);
     const topGenre = useSelector((state) => state.user.topGenre);
-    
+
     // Gemini state (local - ephemeral UI state, not persisted in Redux)
     const [geminiPrompt, setGeminiPrompt] = useState("");
     const [geminiResponse, setGeminiResponse] = useState("");
     const [geminiLoading, setGeminiLoading] = useState(false);
     const [geminiError, setGeminiError] = useState(null);
-    
+
     // Moodboard state - hook gets its own token internally
     const [playlists, setPlaylists] = useState([]);
     const [selectedPlaylistId, setSelectedPlaylistId] = useState("");
@@ -43,7 +52,7 @@ export function DashboardPresenter() {
         async function loadDashboardDataACB() {
             const accessToken = await getValidAccessToken();
             if (!accessToken) return;
-            
+
             // Load playlists
             try {
                 const response = await getUserPlaylists(accessToken, { limit: 50 });
@@ -51,7 +60,7 @@ export function DashboardPresenter() {
             } catch (error) {
                 console.error('Failed to fetch playlists:', error);
             }
-            
+
             // Load top artist
             if (!topArtist) {
                 try {
@@ -61,7 +70,7 @@ export function DashboardPresenter() {
                     console.error('Failed to fetch top artist:', error);
                 }
             }
-            
+
             // Load top tracks
             if (!topTracks) {
                 try {
@@ -71,7 +80,7 @@ export function DashboardPresenter() {
                     console.error('Failed to fetch top tracks:', error);
                 }
             }
-            
+
             // Load top artists
             if (!topArtists) {
                 try {
@@ -81,7 +90,7 @@ export function DashboardPresenter() {
                     console.error('Failed to fetch top artists:', error);
                 }
             }
-            
+
             // Load top genre
             if (!topGenre) {
                 try {
@@ -92,7 +101,7 @@ export function DashboardPresenter() {
                 }
             }
         }
-        
+
         loadDashboardDataACB();
     }, [topArtist, topTracks, topArtists, topGenre, dispatch]);
 
@@ -123,7 +132,7 @@ export function DashboardPresenter() {
     }
 
     function navigateToLandingACB() {
-        navigate('/');
+        router.push('/');
     }
 
     return (

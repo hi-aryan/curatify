@@ -31,6 +31,7 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CollapsibleCard } from "@/components/ui/collapsible-card";
+import { DropdownMenu } from "@/components/ui/dropdown-menu";
 import { MoodboardCard } from "@/components/MoodboardCard";
 
 export function DashboardView(props) {
@@ -48,11 +49,23 @@ export function DashboardView(props) {
             <header className="p-8 flex flex-wrap gap-6 justify-between items-center">
                 <div className="flex items-center gap-4">
                     {props.profile?.images?.[0]?.url && (
-                        <img 
-                            src={props.profile.images[0].url} 
-                            alt="Profile" 
-                            className="w-12 h-12 rounded-full"
-                        />
+                        <DropdownMenu
+                            trigger={
+                                <img 
+                                    src={props.profile.images[0].url} 
+                                    alt="Profile" 
+                                    className="w-12 h-12 rounded-full cursor-pointer transition-transform duration-200 hover:scale-110"
+                                />
+                            }
+                        >
+                            <Button 
+                                onClick={logoutClickHandlerACB}
+                                variant="outline"
+                                className="hover:-rotate-2 hover:scale-105 transition-all duration-200"
+                            >
+                                Logout
+                            </Button>
+                        </DropdownMenu>
                     )}
                     <div>
                         <h1 className="text-3xl font-bold">
@@ -99,13 +112,6 @@ export function DashboardView(props) {
                         className="hover:-rotate-2 hover:scale-105 transition-all duration-200"
                     >
                         Home
-                    </Button>
-                    <Button 
-                        onClick={logoutClickHandlerACB}
-                        variant="outline"
-                        className="hover:-rotate-2 hover:scale-105 transition-all duration-200"
-                    >
-                        Logout
                     </Button>
                 </div>
             </header>

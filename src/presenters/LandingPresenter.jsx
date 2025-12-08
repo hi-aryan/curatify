@@ -1,5 +1,6 @@
+'use client';
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 import {
   setSelectedCountry,
   addToPlaylist,
@@ -20,7 +21,7 @@ import { getCountryTracks } from "../data/nordicCharts.js";
 */
 export function LandingPresenter() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const selectedCountry = useSelector((state) => state.charts.selectedCountry);
   const dummyPlaylist = useSelector((state) => state.charts.dummyPlaylist);
@@ -52,7 +53,7 @@ export function LandingPresenter() {
   }
 
   function navigateToDashboardACB() {
-    navigate("/dashboard");
+    router.push("/dashboard");
   }
 
   return (

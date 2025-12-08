@@ -15,12 +15,12 @@ export function SuspenseView(props) {
 
   // promise exists, no error = loading
   return (
-    <div class="visualizer-container">
-      <div class="bar"></div>
-      <div class="bar"></div>
-      <div class="bar"></div>
-      <div class="bar"></div>
-      <div class="bar"></div>
+    <div className="visualizer-container">
+      <div className="bar"></div>
+      <div className="bar"></div>
+      <div className="bar"></div>
+      <div className="bar"></div>
+      <div className="bar"></div>
     </div>
   );
 }

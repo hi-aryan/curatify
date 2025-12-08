@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
+'use client';
+import { useEffect, useState, useRef } from "react";
 import { useDispatch } from "react-redux";
+import { useRouter } from "next/navigation";
 import { login } from "../store/userSlice.js";
 import { getAccessToken } from "../api/spotifyAuth.js";
 import { getUserProfile } from "../api/spotifySource.js";
 import { SuspenseView } from "../views/SuspenseView.jsx";
-import { resolvePromise } from "../resolvePromise.js";
+// resolvePromise removed as we handle state locally for React compatibility
 
 /*
     CallbackPresenter: handles Spotify OAuth callback
@@ -13,24 +15,28 @@ import { resolvePromise } from "../resolvePromise.js";
     - Extract authorization code from URL and handle OAuth flow
     - Dispatch login action and redirect to dashboard on success
     - Use SuspenseView for loading/error states
-
-    Note: Rendered outside RouterProvider, so we use window.location for navigation
 */
 export function CallbackPresenter() {
   const dispatch = useDispatch();
-  const [promiseState, setPromiseState] = useState({});
+  const router = useRouter();
+  // instead of resolvePromise.js
+  const [promiseState, setPromiseState] = useState({ promise: null, data: null, error: null }); 
+  const hasRun = useRef(false);
 
   useEffect(() => {
+    if (hasRun.current) return;
+    hasRun.current = true;
+
     function handleCallbackACB() {
       const params = new URLSearchParams(window.location.search);
       const code = params.get("code");
 
       if (!code) {
-        // No code found - immediately resolve with error
-        resolvePromise(
-          Promise.reject(new Error("No authorization code found")),
-          promiseState
-        );
+        setPromiseState({
+          promise: null,
+          data: null,
+          error: new Error("No authorization code found")
+        });
         return;
       }
 
@@ -42,17 +48,29 @@ export function CallbackPresenter() {
 
         dispatch(login({ profile }));
         // Redirect to dashboard on success
-        window.location.href = window.location.origin + "/#/dashboard";
+        router.push("/dashboard");
+        return profile;
       })();
 
-      resolvePromise(oauthPromise, promiseState);
+      // Update state to loading
+      setPromiseState({ promise: oauthPromise, data: null, error: null });
+
+      // Handle promise resolution
+      oauthPromise
+        .then((data) => {
+          setPromiseState(prev => prev.promise === oauthPromise ? { ...prev, data } : prev);
+        })
+        .catch((error) => {
+          // Only report error if it's not a "verification missing" race condition that might happen despite checks
+          setPromiseState(prev => prev.promise === oauthPromise ? { ...prev, error } : prev);
+        });
     }
 
     handleCallbackACB();
-  }, [dispatch]);
+  }, [dispatch, router]);
 
   function backToHomeACB() {
-    window.location.href = window.location.origin;
+    router.push("/");
   }
 
   return (

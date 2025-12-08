@@ -45,16 +45,18 @@ export function LandingView(props) {
   }
 
   return (
-    <div className="min-h-screen">
-      {/* Hero section */}
-      <header className="p-8">
-        <h1 className="text-4xl font-bold">Curatify</h1>
-        <p className="mt-2 text-lg opacity-70">Discover Nordic music charts</p>
+    <div className="h-screen flex flex-col overflow-hidden">
+      {/* Hero section - compact */}
+      <header className="px-8 py-4 flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold">Curatify</h1>
+          <p className="text-sm opacity-70">Discover Nordic music charts</p>
+        </div>
         {props.isLoggedIn ? (
           <Button
             onClick={navigateToDashboardHandlerACB}
             variant="outline"
-            className="mt-4 rounded-full border-green/50 text-green hover:bg-green/10 hover:rotate-1 hover:scale-105 transition-all duration-200"
+            className="rounded-full border-green/50 text-green hover:bg-green/10 hover:scale-105 transition-all duration-200"
           >
             Go to Dashboard
           </Button>
@@ -62,25 +64,29 @@ export function LandingView(props) {
           <Button
             onClick={loginClickHandlerACB}
             variant="outline"
-            className="mt-4 rounded-full border-green/50 text-green hover:bg-green/10 hover:rotate-1 hover:scale-105 transition-all duration-200"
+            className="rounded-full border-green/50 text-green hover:bg-green/10 hover:scale-105 transition-all duration-200"
           >
             Sign in with Spotify
           </Button>
         )}
       </header>
 
-      {/* Main content */}
-      <section className="px-8 pb-8">
-        {/* Nordic Map - Centerpiece with 3D effect */}
-        <div className="flex flex-col items-center mb-12">
-          <h2 className="text-3xl font-bold text-light mb-2">Nordic Charts</h2>
-          <p className="text-light/50 mb-8">
-            Click a country to explore its top songs
-          </p>
-
-          <CardContainer className="w-full max-w-3xl" containerClassName="py-0">
-            <CardBody className="w-full h-auto">
-              <CardItem translateZ="80" className="w-full">
+      {/* Main content - side by side */}
+      <section className="flex-1 px-8 pb-4 flex gap-8 min-h-0">
+        {/* Nordic Map - Left side */}
+        <div className="flex-1 flex flex-col items-center min-w-0">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="flex items-center justify-center w-6 h-6 rounded-full bg-green/20 text-green text-xs font-bold">
+              1
+            </span>
+            <p className="text-lg font-semibold">Click a country to explore</p>
+          </div>
+          <CardContainer
+            className="flex-1 w-full"
+            containerClassName="py-0 h-full"
+          >
+            <CardBody className="w-full h-full flex items-center justify-center">
+              <CardItem translateZ="80" className="max-h-full">
                 <NordicMap
                   selectedCountry={props.selectedCountry}
                   onCountryClick={props.onCountryClick}
@@ -90,38 +96,48 @@ export function LandingView(props) {
           </CardContainer>
         </div>
 
-        {/* Playlist Maker Cards - Below Map */}
-        <div className="grid gap-6 md:grid-cols-2 max-w-4xl mx-auto">
-          {/* Country Songs List - drag source */}
-          <Card className="border-light/40 bg-dark/40 hover:shadow-xl hover:shadow-green/[0.05] transition-shadow">
-            <CardHeader>
-              <CardTitle className="text-xl font-semibold">
-                {props.selectedCountry
-                  ? `Top 50 - ${COUNTRY_NAMES[props.selectedCountry]}`
-                  : "Select a Country"}
-              </CardTitle>
+        {/* Playlist Cards - Right side */}
+        <div className="w-96 flex flex-col gap-4 min-h-0">
+          {/* Country Songs List */}
+          <Card className="flex-1 min-h-0 flex flex-col border-light/40 bg-dark/40">
+            <CardHeader className="py-2 lg:py-3">
+              <div className="flex items-center gap-2">
+                <span className="flex items-center justify-center w-6 h-6 rounded-full bg-green/20 text-green text-xs font-bold">
+                  2
+                </span>
+                <CardTitle className="text-base lg:text-lg font-semibold">
+                  {props.selectedCountry
+                    ? `Top 50 - ${COUNTRY_NAMES[props.selectedCountry]}`
+                    : "Browse top songs"}
+                </CardTitle>
+              </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex-1 min-h-0 pb-3">
               {props.selectedCountry ? (
-                <div className="max-h-[350px] overflow-y-auto space-y-2 pr-2">
+                <div className="h-full overflow-y-auto space-y-1.5 pr-2">
                   {props.countryTracks.map(renderSongCardCB)}
                 </div>
               ) : (
-                <div className="h-[200px] flex items-center justify-center text-light/50">
-                  <p>Click a country on the map to see its top songs</p>
+                <div className="h-full flex items-center justify-center text-light/50 text-sm">
+                  <p>Click a country on the map</p>
                 </div>
               )}
             </CardContent>
           </Card>
 
-          {/* Playlist Builder - drop target */}
-          <Card className="border-light/40 bg-dark/40 hover:shadow-xl hover:shadow-green/[0.05] transition-shadow">
-            <CardHeader>
-              <CardTitle className="text-xl font-semibold">
-                Your Playlist
-              </CardTitle>
+          {/* Playlist Builder */}
+          <Card className="flex-1 min-h-0 flex flex-col border-light/40 bg-dark/40">
+            <CardHeader className="py-2 lg:py-3">
+              <div className="flex items-center gap-2">
+                <span className="flex items-center justify-center w-6 h-6 rounded-full bg-green/20 text-green text-xs font-bold">
+                  3
+                </span>
+                <CardTitle className="text-lg font-semibold">
+                  Drop to create playlist
+                </CardTitle>
+              </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex-1 min-h-0 pb-3">
               <PlaylistDropZone
                 playlist={props.dummyPlaylist}
                 onAddTrack={props.onAddToPlaylist}

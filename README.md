@@ -12,3 +12,4 @@ VITE_LLM_API_KEY=your_gemini_api_key
 ```
 
 **Note**: `VITE_SPOTIFY_REDIRECT_URI` defaults to `http://127.0.0.1:5173/callback` if not set.
+**Note**: A Spotify Premium account is required. To get whitelisted, contact ___ and provide your Spotify account email. 

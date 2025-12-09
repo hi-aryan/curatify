@@ -10,7 +10,7 @@ export function AboutView(props) {
         <div className="min-h-screen p-8 flex flex-col items-center justify-center">
             <Card className="w-full max-w-2xl border-light/40 bg-dark/40 backdrop-blur-md">
                 <CardHeader className="text-center border-b border-light/10 pb-6">
-                    <CardTitle className="text-3xl font-bold bg-gradient-to-r from-green to-blue-400 bg-clip-text text-transparent">
+                    <CardTitle className="text-3xl font-bold text-light">
                         About This App
                     </CardTitle>
                 </CardHeader>
@@ -34,7 +34,7 @@ export function AboutView(props) {
                         <h3 className="text-lg font-semibold text-light">The Team:</h3>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             {[
-                                { name: "Person 1", role: "Developer", desc: "Short description here." },
+                                { name: "Lukas Noel", role: "Developer", desc: "Short description here." },
                                 { name: "Person 2", role: "Developer", desc: "Short description here." },
                                 { name: "Person 3", role: "Developer", desc: "Short description here." }
                             ].map((member, i) => (

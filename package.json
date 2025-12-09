@@ -28,6 +28,7 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.4.0",
+    "drizzle-kit": "^0.31.8",
     "eslint": "^8",
     "eslint-config-next": "15.0.3",
     "postcss": "^8.4.0",

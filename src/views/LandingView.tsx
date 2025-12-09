@@ -27,13 +27,37 @@ import { PlaylistDropZone } from "../components/PlaylistDropZone";
 import { COUNTRY_NAMES } from "../data/nordicCharts";
 import { CardBody, CardContainer, CardItem } from "../components/ui/3d-card";
 
-export function LandingView(props) {
+interface LandingViewProps {
+  selectedCountry: string;
+  countryTracks: any[];
+  dummyPlaylist: any[];
+  onCountryClick: (country: string) => void;
+  onAddToPlaylist: (track: any) => void;
+  onRemoveFromPlaylist: (track: any) => void;
+  onReorderPlaylist: (tracks: any[]) => void;
+  isLoggedIn: boolean;
+  onLoginClick: () => void;
+  onNavigateToDashboard: () => void;
+}
+
+export function LandingView({
+  selectedCountry,
+  countryTracks,
+  dummyPlaylist,
+  onCountryClick,
+  onAddToPlaylist,
+  onRemoveFromPlaylist,
+  onReorderPlaylist,
+  isLoggedIn,
+  onLoginClick,
+  onNavigateToDashboard,
+}: LandingViewProps) {
   function loginClickHandlerACB() {
-    props.onLoginClick();
+    onLoginClick();
   }
 
   function navigateToDashboardHandlerACB() {
-    props.onNavigateToDashboard();
+    onNavigateToDashboard();
   }
 
   function renderSongCardCB(track) {
@@ -48,7 +72,7 @@ export function LandingView(props) {
           <h1 className="text-3xl font-bold">Curatify</h1>
           <p className="text-sm opacity-70">Discover Nordic music charts</p>
         </div>
-        {props.isLoggedIn ? (
+        {isLoggedIn ? (
           <Button
             onClick={navigateToDashboardHandlerACB}
             variant="outline"
@@ -84,8 +108,8 @@ export function LandingView(props) {
             <CardBody className="w-full h-full flex items-center justify-center">
               <CardItem translateZ="80" className="max-h-full">
                 <NordicMap
-                  selectedCountry={props.selectedCountry}
-                  onCountryClick={props.onCountryClick}
+                  selectedCountry={selectedCountry}
+                  onCountryClick={onCountryClick}
                 />
               </CardItem>
             </CardBody>
@@ -102,16 +126,16 @@ export function LandingView(props) {
                   2
                 </span>
                 <CardTitle className="text-base lg:text-lg font-semibold">
-                  {props.selectedCountry
-                    ? `Top 50 - ${COUNTRY_NAMES[props.selectedCountry]}`
+                  {selectedCountry
+                    ? `Top 50 - ${COUNTRY_NAMES[selectedCountry]}`
                     : "Browse top songs"}
                 </CardTitle>
               </div>
             </CardHeader>
             <CardContent className="flex-1 min-h-0 pb-3">
-              {props.selectedCountry ? (
+              {selectedCountry ? (
                 <div className="h-full overflow-y-auto space-y-1.5 pr-2">
-                  {props.countryTracks.map(renderSongCardCB)}
+                  {countryTracks.map(renderSongCardCB)}
                 </div>
               ) : (
                 <div className="h-full flex items-center justify-center text-light/50 text-sm">
@@ -135,10 +159,10 @@ export function LandingView(props) {
             </CardHeader>
             <CardContent className="flex-1 min-h-0 pb-3">
               <PlaylistDropZone
-                playlist={props.dummyPlaylist}
-                onAddTrack={props.onAddToPlaylist}
-                onRemoveTrack={props.onRemoveFromPlaylist}
-                onReorder={props.onReorderPlaylist}
+                playlist={dummyPlaylist}
+                onAddTrack={onAddToPlaylist}
+                onRemoveTrack={onRemoveFromPlaylist}
+                onReorder={onReorderPlaylist}
               />
             </CardContent>
           </Card>

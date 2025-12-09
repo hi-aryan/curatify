@@ -34,13 +34,57 @@ import { CollapsibleCard } from "@/components/ui/collapsible-card";
 import { DropdownMenu } from "@/components/ui/dropdown-menu";
 import { MoodboardCard } from "@/components/MoodboardCard";
 
-export function DashboardView(props) {
+interface DashboardViewProps {
+  profile: any;
+  favoriteArtist: any;
+  topTracks: any[];
+  topArtists: any[];
+  topGenre: string;
+  onLogout: () => void;
+  onNavigateToLanding: () => void;
+  geminiPrompt: string;
+  geminiResponse: string;
+  geminiLoading: boolean;
+  geminiError: string;
+  onGeminiPromptChange: (prompt: string) => void;
+  onTestGemini: () => void;
+  playlists: any[];
+  selectedPlaylistId: string;
+  onPlaylistSelect: (playlistId: string) => void;
+  onAnalyzePlaylist: () => void;
+  moodboardAnalysis: any;
+  moodboardLoading: boolean;
+  moodboardError: string;
+}
+
+export function DashboardView({
+  profile,
+  favoriteArtist,
+  topTracks,
+  topArtists,
+  topGenre,
+  onLogout,
+  onNavigateToLanding,
+  geminiPrompt,
+  geminiResponse,
+  geminiLoading,
+  geminiError,
+  onGeminiPromptChange,
+  onTestGemini,
+  playlists,
+  selectedPlaylistId,
+  onPlaylistSelect,
+  onAnalyzePlaylist,
+  moodboardAnalysis,
+  moodboardLoading,
+  moodboardError,
+}: DashboardViewProps) {
   function logoutClickHandlerACB() {
-    props.onLogout();
+    onLogout();
   }
 
   function navigateToLandingHandlerACB() {
-    props.onNavigateToLanding();
+    onNavigateToLanding();
   }
 
   return (
@@ -48,11 +92,11 @@ export function DashboardView(props) {
       {/* Header with user info */}
       <header className="p-8 flex flex-wrap gap-6 justify-between items-center">
         <div className="flex items-center gap-4">
-          {props.profile?.images?.[0]?.url && (
+          {profile?.images?.[0]?.url && (
             <DropdownMenu
               trigger={
                 <img
-                  src={props.profile.images[0].url}
+                  src={profile.images[0].url}
                   alt="Profile"
                   className="w-12 h-12 rounded-full cursor-pointer transition-transform duration-200 hover:scale-110"
                 />
@@ -69,31 +113,31 @@ export function DashboardView(props) {
           )}
           <div>
             <h1 className="text-3xl font-bold">
-              Welcome, {props.profile?.display_name || "User"}
+              Welcome, {profile?.display_name || "User"}
             </h1>
-            <p className="text-sm opacity-70">{props.profile?.email}</p>
+            <p className="text-sm opacity-70">{profile?.email}</p>
           </div>
         </div>
         <div className="flex items-center gap-3">
           {/* conditionally render link if .url is available */}
-          {props.favoriteArtist?.image &&
-            (props.favoriteArtist?.url ? (
+          {favoriteArtist?.image &&
+            (favoriteArtist?.url ? (
               <a
-                href={props.favoriteArtist.url}
+                href={favoriteArtist.url}
                 target="_blank"
                 rel="noreferrer"
                 className="inline-block transition-opacity hover:opacity-80"
               >
                 <img
-                  src={props.favoriteArtist.image}
-                  alt={props.favoriteArtist.name}
+                  src={favoriteArtist.image}
+                  alt={favoriteArtist.name}
                   className="w-12 h-12 rounded-full object-cover border border-light/40"
                 />
               </a>
             ) : (
               <img
-                src={props.favoriteArtist.image}
-                alt={props.favoriteArtist.name}
+                src={favoriteArtist.image}
+                alt={favoriteArtist.name}
                 className="w-12 h-12 rounded-full object-cover border border-light/40"
               />
             ))}
@@ -102,7 +146,7 @@ export function DashboardView(props) {
               Favourite artist
             </p>
             <p className="text-lg font-semibold">
-              {props.favoriteArtist?.name || "Not available"}
+              {favoriteArtist?.name || "Not available"}
             </p>
           </div>
         </div>
@@ -135,25 +179,25 @@ export function DashboardView(props) {
         </CollapsibleCard>
 
         <MoodboardCard
-          playlists={props.playlists}
-          selectedPlaylistId={props.selectedPlaylistId}
-          onPlaylistSelect={props.onPlaylistSelect}
-          onAnalyze={props.onAnalyzePlaylist}
-          analysis={props.moodboardAnalysis}
-          loading={props.moodboardLoading}
-          error={props.moodboardError}
+          playlists={playlists}
+          selectedPlaylistId={selectedPlaylistId}
+          onPlaylistSelect={onPlaylistSelect}
+          onAnalyze={onAnalyzePlaylist}
+          analysis={moodboardAnalysis}
+          loading={moodboardLoading}
+          error={moodboardError}
         />
 
         <CollapsibleCard title="Stats">
           <div className="space-y-6">
             {/* Favorite Genre */}
-            {props.topGenre ? (
+            {topGenre ? (
               <div className="border border-light/30 rounded p-4 bg-dark/30">
                 <p className="text-xs uppercase tracking-wide text-light/70 mb-2">
                   Your Favorite Genre
                 </p>
                 <p className="text-2xl font-semibold capitalize text-light group">
-                  {props.topGenre.split("").map((char, index) => (
+                  {topGenre.split("").map((char, index) => (
                     <span
                       key={`${char}-${index}`}
                       className="inline-block transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:text-green"
@@ -181,9 +225,9 @@ export function DashboardView(props) {
               <h3 className="text-sm uppercase tracking-wide opacity-70 mb-3">
                 Top 3 Tracks
               </h3>
-              {props.topTracks && props.topTracks.length > 0 ? (
+              {topTracks && topTracks.length > 0 ? (
                 <div className="space-y-2">
-                  {props.topTracks.map((track, index) => (
+                  {topTracks.map((track, index) => (
                     <div key={track.id} className="flex items-center gap-3">
                       <span className="text-2xl font-bold text-light/40 w-6">
                         {index + 1}
@@ -221,9 +265,9 @@ export function DashboardView(props) {
               <h3 className="text-sm uppercase tracking-wide opacity-70 mb-3">
                 Top Artists
               </h3>
-              {props.topArtists && props.topArtists.length > 0 ? (
+              {topArtists && topArtists.length > 0 ? (
                 <div className="flex flex-wrap gap-2">
-                  {props.topArtists.slice(0, 5).map((artist) => (
+                  {topArtists.slice(0, 5).map((artist) => (
                     <a
                       key={artist.id}
                       href={artist.external_urls?.spotify}
@@ -260,31 +304,29 @@ export function DashboardView(props) {
               <div>
                 <input
                   type="text"
-                  value={props.geminiPrompt || ""}
-                  onChange={(e) => props.onGeminiPromptChange(e.target.value)}
+                  value={geminiPrompt || ""}
+                  onChange={(e) => onGeminiPromptChange(e.target.value)}
                   placeholder="Enter a prompt to test Gemini API..."
                   className="w-full px-3 py-2 border border-light rounded bg-transparent text-light placeholder-light/50 focus:outline-none focus:border-light/80"
-                  disabled={props.geminiLoading}
+                  disabled={geminiLoading}
                 />
               </div>
               <button
-                onClick={props.onTestGemini}
-                disabled={props.geminiLoading || !props.geminiPrompt?.trim()}
+                onClick={onTestGemini}
+                disabled={geminiLoading || !geminiPrompt?.trim()}
                 className="px-4 py-2 border border-light rounded hover:bg-light/10 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {props.geminiLoading ? "Loading..." : "Test Gemini"}
+                {geminiLoading ? "Loading..." : "Test Gemini"}
               </button>
-              {props.geminiError && (
+              {geminiError && (
                 <div className="p-3 border border-pink/50 rounded bg-pink/10">
-                  <p className="text-sm text-pink">
-                    Error: {props.geminiError}
-                  </p>
+                  <p className="text-sm text-pink">Error: {geminiError}</p>
                 </div>
               )}
-              {props.geminiResponse && (
+              {geminiResponse && (
                 <div className="p-3 border border-light/40 rounded bg-light/5">
                   <p className="text-sm text-light whitespace-pre-wrap">
-                    {props.geminiResponse}
+                    {geminiResponse}
                   </p>
                 </div>
               )}

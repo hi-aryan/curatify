@@ -11,6 +11,32 @@ The `postgres` branch introduces a database layer using **PostgreSQL** and **Dri
 
 ---
 
+## 🛠 Prerequisites: Installing PostgreSQL (macOS)
+If you don't have PostgreSQL installed, follow these steps using **Homebrew** (easiest method):
+
+1. **Install Homebrew** (if you don't have it):
+   ```bash
+   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+   ```
+
+2. **Install PostgreSQL**:
+   ```bash
+   brew install postgresql
+   ```
+
+3. **Start the Service**:
+   ```bash
+   brew services start postgresql
+   ```
+
+4. **Create Default Database**:
+   ```bash
+   createdb
+   ```
+   *This creates a database matching your system username, which is often enough for local dev.*
+
+---
+
 ## 👩‍💻 For Teammates: Local Setup Steps
 Share these exact instructions with your team.
 

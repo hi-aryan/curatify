@@ -135,6 +135,10 @@ export function DashboardPresenter() {
         router.push('/');
     }
 
+    function navigateToAboutACB() {
+        router.push('/about');
+    }
+
     return (
         <DashboardView
             profile={profile}
@@ -144,6 +148,7 @@ export function DashboardPresenter() {
             topGenre={topGenre}
             onLogout={logoutACB}
             onNavigateToLanding={navigateToLandingACB}
+            onNavigateToAbout={navigateToAboutACB}
             geminiPrompt={geminiPrompt}
             geminiResponse={geminiResponse}
             geminiLoading={geminiLoading}

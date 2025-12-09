@@ -51,19 +51,26 @@ export function DashboardView(props) {
                     {props.profile?.images?.[0]?.url && (
                         <DropdownMenu
                             trigger={
-                                <img 
-                                    src={props.profile.images[0].url} 
-                                    alt="Profile" 
+                                <img
+                                    src={props.profile.images[0].url}
+                                    alt="Profile"
                                     className="w-12 h-12 rounded-full cursor-pointer transition-transform duration-200 hover:scale-110"
                                 />
                             }
                         >
-                            <Button 
+                            <Button
                                 onClick={logoutClickHandlerACB}
                                 variant="outline"
                                 className="hover:-rotate-2 hover:scale-105 transition-all duration-200"
                             >
                                 Logout
+                            </Button>
+                            <Button
+                                onClick={props.onNavigateToAbout}
+                                variant="outline"
+                                className="w-full mt-2 hover:-rotate-2 hover:scale-105 transition-all duration-200"
+                            >
+                                About
                             </Button>
                         </DropdownMenu>
                     )}
@@ -106,7 +113,7 @@ export function DashboardView(props) {
                     </div>
                 </div>
                 <div className="flex items-center gap-3">
-                    <Button 
+                    <Button
                         onClick={navigateToLandingHandlerACB}
                         variant="outline"
                         className="hover:-rotate-2 hover:scale-105 transition-all duration-200"
@@ -241,35 +248,35 @@ export function DashboardView(props) {
                         <CardTitle className="text-xl font-semibold">Gemini API Test</CardTitle>
                     </CardHeader>
                     <CardContent>
-                    <div className="space-y-4">
-                        <div>
-                            <input
-                                type="text"
-                                value={props.geminiPrompt || ""}
-                                onChange={(e) => props.onGeminiPromptChange(e.target.value)}
-                                placeholder="Enter a prompt to test Gemini API..."
-                                className="w-full px-3 py-2 border border-light rounded bg-transparent text-light placeholder-light/50 focus:outline-none focus:border-light/80"
-                                disabled={props.geminiLoading}
-                            />
-                        </div>
-                        <button
-                            onClick={props.onTestGemini}
-                            disabled={props.geminiLoading || !props.geminiPrompt?.trim()}
-                            className="px-4 py-2 border border-light rounded hover:bg-light/10 disabled:opacity-50 disabled:cursor-not-allowed"
+                        <div className="space-y-4">
+                            <div>
+                                <input
+                                    type="text"
+                                    value={props.geminiPrompt || ""}
+                                    onChange={(e) => props.onGeminiPromptChange(e.target.value)}
+                                    placeholder="Enter a prompt to test Gemini API..."
+                                    className="w-full px-3 py-2 border border-light rounded bg-transparent text-light placeholder-light/50 focus:outline-none focus:border-light/80"
+                                    disabled={props.geminiLoading}
+                                />
+                            </div>
+                            <button
+                                onClick={props.onTestGemini}
+                                disabled={props.geminiLoading || !props.geminiPrompt?.trim()}
+                                className="px-4 py-2 border border-light rounded hover:bg-light/10 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                            {props.geminiLoading ? "Loading..." : "Test Gemini"}
-                        </button>
-                        {props.geminiError && (
-                            <div className="p-3 border border-pink/50 rounded bg-pink/10">
-                                <p className="text-sm text-pink">Error: {props.geminiError}</p>
-                            </div>
-                        )}
-                        {props.geminiResponse && (
-                            <div className="p-3 border border-light/40 rounded bg-light/5">
-                                <p className="text-sm text-light whitespace-pre-wrap">{props.geminiResponse}</p>
-                            </div>
-                        )}
-                    </div>
+                                {props.geminiLoading ? "Loading..." : "Test Gemini"}
+                            </button>
+                            {props.geminiError && (
+                                <div className="p-3 border border-pink/50 rounded bg-pink/10">
+                                    <p className="text-sm text-pink">Error: {props.geminiError}</p>
+                                </div>
+                            )}
+                            {props.geminiResponse && (
+                                <div className="p-3 border border-light/40 rounded bg-light/5">
+                                    <p className="text-sm text-light whitespace-pre-wrap">{props.geminiResponse}</p>
+                                </div>
+                            )}
+                        </div>
                     </CardContent>
                 </Card>
 

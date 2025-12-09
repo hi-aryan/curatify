@@ -10,18 +10,17 @@ interface SuspenseViewProps {
 }
 
 export function SuspenseView({
-  props,
-}: {
-  props: SuspenseViewProps;
-}): ReactElement {
+  promise,
+  error,
+}: SuspenseViewProps): ReactElement {
   // no promise = no data requested
-  if (!props.promise) {
+  if (!promise) {
     return <span className="text-light">No data</span>;
   }
 
   // promise exists but error occurred
-  if (props.error) {
-    return <span className="text-pink">{props.error.toString()}</span>;
+  if (error) {
+    return <span className="text-pink">{error.toString()}</span>;
   }
 
   // promise exists, no error = loading

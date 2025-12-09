@@ -69,3 +69,18 @@ Go to **Vercel Dashboard > Settings > Environment Variables**:
 ---
 
 
+# potential db schema
+  create table users (
+    spotify_user_id text primary key,
+    display_name text not null,
+    email text unique,
+    image_url text,
+    created_at timestamptz default now() not null,
+    updated_at timestamptz default now() not null
+  );
+  create table user_state (
+    spotify_user_id text primary key references users(spotify_user_id) on delete cascade,
+    landing_playlist jsonb not null default '[]'::jsonb,
+    preferences jsonb,
+    updated_at timestamptz default now() not null
+  );

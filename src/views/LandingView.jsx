@@ -47,25 +47,29 @@ export function LandingView(props) {
   return (
     <div className="min-h-screen">
       {/* Hero section */}
-      <header className="p-8">
+      <header className="p-8 flex justify-between items-start">
         <h1 className="text-4xl font-bold">Curatify</h1>
-        <p className="mt-2 text-lg opacity-70">Discover Nordic music charts</p>
         {props.isLoggedIn ? (
           <Button
             onClick={navigateToDashboardHandlerACB}
             variant="outline"
-            className="mt-4 rounded-full border-green/50 text-green hover:bg-green/10 hover:rotate-1 hover:scale-105 transition-all duration-200"
+            className="rounded-full border-green/50 text-green hover:bg-green/10 hover:rotate-1 hover:scale-105 transition-all duration-200"
           >
             Go to Dashboard
           </Button>
         ) : (
-          <Button
-            onClick={loginClickHandlerACB}
-            variant="outline"
-            className="mt-4 rounded-full border-green/50 text-green hover:bg-green/10 hover:rotate-1 hover:scale-105 transition-all duration-200"
-          >
-            Sign in with Spotify
-          </Button>
+          <div className="flex flex-col items-end text-right">
+            <Button
+              onClick={loginClickHandlerACB}
+              variant="outline"
+              className="rounded-full border-green/50 text-green hover:bg-green/10 hover:rotate-1 hover:scale-105 transition-all duration-200"
+            >
+              Sign in with Spotify
+            </Button>
+            <p className="text-xs text-light/50 mt-2 max-w-[35ch]">
+              currently only whitelisted users allowed; contact aryanleo055@gmail.com for whitelist
+            </p>
+          </div>
         )}
       </header>
 

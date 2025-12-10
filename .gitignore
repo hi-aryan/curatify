@@ -138,3 +138,7 @@ dist
 # kept on purpose
 .cursor/
 .cursorrules
+
+.vscode/
+
+.agent/

@@ -67,7 +67,7 @@ export function LandingView(props) {
               Sign in with Spotify
             </Button>
             <p className="text-xs text-light/50 mt-2 max-w-[35ch]">
-              currently only whitelisted users allowed; contact aryanleo055@gmail.com for whitelist
+              currently whitelisted users only; please contact aryanleo055@gmail.com
             </p>
           </div>
         )}

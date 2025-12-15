@@ -1,5 +1,9 @@
+import Image from "next/image";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import lukasImg from "@/assets/lukas.jpg";
+import aryanImg from "@/assets/aryan.jpeg";
+import rafaelImg from "@/assets/rafael.JPG";
 
 export function AboutView(props) {
     function navigateToHomeHandlerACB() {
@@ -34,14 +38,17 @@ export function AboutView(props) {
                         <h3 className="text-lg font-semibold text-light">The Team:</h3>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             {[
-                                { name: "Lukas Noel", role: "Developer", desc: "Short description here." },
-                                { name: "Person 2", role: "Developer", desc: "Short description here." },
-                                { name: "Person 3", role: "Developer", desc: "Short description here." }
+                                { name: "Lukas", role: "Developer", desc: "Short description here.", image: lukasImg },
+                                { name: "Aryan", role: "Developer", desc: "Short description here.", image: aryanImg },
+                                { name: "Rafael", role: "Developer", desc: "Short description here.", image: rafaelImg }
                             ].map((member, i) => (
                                 <div key={i} className="flex flex-col items-center text-center space-y-2 p-4 bg-light/5 rounded-lg">
-                                    <div className="w-20 h-20 rounded-full bg-light/20 flex items-center justify-center overflow-hidden">
-                                        {/* Placeholder for profile image */}
-                                        <span className="text-2xl">👤</span>
+                                    <div className="w-20 h-20 rounded-full bg-light/20 flex items-center justify-center overflow-hidden relative">
+                                        {member.image ? (
+                                            <Image src={member.image} alt={member.name} fill className="object-cover" />
+                                        ) : (
+                                            <span className="text-2xl">👤</span>
+                                        )}
                                     </div>
                                     <div>
                                         <h4 className="font-medium text-light">{member.name}</h4>

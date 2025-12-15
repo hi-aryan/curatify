@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { login } from "../store/userSlice.js";
 import { getAccessToken } from "../api/spotifyAuth.js";
 import { getUserProfile } from "../api/spotifySource.js";
+import { saveUserToDb } from "../actions/userActions.js";
 import { SuspenseView } from "../views/SuspenseView.jsx";
 // resolvePromise removed as we handle state locally for React compatibility
 
@@ -20,7 +21,7 @@ export function CallbackPresenter() {
   const dispatch = useDispatch();
   const router = useRouter();
   // instead of resolvePromise.js
-  const [promiseState, setPromiseState] = useState({ promise: null, data: null, error: null }); 
+  const [promiseState, setPromiseState] = useState({ promise: null, data: null, error: null });
   const hasRun = useRef(false);
 
   useEffect(() => {
@@ -45,6 +46,9 @@ export function CallbackPresenter() {
         // getAccessToken exchanges code and stores all token data internally
         const accessToken = await getAccessToken(code);
         const profile = await getUserProfile(accessToken);
+
+        // Persist user to database (Fire and forget, or await if critical)
+        await saveUserToDb(profile);
 
         dispatch(login({ profile }));
         // Redirect to dashboard on success

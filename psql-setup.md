@@ -35,16 +35,14 @@ If you don't have PostgreSQL installed, follow these steps using **Homebrew** (e
    ```
    *This creates a database matching your system username, which is often enough for local dev.*
 
+5. **connect to the db**
+
 ---
 
 ## 👩‍💻 For Teammates: Local Setup Steps
 Share these exact instructions with your team.
 
-### 1. Switch to the branch
-```bash
-git fetch origin
-git checkout postgres
-```
+### 1. Switch to the branch (not needed anymore)
 
 ### 2. Install Dependencies
 > **Important**: This branch adds new packages.
@@ -63,6 +61,8 @@ DATABASE_URL=postgresql://user:password@localhost:5432/db_name
 Sync your local database with the schema defined in `src/db/schema.js`.
 ```bash
 npx drizzle-kit push
+or
+npx drizzle-kit push --config=drizzle.config.mjs
 ```
 
 ### 5. Verify Connection

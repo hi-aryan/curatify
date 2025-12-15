@@ -107,8 +107,16 @@ export function DashboardView(props) {
                     )}
                     <div>
                         <p className="text-xs uppercase tracking-wide opacity-70">Favourite artist</p>
-                        <p className="text-lg font-semibold">
-                            {props.favoriteArtist?.name || "Not available"}
+                        <p className="text-lg font-semibold group">
+                            {(props.favoriteArtist?.name || "Not available").split('').map((char, index) => (
+                                <span
+                                    key={`${char}-${index}`}
+                                    className="inline-block transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:text-green"
+                                    style={{ transitionDelay: `${index * 30}ms` }}
+                                >
+                                    {char === ' ' ? '\u00A0' : char}
+                                </span>
+                            ))}
                         </p>
                     </div>
                 </div>

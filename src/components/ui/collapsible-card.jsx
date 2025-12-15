@@ -12,9 +12,10 @@ import { cn } from "@/lib/utils"
     Props:
     - title: string - The title displayed in CardHeader
     - children: ReactNode - Content to be shown/hidden
+    - peekContent: ReactNode - Content that is always visible
     - className: string - Optional additional classes for the Card
 */
-export function CollapsibleCard({ title, children, className }) {
+export function CollapsibleCard({ title, children, peekContent, className }) {
     const [isExpanded, setIsExpanded] = useState(false);
 
     function toggleClickHandlerACB() {
@@ -26,18 +27,14 @@ export function CollapsibleCard({ title, children, className }) {
             <CardHeader>
                 <CardTitle className="text-xl font-semibold">{title}</CardTitle>
             </CardHeader>
-            
-            <div className="flex justify-center pb-4">
-                <Button
-                    onClick={toggleClickHandlerACB}
-                    variant="ghost"
-                    size="sm"
-                    className="text-sm"
-                >
-                    {isExpanded ? "Show less" : "Show more"}
-                </Button>
-            </div>
 
+            {/* Always visible peek content */}
+            {peekContent && (
+                <div className="pb-4 px-6">
+                    {peekContent}
+                </div>
+            )}
+            
             <div
                 className={cn(
                     "overflow-hidden transition-all duration-300 ease-in-out",
@@ -47,6 +44,17 @@ export function CollapsibleCard({ title, children, className }) {
                 <CardContent>
                     {children}
                 </CardContent>
+            </div>
+
+            <div className="flex justify-center pb-4 pt-2">
+                <Button
+                    onClick={toggleClickHandlerACB}
+                    variant="ghost"
+                    size="sm"
+                    className="text-sm"
+                >
+                    {isExpanded ? "Show less" : "Show more"}
+                </Button>
             </div>
         </Card>
     );

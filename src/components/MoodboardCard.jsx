@@ -24,7 +24,7 @@ export function MoodboardCard({ playlists, selectedPlaylistId, onPlaylistSelect,
     return (
         <Card className="border-light/40 bg-dark/40">
             <CardHeader>
-                <CardTitle className="text-xl font-semibold">Personality - Moodboard</CardTitle>
+                <CardTitle className="text-xl font-semibold">Your Music Personality</CardTitle>
             </CardHeader>
             <CardContent>
                 <div className="space-y-4">
@@ -35,7 +35,7 @@ export function MoodboardCard({ playlists, selectedPlaylistId, onPlaylistSelect,
                             disabled={loading || !playlists?.length}
                             className="flex-1 px-3 py-2 border border-light/30 rounded bg-dark text-light focus:outline-none focus:border-green/50 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            <option value="">Choose a playlist...</option>
+                            <option value="">Playlist to Analyze...</option>
                             {playlists?.map((playlist) => (
                                 <option key={playlist.id} value={playlist.id}>
                                     {playlist.name}

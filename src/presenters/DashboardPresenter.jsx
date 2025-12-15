@@ -6,7 +6,7 @@ import { logout, setTopArtist, setTopTracks, setTopArtists, setTopGenre } from '
 import { clearTokenData, getValidAccessToken } from '../api/spotifyAuth.js';
 import { DashboardView } from '../views/DashboardView.jsx';
 import { fetchTopArtist, fetchTopTracks, fetchTopArtists, fetchTopGenre } from '../utils/dashboardUtils.js';
-import { callGeminiAPI, extractGeminiText } from '../api/llmSource.js';
+
 import { getUserPlaylists } from '../api/spotifySource.js';
 import { useMoodboard } from '../hooks/useMoodboard.js';
 
@@ -35,12 +35,6 @@ export function DashboardPresenter() {
     const topTracks = useSelector((state) => state.user.topTracks);
     const topArtists = useSelector((state) => state.user.topArtists);
     const topGenre = useSelector((state) => state.user.topGenre);
-
-    // Gemini state (local - ephemeral UI state, not persisted in Redux)
-    const [geminiPrompt, setGeminiPrompt] = useState("");
-    const [geminiResponse, setGeminiResponse] = useState("");
-    const [geminiLoading, setGeminiLoading] = useState(false);
-    const [geminiError, setGeminiError] = useState(null);
 
     // Moodboard state - hook gets its own token internally
     const [playlists, setPlaylists] = useState([]);
@@ -111,22 +105,6 @@ export function DashboardPresenter() {
         window.location.href = window.location.origin;
     }
 
-    async function callGeminiACB() {
-        if (!geminiPrompt.trim()) return;
-        setGeminiLoading(true);
-        setGeminiError(null);
-        setGeminiResponse("");
-        try {
-            const response = await callGeminiAPI(geminiPrompt);
-            const text = extractGeminiText(response) || "No response text found";
-            setGeminiResponse(text);
-        } catch (error) {
-            setGeminiError(error.message || "Failed to get response from Gemini API");
-        } finally {
-            setGeminiLoading(false);
-        }
-    }
-
     function analyzePlaylistACB() {
         analyzePlaylist(selectedPlaylistId);
     }
@@ -149,12 +127,6 @@ export function DashboardPresenter() {
             onLogout={logoutACB}
             onNavigateToLanding={navigateToLandingACB}
             onNavigateToAbout={navigateToAboutACB}
-            geminiPrompt={geminiPrompt}
-            geminiResponse={geminiResponse}
-            geminiLoading={geminiLoading}
-            geminiError={geminiError}
-            onGeminiPromptChange={setGeminiPrompt}
-            onTestGemini={callGeminiACB}
             playlists={playlists}
             selectedPlaylistId={selectedPlaylistId}
             onPlaylistSelect={setSelectedPlaylistId}

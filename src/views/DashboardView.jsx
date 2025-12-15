@@ -130,13 +130,18 @@ export function DashboardView(props) {
                         <CardTitle className="text-xl font-semibold">Sort Playlists</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-light opacity-60">Organize your playlists</p>
+                        <p className="text-light opacity-60">Coming soon</p>
                     </CardContent>
                 </Card>
 
-                <CollapsibleCard title="Recommendations">
-                    <p className="text-light opacity-60">AI-powered song suggestions</p>
-                </CollapsibleCard>
+                <Card className="border-light/40 bg-dark/40">
+                    <CardHeader>
+                        <CardTitle className="text-xl font-semibold">Recommendations</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <p className="text-light opacity-60">AI-powered song suggestions</p>
+                    </CardContent>
+                </Card>
 
                 <MoodboardCard
                     playlists={props.playlists}
@@ -148,42 +153,17 @@ export function DashboardView(props) {
                     error={props.moodboardError}
                 />
 
-                <CollapsibleCard title="Stats">
-                    <div className="space-y-6">
-                        {/* Favorite Genre */}
-                        {props.topGenre ? (
-                            <div className="border border-light/30 rounded p-4 bg-dark/30">
-                                <p className="text-xs uppercase tracking-wide text-light/70 mb-2">
-                                    Your Favorite Genre
-                                </p>
-                                <p className="text-2xl font-semibold capitalize text-light group">
-                                    {props.topGenre.split('').map((char, index) => (
-                                        <span
-                                            key={`${char}-${index}`}
-                                            className="inline-block transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:text-green"
-                                            style={{ transitionDelay: `${index * 30}ms` }}
-                                        >
-                                            {char === ' ' ? '\u00A0' : char}
-                                        </span>
-                                    ))}
-                                </p>
-                                <p className="text-xs text-light/60 mt-2">Based on your top 50 tracks</p>
-                            </div>
-                        ) : (
-                            <div className="border border-light/30 rounded p-4 bg-dark/20">
-                                <p className="text-xs uppercase tracking-wide text-light/70 mb-2">Your Favorite Genre</p>
-                                <p className="text-sm text-light/60">Calculating...</p>
-                            </div>
-                        )}
-
-                        {/* Top 3 Tracks */}
+                <CollapsibleCard 
+                    title="Listening Statistics"
+                    peekContent={
+                        /* Top 3 Tracks - Always visible */
                         <div>
-                            <h3 className="text-sm uppercase tracking-wide opacity-70 mb-3">Top 3 Tracks</h3>
+                            <h3 className="text-sm uppercase tracking-wide opacity-70 mb-3">Top 3 Tracks</h3> {/* TODO: this week? more specific! */}
                             {props.topTracks && props.topTracks.length > 0 ? (
                                 <div className="space-y-2">
                                     {props.topTracks.map((track, index) => (
                                         <div key={track.id} className="flex items-center gap-3">
-                                            <span className="text-2xl font-bold text-light/40 w-6">{index + 1}</span>
+                                            <span className="text-xl font-bold text-light/40 w-6 text-center">{index + 1}</span>
                                             {track.album?.images?.[2]?.url && (
                                                 <img
                                                     src={track.album.images[2].url}
@@ -211,6 +191,34 @@ export function DashboardView(props) {
                                 <p className="text-sm opacity-60">Loading tracks...</p>
                             )}
                         </div>
+                    }
+                >
+                    <div className="space-y-6 pt-2">
+                        {/* Favorite Genre */}
+                        {props.topGenre ? (
+                            <div className="border border-light/30 rounded p-4 bg-dark/30">
+                                <p className="text-xs uppercase tracking-wide text-light/70 mb-2">
+                                    Your Favorite Genre
+                                </p>
+                                <p className="text-2xl font-semibold capitalize text-light group">
+                                    {props.topGenre.split('').map((char, index) => (
+                                        <span
+                                            key={`${char}-${index}`}
+                                            className="inline-block transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:text-green"
+                                            style={{ transitionDelay: `${index * 30}ms` }}
+                                        >
+                                            {char === ' ' ? '\u00A0' : char}
+                                        </span>
+                                    ))}
+                                </p>
+                                <p className="text-xs text-light/60 mt-2">Based on your top 50 tracks</p>
+                            </div>
+                        ) : (
+                            <div className="border border-light/30 rounded p-4 bg-dark/20">
+                                <p className="text-xs uppercase tracking-wide text-light/70 mb-2">Your Favorite Genre</p>
+                                <p className="text-sm text-light/60">Calculating...</p>
+                            </div>
+                        )}
 
                         {/* Top Artists */}
                         <div>
@@ -242,43 +250,6 @@ export function DashboardView(props) {
                         </div>
                     </div>
                 </CollapsibleCard>
-
-                <Card className="border-light/40 bg-dark/40">
-                    <CardHeader>
-                        <CardTitle className="text-xl font-semibold">Gemini API Test</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="space-y-4">
-                            <div>
-                                <input
-                                    type="text"
-                                    value={props.geminiPrompt || ""}
-                                    onChange={(e) => props.onGeminiPromptChange(e.target.value)}
-                                    placeholder="Enter a prompt to test Gemini API..."
-                                    className="w-full px-3 py-2 border border-light rounded bg-transparent text-light placeholder-light/50 focus:outline-none focus:border-light/80"
-                                    disabled={props.geminiLoading}
-                                />
-                            </div>
-                            <button
-                                onClick={props.onTestGemini}
-                                disabled={props.geminiLoading || !props.geminiPrompt?.trim()}
-                                className="px-4 py-2 border border-light rounded hover:bg-light/10 disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                                {props.geminiLoading ? "Loading..." : "Test Gemini"}
-                            </button>
-                            {props.geminiError && (
-                                <div className="p-3 border border-pink/50 rounded bg-pink/10">
-                                    <p className="text-sm text-pink">Error: {props.geminiError}</p>
-                                </div>
-                            )}
-                            {props.geminiResponse && (
-                                <div className="p-3 border border-light/40 rounded bg-light/5">
-                                    <p className="text-sm text-light whitespace-pre-wrap">{props.geminiResponse}</p>
-                                </div>
-                            )}
-                        </div>
-                    </CardContent>
-                </Card>
 
             </section>
         </div>

@@ -74,24 +74,53 @@ node scripts/test-db.js
 
 ---
 
-## 🚀 For Vercel Deployment
-Since Vercel listens to the `main` branch, you will need to configure these settings **before** merging or if you want to deploy a preview of this branch.
+## 🚀 For Vercel Deployment (Neon Postgres)
 
-### 1. Database Accessibility
-**CRITICAL**: Vercel cannot access a database running on your `localhost`.
-- You **MUST** use a cloud-hosted PostgreSQL database (e.g., Neon, Supabase, Vercel Postgres, or AWS RDS).
-- Ensure the database accepts connections from the public internet (or configure Vercel IP allowlists).
+### 1. Database Setup (Vercel Marketplace)
+1. In your Vercel Project, go to the **Storage** tab or **Marketplace**.
+2. Add **Neon** (or Vercel Postgres).
+3. Once created, find the **Connection String** (usually in `.env.local` tab or settings).
+   - It looks like: `postgres://user:pass@ep-hostname...neon.tech/neondb?sslmode=require`
 
-### 2. Environment Variables
-Go to **Vercel Dashboard > Settings > Environment Variables**:
+### 2. Configure Vercel Environment
+Go to **Settings > Environment Variables** on Vercel:
 - **Key**: `DATABASE_URL`
-- **Value**: Your *cloud* database connection string (e.g., `postgres://user:pass@ep-hostname.us-east-2.aws.neon.tech/neondb...`)
-- Select environments: **Production**, **Preview**, and **Development**.
+- **Value**: Paste the Neon connection string from above.
+- **Environments**: Check Production, Preview, and Development.
 
-### 3. Build & Deploy
-- Vercel will automatically detect the new dependencies (`pg`, `drizzle-orm`) from `package.json` and install them.
-- No changes to the build command are needed.
+### 3. Initialize Production Database (Run from Laptop)
+Your cloud database starts empty. You must "push" your schema to it.
 
+1. **Temporarily** paste your **Neon Connection String** into your local `.env` file (replacing localhost).
+   ```env
+   # .env
+   DATABASE_URL="postgres://user:pass@ep-...neon.tech/neondb?sslmode=require"
+   ```
+2. Run the push command:
+   ```bash
+   npx drizzle-kit push
+   ```
+   *You should see output confirming tables were created.*
+
+3. **Revert** your local `.env` back to localhost:
+   ```env
+   # .env
+   DATABASE_URL="postgresql://localhost:5432/curatify_db"
+   ```
+
+### 4. Deploy Code
+- Push your `postgres` branch to `main` (or merge via PR).
+- Vercel will trigger a build. 
+- Since `DATABASE_URL` is set, the app will work immediately!
+
+---
+
+### ❓ FAQ
+**Q: Do I need `@vercel/postgres`?**
+A: **No.** Your project is configured to use the standard `pg` driver (in `src/db/index.js`). This is compatible with Neon and Vercel out of the box. You do NOT need to install extra Vercel-specific packages.
+
+**Q: Can I connect to Vercel from localhost?**
+A: Yes! If you want to debug against the *production* data, you can put the Neon URL in your `.env`. Just be careful not to delete real user data.
 ---
 
 

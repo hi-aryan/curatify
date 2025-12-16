@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { login } from "../store/userSlice";
 import { getAccessToken } from "../api/spotifyAuth";
 import { getUserProfile } from "../api/spotifySource";
-import { saveUserToDb } from "../actions/userActions.js";
+import { saveUserToDb } from "../actions/userActions";
 import { SuspenseView } from "../views/SuspenseView";
 // resolvePromise removed as we handle state locally for React compatibility
 

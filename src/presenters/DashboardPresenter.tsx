@@ -17,8 +17,9 @@ import {
   fetchTopArtists,
   fetchTopGenre,
 } from "../utils/dashboardUtils";
-import { callGeminiAPI, extractGeminiText } from "../api/llmSource";
-import { getUserPlaylists } from "../api/spotifySource";
+import { getAiRecommendations } from "../api/llmSource";
+
+import { getUserPlaylists, addItemToQueue } from "../api/spotifySource";
 import { useMoodboard } from "../hooks/useMoodboard";
 
 /*
@@ -47,12 +48,6 @@ export function DashboardPresenter() {
   const topArtists = useSelector((state) => state.user.topArtists);
   const topGenre = useSelector((state) => state.user.topGenre);
 
-  // Gemini state (local - ephemeral UI state, not persisted in Redux)
-  const [geminiPrompt, setGeminiPrompt] = useState("");
-  const [geminiResponse, setGeminiResponse] = useState("");
-  const [geminiLoading, setGeminiLoading] = useState(false);
-  const [geminiError, setGeminiError] = useState(null);
-
   // Moodboard state - hook gets its own token internally
   const [playlists, setPlaylists] = useState([]);
   const [selectedPlaylistId, setSelectedPlaylistId] = useState("");
@@ -62,6 +57,11 @@ export function DashboardPresenter() {
     error: moodboardError,
     analyze: analyzePlaylist,
   } = useMoodboard();
+
+  // AI Recommendations state
+  const [recommendations, setRecommendations] = useState(null);
+  const [recLoading, setRecLoading] = useState(false);
+  const [recError, setRecError] = useState(null);
 
   // Load dashboard data and playlists
   useEffect(() => {
@@ -127,28 +127,54 @@ export function DashboardPresenter() {
     window.location.href = window.location.origin;
   }
 
-  async function callGeminiACB() {
-    if (!geminiPrompt.trim()) return;
-    setGeminiLoading(true);
-    setGeminiError(null);
-    setGeminiResponse("");
-    try {
-      const response = await callGeminiAPI(geminiPrompt);
-      const text = extractGeminiText(response) || "No response text found";
-      setGeminiResponse(text);
-    } catch (error) {
-      setGeminiError(error.message || "Failed to get response from Gemini API");
-    } finally {
-      setGeminiLoading(false);
-    }
-  }
-
   function analyzePlaylistACB() {
     analyzePlaylist(selectedPlaylistId);
   }
 
+  async function handleGetRecommendationsACB() {
+    if (!topTracks || !topArtists || !topGenre) {
+      setRecError("Missing profile data. Please play more music on Spotify!");
+      return;
+    }
+
+    setRecLoading(true);
+    setRecError(null);
+
+    try {
+      const data = await getAiRecommendations(topTracks, topArtists, topGenre);
+      if (data && data.recommendations) {
+        setRecommendations(data.recommendations);
+      } else {
+        setRecError("Failed to get valid recommendations.");
+      }
+    } catch (error) {
+      console.error("Recommendation Error:", error);
+      setRecError(`Error: ${error.message}`);
+    } finally {
+      setRecLoading(false);
+    }
+  }
+
   function navigateToLandingACB() {
     router.push("/");
+  }
+
+  function navigateToAboutACB() {
+    router.push("/about");
+  }
+
+  async function addToQueueACB(trackUri) {
+    if (!trackUri) return;
+    try {
+      const accessToken = await getValidAccessToken();
+      if (accessToken) {
+        await addItemToQueue(trackUri, accessToken);
+        // Optional: Show success toast/alert
+        console.log("Added to queue:", trackUri);
+      }
+    } catch (error) {
+      console.error("Failed to add to queue:", error);
+    }
   }
 
   return (
@@ -160,12 +186,7 @@ export function DashboardPresenter() {
       topGenre={topGenre}
       onLogout={logoutACB}
       onNavigateToLanding={navigateToLandingACB}
-      geminiPrompt={geminiPrompt}
-      geminiResponse={geminiResponse}
-      geminiLoading={geminiLoading}
-      geminiError={geminiError}
-      onGeminiPromptChange={setGeminiPrompt}
-      onTestGemini={callGeminiACB}
+      onNavigateToAbout={navigateToAboutACB}
       playlists={playlists}
       selectedPlaylistId={selectedPlaylistId}
       onPlaylistSelect={setSelectedPlaylistId}
@@ -173,6 +194,12 @@ export function DashboardPresenter() {
       moodboardAnalysis={moodboardAnalysis}
       moodboardLoading={moodboardLoading}
       moodboardError={moodboardError}
+      onAddToQueue={addToQueueACB}
+      // AI Recommendations props
+      recommendations={recommendations}
+      recLoading={recLoading}
+      recError={recError}
+      onGetRecommendations={handleGetRecommendationsACB}
     />
   );
 }

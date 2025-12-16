@@ -15,12 +15,12 @@ export function SuspenseView(props) {
 
   // promise exists, no error = loading
   return (
-    <div className="visualizer-container">
-      <div className="bar"></div>
-      <div className="bar"></div>
-      <div className="bar"></div>
-      <div className="bar"></div>
-      <div className="bar"></div>
+    <div className="flex justify-center items-center h-screen gap-1.5">
+      <div className="w-2.5 h-12 bg-green rounded-full animate-equalizer-1"></div>
+      <div className="w-2.5 h-12 bg-green rounded-full animate-equalizer-2"></div>
+      <div className="w-2.5 h-12 bg-green rounded-full animate-equalizer-3"></div>
+      <div className="w-2.5 h-12 bg-green rounded-full animate-equalizer-4"></div>
+      <div className="w-2.5 h-12 bg-green rounded-full animate-equalizer-5"></div>
     </div>
   );
 }

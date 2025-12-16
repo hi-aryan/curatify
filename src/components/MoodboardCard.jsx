@@ -22,7 +22,7 @@ export function MoodboardCard({ playlists, selectedPlaylistId, onPlaylistSelect,
     ];
 
     return (
-        <Card className="border-light/40 bg-dark/40">
+        <Card className="border-light/40 bg-dark/40 hover:shadow-xl hover:shadow-green/[0.05] transition-shadow">
             <CardHeader>
                 <CardTitle className="text-xl font-semibold">Your Music Personality</CardTitle>
             </CardHeader>

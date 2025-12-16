@@ -133,7 +133,7 @@ export function DashboardView(props) {
 
             {/* Features grid - placeholders */}
             <section className="p-8 grid gap-6 md:grid-cols-2">
-                <Card className="border-light/40 bg-dark/40">
+                <Card className="border-light/40 bg-dark/40 hover:shadow-xl hover:shadow-green/[0.05] transition-shadow">
                     <CardHeader>
                         <CardTitle className="text-xl font-semibold">Sort Playlists</CardTitle>
                     </CardHeader>
@@ -142,7 +142,7 @@ export function DashboardView(props) {
                     </CardContent>
                 </Card>
 
-                <Card className="border-light/40 bg-dark/40">
+                <Card className="border-light/40 bg-dark/40 hover:shadow-xl hover:shadow-green/[0.05] transition-shadow">
                     <CardHeader>
                         <CardTitle className="text-xl font-semibold">Recommendations</CardTitle>
                     </CardHeader>
@@ -162,6 +162,7 @@ export function DashboardView(props) {
                 />
 
                 <CollapsibleCard 
+                    className="hover:shadow-xl hover:shadow-green/[0.05] transition-shadow"
                     title="Listening Statistics"
                     peekContent={
                         /* Top 3 Tracks - Always visible */

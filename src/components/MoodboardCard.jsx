@@ -1,6 +1,17 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
+import { MultiStepLoader } from "@/components/ui/multi-step-loader";
+
+const loadingStates = [
+  { text: "Fetching playlist songs" },
+  { text: "Analyzing artists" },
+  { text: "Reading the lyrics" },
+  { text: "Generating mood profile" },
+  { text: "Combining the data" },
+  { text: "Cooking up the results!" },
+];
+
 /**
  * MoodboardCard: Displays playlist mood analysis
  * 
@@ -22,7 +33,8 @@ export function MoodboardCard({ playlists, selectedPlaylistId, onPlaylistSelect,
     ];
 
     return (
-        <Card className="border-light/40 bg-dark/40 hover:shadow-xl hover:shadow-green/[0.05] transition-shadow">
+        <Card className="border-light/40 bg-dark/40 hover:shadow-xl hover:shadow-green/[0.05] transition-shadow relative overflow-hidden">
+            <MultiStepLoader loadingStates={loadingStates} loading={loading} duration={3000} loop={false} />
             <CardHeader>
                 <CardTitle className="text-xl font-semibold">Your Music Personality</CardTitle>
             </CardHeader>

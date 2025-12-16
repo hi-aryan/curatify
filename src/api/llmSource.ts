@@ -79,68 +79,125 @@ export async function callGeminiJSON(prompt, useGoogleSearch = false) {
  * @param {boolean} useGoogleSearch - Whether to enable Google Search grounding
  * @returns {Promise<Object>} - Raw Gemini API response
  */
-export function callGeminiAPI(prompt, useGoogleSearch = false) {
-  if (!LLM_API_KEY) {
-    return Promise.reject(
-      new Error(
-        "API key is missing. Please set VITE_LLM_API_KEY in your .env file"
-      )
-    );
-  }
-
-  if (!LLM_API_URL) {
-    return Promise.reject(
-      new Error(
-        "API URL is missing. Please set VITE_LLM_API_URL in your .env file"
-      )
-    );
-  }
-
-  const url = `${LLM_API_URL}?key=${LLM_API_KEY}`;
-
-  const requestBody = {
-    contents: [
-      {
-        parts: [
-          {
-            text: prompt,
-          },
-        ],
-      },
-    ],
-  };
-
-  // Enable Google Search grounding for real-time web information
-  if (useGoogleSearch) {
-    requestBody.tools = [{ googleSearch: {} }];
-  }
-
-  return fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(requestBody),
-  }).then(async (response) => {
-    if (!response.ok) {
-      let errorMessage = `LLM API error: ${response.status}`;
-      try {
-        const errorData = await response.json();
-        errorMessage = errorData.error?.message || errorMessage;
-      } catch {
-        errorMessage = `${errorMessage} - ${response.statusText}`;
-      }
-      throw new Error(errorMessage);
-    }
-    return response.json();
-  });
+// Helper for delay
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-// Analyze charts data and return insights
-// NOTE: This function is currently unused. If needed, implement using callGeminiAPI or callGeminiJSON
-export function analyzeCharts(chartsData) {
-  // TODO: Implement actual LLM API call using callGeminiAPI or callGeminiJSON
-  throw new Error(
-    "analyzeCharts is not implemented. Use callGeminiAPI or callGeminiJSON instead."
-  );
+/**
+ * Call Gemini API with a prompt
+ * @param {string} prompt - The prompt to send
+ * @param {boolean} useGoogleSearch - Whether to enable Google Search grounding
+ * @returns {Promise<Object>} - Raw Gemini API response
+ */
+export async function callGeminiAPI(prompt, useGoogleSearch = false) {
+    if (!LLM_API_KEY) {
+        throw new Error("API key is missing. Please set NEXT_PUBLIC_LLM_API_KEY in your .env file");
+    }
+
+    if (!LLM_API_URL) {
+        throw new Error("API URL is missing. Please set NEXT_PUBLIC_LLM_API_URL in your .env file");
+    }
+
+    const url = `${LLM_API_URL}?key=${LLM_API_KEY}`;
+    
+    const requestBody = {
+        contents: [{ parts: [{ text: prompt }] }],
+    };
+
+    if (useGoogleSearch) {
+        requestBody.tools = [{ googleSearch: {} }];
+    }
+
+    // Retry logic with exponential backoff
+    const MAX_RETRIES = 3;
+    let attempt = 0;
+
+    while (attempt < MAX_RETRIES) {
+        try {
+            const response = await fetch(url, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(requestBody),
+            });
+
+            if (!response.ok) {
+                // If 503 (Overloaded) or 500/502/504 (Server Errors), throw to trigger retry
+                if (response.status === 503 || response.status === 429 || (response.status >= 500 && response.status <= 504)) {
+                    throw new Error(`Server Busy (${response.status})`);
+                }
+                
+                // Other errors (400, 401, 403) are likely permanent, so parse and throw immediately
+                let errorMessage = `LLM API error: ${response.status}`;
+                try {
+                    const errorData = await response.json();
+                    errorMessage = errorData.error?.message || errorMessage;
+                } catch { /* ignore parse error */ }
+                throw new Error(errorMessage);
+            }
+
+            return await response.json(); // Success!
+
+        } catch (error) {
+            attempt++;
+            console.warn(`Gemini API attempt ${attempt} failed: ${error.message}`);
+            
+            if (attempt >= MAX_RETRIES) {
+                throw error; // Give up
+            }
+
+            // Exponential backoff: 1s, 2s, 4s
+            await delay(1000 * Math.pow(2, attempt - 1));
+        }
+    }
+}
+
+/**
+ * Get AI-powered song recommendations based on user's profile
+ * @param {Array} topTracks - User's top tracks
+ * @param {Array} topArtists - User's top artists
+ * @param {string} topGenre - User's top genre
+ * @returns {Promise<Object>} - Object containing recommendation list
+ */
+export async function getAiRecommendations(topTracks, topArtists, topGenre) {
+    const tracksText = topTracks?.map(t => `${t.name} by ${t.artists[0].name}`).join(', ');
+    const artistsText = topArtists?.map(a => a.name).join(', ');
+    
+    // We enable Google Search to ensure songs are real
+    const useSearch = true; 
+    
+    const prompt = `
+        You are an expert music curator. 
+        User Profile:
+        - Top Tracks: ${tracksText}
+        - Top Artists: ${artistsText}
+        - Favorite Genre: ${topGenre}
+
+        Task: Recommend 3 songs using Google Search to verify they exist.
+    
+        IMPORTANT RESPONSE RULES:
+        1. Output ONLY a valid JSON object. 
+        2. Do NOT use Markdown code blocks (no \`\`\`json).
+        3. Do NOT write any introduction, explanation, or conclusion.
+        4. Start the response immediately with "{".
+    
+        Required Songs:
+        1. "Safe Bet": Matches their taste perfectly.
+        2. "Wild Card": A creative, unexpected choice that still fits their vibe (think adjancent genres or deep cuts). Verify this song exists.
+        3. "Discovery": A highly-rated, less-known gem.
+
+        Output JSON format:
+        {
+            "recommendations": [
+                {
+                    "title": "Exact Song Title",
+                    "artist": "Exact Artist Name",
+                    "type": "Safe Bet", 
+                    "reason": "Convincing reason why they will like it."
+                }
+            ]
+        }
+    `;
+
+    return callGeminiJSON(prompt, useSearch);
 }

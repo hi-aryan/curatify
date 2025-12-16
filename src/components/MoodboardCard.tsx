@@ -1,5 +1,17 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { ListPlus } from "lucide-react";
+
+import { MultiStepLoader } from "@/components/ui/multi-step-loader";
+
+const loadingStates = [
+  { text: "Fetching playlist songs" },
+  { text: "Analyzing artists" },
+  { text: "Reading the lyrics" },
+  { text: "Generating mood profile" },
+  { text: "Combining the data" },
+  { text: "Cooking up the results!" },
+];
 
 /**
  * MoodboardCard: Displays playlist mood analysis
@@ -13,7 +25,7 @@ import { Button } from "@/components/ui/button";
  * - loading: Whether analysis is in progress
  * - error: Error message if analysis failed
  */
-export function MoodboardCard({ playlists, selectedPlaylistId, onPlaylistSelect, onAnalyze, analysis, loading, error }) {
+export function MoodboardCard({ playlists, selectedPlaylistId, onPlaylistSelect, onAnalyze, analysis, loading, error, onAddToQueue }) {
     const categories = [
         { key: 'happiness', label: 'Happiness', topLabel: 'Happiest song', color: 'text-green' },
         { key: 'sadness', label: 'Sadness', topLabel: 'Saddest song', color: 'text-blue' },
@@ -22,9 +34,10 @@ export function MoodboardCard({ playlists, selectedPlaylistId, onPlaylistSelect,
     ];
 
     return (
-        <Card className="border-light/40 bg-dark/40">
+        <Card className="border-light/40 bg-dark/40 hover:shadow-xl hover:shadow-green/[0.05] transition-shadow relative overflow-hidden">
+            <MultiStepLoader loadingStates={loadingStates} loading={loading} duration={3000} loop={false} />
             <CardHeader>
-                <CardTitle className="text-xl font-semibold">Personality - Moodboard</CardTitle>
+                <CardTitle className="text-xl font-semibold">Your Music Personality</CardTitle>
             </CardHeader>
             <CardContent>
                 <div className="space-y-4">
@@ -35,7 +48,7 @@ export function MoodboardCard({ playlists, selectedPlaylistId, onPlaylistSelect,
                             disabled={loading || !playlists?.length}
                             className="flex-1 px-3 py-2 border border-light/30 rounded bg-dark text-light focus:outline-none focus:border-green/50 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            <option value="">Choose a playlist...</option>
+                            <option value="">Playlist to Analyze...</option>
                             {playlists?.map((playlist) => (
                                 <option key={playlist.id} value={playlist.id}>
                                     {playlist.name}
@@ -106,6 +119,15 @@ export function MoodboardCard({ playlists, selectedPlaylistId, onPlaylistSelect,
                                         <span className={`text-sm font-bold ml-4 ${categoryInfo?.color || 'text-green'}`}>
                                             {(track.score * 100).toFixed(1)}%
                                         </span>
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            className="h-8 w-8 text-light/50 hover:text-green hover:bg-green/10 ml-2"
+                                            onClick={() => onAnalyze && onAddToQueue ? onAddToQueue(track.uri) : null}
+                                            title="Add to Spotify Queue"
+                                        >
+                                            <ListPlus className="h-4 w-4" />
+                                        </Button>
                                     </div>
                                 );
                             })}

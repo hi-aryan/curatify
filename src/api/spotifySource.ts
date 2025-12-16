@@ -83,6 +83,17 @@ export function getUserPlaylists(accessToken, options = {}) {
   }).then(gotResponseACB);
 }
 
-// TODO: Add more Spotify API functions as needed
-// - getTopCharts(countryCode)
-// - createPlaylist(accessToken, name, tracks)
+// Add item to queue
+export function addItemToQueue(uri, accessToken) {
+    const params = new URLSearchParams({ uri });
+    return fetch(`${SPOTIFY_API_URL}/me/player/queue?${params.toString()}`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${accessToken}` },
+    }).then(response => {
+        if (!response.ok) {
+            throw new Error("Spotify API error: " + response.status);
+        }
+        // 204 No Content is successful, so we don't try to parse JSON
+        return true; 
+    });
+}

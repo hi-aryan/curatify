@@ -31,7 +31,13 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CollapsibleCard } from "@/components/ui/collapsible-card";
-import { DropdownMenu } from "@/components/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
 import { MoodboardCard } from "@/components/MoodboardCard";
 import { ListPlus } from "lucide-react";
 
@@ -49,35 +55,33 @@ export function DashboardView(props) {
       {/* Header with user info */}
       <header className="p-8 flex flex-wrap gap-6 justify-between items-center">
         <div className="flex items-center gap-4">
-          <DropdownMenu
-            trigger={
-              props.profile?.images?.[0]?.url ? (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              {props.profile?.images?.[0]?.url ? (
                 <img
                   src={props.profile.images[0].url}
-                  alt="Profile"
-                  className="w-12 h-12 rounded-full cursor-pointer transition-transform duration-200 hover:scale-110"
+                  alt={props.profile.display_name || "Profile"}
+                  className="w-12 h-12 rounded-full object-cover border border-light/40 cursor-pointer transition-transform duration-200 hover:scale-105"
                 />
               ) : (
-                <div className="w-12 h-12 rounded-full bg-light/20 flex items-center justify-center cursor-pointer transition-transform duration-200 hover:scale-110 border border-light/10">
-                  <span className="text-xl">👤</span>
+                <div className="w-12 h-12 rounded-full bg-light/20 flex items-center justify-center border border-light/20 text-sm cursor-pointer">
+                  👤
                 </div>
-              )
-            }
-          >
-            <Button
-              onClick={logoutClickHandlerACB}
-              variant="outline"
-              className="hover:-rotate-2 hover:scale-105 transition-all duration-200"
-            >
-              Logout
-            </Button>
-            <Button
-              onClick={props.onNavigateToAbout}
-              variant="outline"
-              className="w-full mt-2 hover:-rotate-2 hover:scale-105 transition-all duration-200"
-            >
-              About
-            </Button>
+              )}
+            </DropdownMenuTrigger>
+
+            <DropdownMenuContent align="start" className="w-44">
+              <DropdownMenuItem disabled>
+                {props.profile?.display_name ?? "Account"}
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={navigateToLandingHandlerACB}>
+                Home
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={logoutClickHandlerACB}>
+                Logout
+              </DropdownMenuItem>
+            </DropdownMenuContent>
           </DropdownMenu>
           <div>
             <h1 className="text-3xl font-bold">

@@ -48,32 +48,36 @@ export function DashboardView(props) {
             {/* Header with user info */}
             <header className="p-8 flex flex-wrap gap-6 justify-between items-center">
                 <div className="flex items-center gap-4">
-                    {props.profile?.images?.[0]?.url && (
-                        <DropdownMenu
-                            trigger={
+                    <DropdownMenu
+                        trigger={
+                            props.profile?.images?.[0]?.url ? (
                                 <img
                                     src={props.profile.images[0].url}
                                     alt="Profile"
                                     className="w-12 h-12 rounded-full cursor-pointer transition-transform duration-200 hover:scale-110"
                                 />
-                            }
+                            ) : (
+                                <div className="w-12 h-12 rounded-full bg-light/20 flex items-center justify-center cursor-pointer transition-transform duration-200 hover:scale-110 border border-light/10">
+                                    <span className="text-xl">👤</span>
+                                </div>
+                            )
+                        }
+                    >
+                        <Button
+                            onClick={logoutClickHandlerACB}
+                            variant="outline"
+                            className="hover:-rotate-2 hover:scale-105 transition-all duration-200"
                         >
-                            <Button
-                                onClick={logoutClickHandlerACB}
-                                variant="outline"
-                                className="hover:-rotate-2 hover:scale-105 transition-all duration-200"
-                            >
-                                Logout
-                            </Button>
-                            <Button
-                                onClick={props.onNavigateToAbout}
-                                variant="outline"
-                                className="w-full mt-2 hover:-rotate-2 hover:scale-105 transition-all duration-200"
-                            >
-                                About
-                            </Button>
-                        </DropdownMenu>
-                    )}
+                            Logout
+                        </Button>
+                        <Button
+                            onClick={props.onNavigateToAbout}
+                            variant="outline"
+                            className="w-full mt-2 hover:-rotate-2 hover:scale-105 transition-all duration-200"
+                        >
+                            About
+                        </Button>
+                    </DropdownMenu>
                     <div>
                         <h1 className="text-3xl font-bold">
                             Welcome, {props.profile?.display_name || "User"}

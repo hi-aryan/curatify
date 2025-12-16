@@ -50,6 +50,10 @@ export function DashboardView(props) {
     props.onNavigateToLanding();
   }
 
+  function navigateToAboutHandlerACB() {
+    props.onNavigateToAbout();
+  }
+
   return (
     <div className="min-h-screen">
       {/* Header with user info */}
@@ -77,6 +81,9 @@ export function DashboardView(props) {
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={navigateToLandingHandlerACB}>
                 Home
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={navigateToAboutHandlerACB}>
+                About
               </DropdownMenuItem>
               <DropdownMenuItem onClick={logoutClickHandlerACB}>
                 Logout

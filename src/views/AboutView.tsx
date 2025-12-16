@@ -3,7 +3,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import lukasImg from "@/assets/lukas.jpg";
 import aryanImg from "@/assets/aryan.jpeg";
-import rafaelImg from "@/assets/rafael.jpg";
+import rafaelImg from "@/assets/papi.jpg";
 
 export function AboutView(props) {
   function navigateToHomeHandlerACB() {

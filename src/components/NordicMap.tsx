@@ -60,12 +60,6 @@ export function NordicMap({ selectedCountry, onCountryClick }) {
           {Object.keys(COUNTRY_PATHS).map(renderCountryCB)}
         </g>
       </svg>
-
-      {selectedCountry && (
-        <p className="mt-3 text-center text-sm font-medium text-green">
-          {COUNTRY_NAMES[selectedCountry]}
-        </p>
-      )}
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { SPOTIFY_API_URL } from "../apiConfig.js";
+import { SPOTIFY_API_URL } from "../apiConfig";
 
 /*
     Spotify API source file
@@ -73,14 +73,14 @@ export function getArtists(accessToken, artistIds) {
 
 // Get user's playlists
 export function getUserPlaylists(accessToken, options = {}) {
-    const { limit = 50, offset = 0 } = options;
-    const params = new URLSearchParams({
-        limit: String(limit),
-        offset: String(offset),
-    });
-    return fetch(`${SPOTIFY_API_URL}/me/playlists?${params.toString()}`, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-    }).then(gotResponseACB);
+  const { limit = 50, offset = 0 } = options;
+  const params = new URLSearchParams({
+    limit: String(limit),
+    offset: String(offset),
+  });
+  return fetch(`${SPOTIFY_API_URL}/me/playlists?${params.toString()}`, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  }).then(gotResponseACB);
 }
 
 // Add item to queue

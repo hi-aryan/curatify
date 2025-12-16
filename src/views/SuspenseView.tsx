@@ -2,15 +2,21 @@
     SuspenseView: displays loading state or error
     Pattern from TW1-3: check promise state to decide what to show
 */
-export function SuspenseView(props) {
+
+interface SuspenseViewProps {
+  promise: Promise<unknown> | null;
+  error: Error | null;
+}
+
+export function SuspenseView({ promise, error }: SuspenseViewProps) {
   // no promise = no data requested
-  if (!props.promise) {
+  if (!promise) {
     return <span className="text-light">No data</span>;
   }
 
   // promise exists but error occurred
-  if (props.error) {
-    return <span className="text-pink">{props.error.toString()}</span>;
+  if (error) {
+    return <span className="text-pink">{error.toString()}</span>;
   }
 
   // promise exists, no error = loading

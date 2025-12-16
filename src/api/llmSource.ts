@@ -1,4 +1,4 @@
-import { LLM_API_URL, LLM_API_KEY } from "../apiConfig.js";
+import { LLM_API_URL, LLM_API_KEY } from "../apiConfig";
 
 /*
     LLM API source file (Gemini)
@@ -32,23 +32,29 @@ export function extractGeminiText(response) {
  * @returns {Object} - Parsed JSON object
  */
 export function parseGeminiJSON(responseText) {
-    let jsonText = responseText.trim()
-        .replace(/^```json\s*/i, '').replace(/^```\s*/, '').replace(/\s*```$/g, '');
-    
-    const firstBrace = jsonText.indexOf('{');
-    const lastBrace = jsonText.lastIndexOf('}');
-    if (firstBrace !== -1 && lastBrace > firstBrace) {
-        jsonText = jsonText.substring(firstBrace, lastBrace + 1);
-    }
-    
-    jsonText = jsonText.replace(/,(\s*[}\]])/g, '$1');
-    
-    try {
-        return JSON.parse(jsonText);
-    } catch (error) {
-        console.error('Failed to parse Gemini JSON. Raw response:', responseText.substring(0, 500));
-        throw new Error(`Failed to parse JSON: ${error.message}`);
-    }
+  let jsonText = responseText
+    .trim()
+    .replace(/^```json\s*/i, "")
+    .replace(/^```\s*/, "")
+    .replace(/\s*```$/g, "");
+
+  const firstBrace = jsonText.indexOf("{");
+  const lastBrace = jsonText.lastIndexOf("}");
+  if (firstBrace !== -1 && lastBrace > firstBrace) {
+    jsonText = jsonText.substring(firstBrace, lastBrace + 1);
+  }
+
+  jsonText = jsonText.replace(/,(\s*[}\]])/g, "$1");
+
+  try {
+    return JSON.parse(jsonText);
+  } catch (error) {
+    console.error(
+      "Failed to parse Gemini JSON. Raw response:",
+      responseText.substring(0, 500)
+    );
+    throw new Error(`Failed to parse JSON: ${error.message}`);
+  }
 }
 
 /**
@@ -59,12 +65,12 @@ export function parseGeminiJSON(responseText) {
  * @returns {Promise<Object>} - Parsed JSON object from Gemini response
  */
 export async function callGeminiJSON(prompt, useGoogleSearch = false) {
-    const response = await callGeminiAPI(prompt, useGoogleSearch);
-    const text = extractGeminiText(response);
-    if (!text) {
-        throw new Error("No response from Gemini API");
-    }
-    return parseGeminiJSON(text);
+  const response = await callGeminiAPI(prompt, useGoogleSearch);
+  const text = extractGeminiText(response);
+  if (!text) {
+    throw new Error("No response from Gemini API");
+  }
+  return parseGeminiJSON(text);
 }
 
 /**

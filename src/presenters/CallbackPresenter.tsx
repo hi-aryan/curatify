@@ -1,12 +1,12 @@
-'use client';
+"use client";
 import { useEffect, useState, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
-import { login } from "../store/userSlice.js";
-import { getAccessToken } from "../api/spotifyAuth.js";
-import { getUserProfile } from "../api/spotifySource.js";
-import { saveUserToDb } from "../actions/userActions.js";
-import { SuspenseView } from "../views/SuspenseView.jsx";
+import { login } from "../store/userSlice";
+import { getAccessToken } from "../api/spotifyAuth";
+import { getUserProfile } from "../api/spotifySource";
+import { saveUserToDb } from "../actions/userActions";
+import { SuspenseView } from "../views/SuspenseView";
 // resolvePromise removed as we handle state locally for React compatibility
 
 /*
@@ -21,7 +21,11 @@ export function CallbackPresenter() {
   const dispatch = useDispatch();
   const router = useRouter();
   // instead of resolvePromise.js
-  const [promiseState, setPromiseState] = useState({ promise: null, data: null, error: null });
+  const [promiseState, setPromiseState] = useState({
+    promise: null,
+    data: null,
+    error: null,
+  });
   const hasRun = useRef(false);
 
   useEffect(() => {
@@ -36,7 +40,7 @@ export function CallbackPresenter() {
         setPromiseState({
           promise: null,
           data: null,
-          error: new Error("No authorization code found")
+          error: new Error("No authorization code found"),
         });
         return;
       }
@@ -62,11 +66,15 @@ export function CallbackPresenter() {
       // Handle promise resolution
       oauthPromise
         .then((data) => {
-          setPromiseState(prev => prev.promise === oauthPromise ? { ...prev, data } : prev);
+          setPromiseState((prev) =>
+            prev.promise === oauthPromise ? { ...prev, data } : prev
+          );
         })
         .catch((error) => {
           // Only report error if it's not a "verification missing" race condition that might happen despite checks
-          setPromiseState(prev => prev.promise === oauthPromise ? { ...prev, error } : prev);
+          setPromiseState((prev) =>
+            prev.promise === oauthPromise ? { ...prev, error } : prev
+          );
         });
     }
 

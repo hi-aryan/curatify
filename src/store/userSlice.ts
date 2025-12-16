@@ -1,11 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+export interface UserState {
+  isLoggedIn: boolean;
+  profile: any[] | null;
+  topArtist: string | null;
+  topTracks: any[] | null;
+  topArtists: any[] | null;
+  topGenre: string | null;
+}
 /*
     User slice: manages authentication state
     - isLoggedIn: whether user is authenticated with Spotify
     - profile: user's Spotify profile data (null if not logged in)
 */
-const userSlice = createSlice({
+export const userSlice = createSlice({
   name: "user",
   initialState: {
     isLoggedIn: false,

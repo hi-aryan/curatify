@@ -7,7 +7,6 @@
     @apply bg-dark text-light;
   }
   :root {
-
     --background: 0 0% 100%;
 
     --foreground: 0 0% 3.9%;
@@ -56,10 +55,9 @@
 
     --chart-5: 27 87% 67%;
 
-    --radius: 0.4rem
+    --radius: 0.5rem;
   }
   .dark {
-
     --background: 0 0% 3.9%;
 
     --foreground: 0 0% 98%;
@@ -106,15 +104,6 @@
 
     --chart-4: 280 65% 60%;
 
-    --chart-5: 340 75% 55%
-  }
-}
-
-
-
-@layer base {
-  body {
-    /* Use existing custom colors instead of shadcn tokens to avoid bg-background error */
-    @apply bg-dark text-light;
+    --chart-5: 340 75% 55%;
   }
 }

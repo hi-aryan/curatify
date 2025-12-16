@@ -164,6 +164,7 @@ export function DashboardView(props) {
                     analysis={props.moodboardAnalysis}
                     loading={props.moodboardLoading}
                     error={props.moodboardError}
+                    onAddToQueue={props.onAddToQueue}
                 />
 
                 <CollapsibleCard 

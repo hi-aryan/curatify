@@ -1,5 +1,6 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { ListPlus } from "lucide-react";
 
 import { MultiStepLoader } from "@/components/ui/multi-step-loader";
 
@@ -24,7 +25,7 @@ const loadingStates = [
  * - loading: Whether analysis is in progress
  * - error: Error message if analysis failed
  */
-export function MoodboardCard({ playlists, selectedPlaylistId, onPlaylistSelect, onAnalyze, analysis, loading, error }) {
+export function MoodboardCard({ playlists, selectedPlaylistId, onPlaylistSelect, onAnalyze, analysis, loading, error, onAddToQueue }) {
     const categories = [
         { key: 'happiness', label: 'Happiness', topLabel: 'Happiest song', color: 'text-green' },
         { key: 'sadness', label: 'Sadness', topLabel: 'Saddest song', color: 'text-blue' },
@@ -118,6 +119,15 @@ export function MoodboardCard({ playlists, selectedPlaylistId, onPlaylistSelect,
                                         <span className={`text-sm font-bold ml-4 ${categoryInfo?.color || 'text-green'}`}>
                                             {(track.score * 100).toFixed(1)}%
                                         </span>
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            className="h-8 w-8 text-light/50 hover:text-green hover:bg-green/10 ml-2"
+                                            onClick={() => onAnalyze && onAddToQueue ? onAddToQueue(track.uri) : null}
+                                            title="Add to Spotify Queue"
+                                        >
+                                            <ListPlus className="h-4 w-4" />
+                                        </Button>
                                     </div>
                                 );
                             })}

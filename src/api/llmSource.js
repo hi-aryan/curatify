@@ -136,3 +136,43 @@ export function analyzeCharts(chartsData) {
   // TODO: Implement actual LLM API call using callGeminiAPI or callGeminiJSON
   throw new Error("analyzeCharts is not implemented. Use callGeminiAPI or callGeminiJSON instead.");
 }
+
+/**
+ * Get AI-powered song recommendations based on user's profile
+ * @param {Array} topTracks - User's top tracks
+ * @param {Array} topArtists - User's top artists
+ * @param {string} topGenre - User's top genre
+ * @returns {Promise<Object>} - Object containing recommendation list
+ */
+export async function getAiRecommendations(topTracks, topArtists, topGenre) {
+    const tracksText = topTracks?.map(t => `${t.name} by ${t.artists[0].name}`).join(', ');
+    const artistsText = topArtists?.map(a => a.name).join(', ');
+    
+    const prompt = `
+        Based on this user's music taste:
+        - Top Tracks: ${tracksText}
+        - Top Artists: ${artistsText}
+        - Favorite Genre: ${topGenre}
+
+        Recommend exactly 3 songs in this JSON format:
+        {
+            "recommendations": [
+                {
+                    "title": "Song Title",
+                    "artist": "Artist Name",
+                    "type": "Safe Bet", // Strictly 'Safe Bet', 'Wild Card', or 'Discovery'
+                    "reason": "Brief explanation why"
+                },
+                ...
+            ]
+        }
+
+        Rules:
+        1. "Safe Bet": A song very similar to their top tracks/artists.
+        2. "Wild Card": A song slightly outside comfort zone but compatible.
+        3. "Discovery": A highly rated hidden gem in their genre.
+        4. Return ONLY valid JSON.
+    `;
+
+    return callGeminiJSON(prompt);
+}

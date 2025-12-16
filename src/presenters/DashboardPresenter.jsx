@@ -6,6 +6,7 @@ import { logout, setTopArtist, setTopTracks, setTopArtists, setTopGenre } from '
 import { clearTokenData, getValidAccessToken } from '../api/spotifyAuth.js';
 import { DashboardView } from '../views/DashboardView.jsx';
 import { fetchTopArtist, fetchTopTracks, fetchTopArtists, fetchTopGenre } from '../utils/dashboardUtils.js';
+import { getAiRecommendations } from '../api/llmSource.js';
 
 import { getUserPlaylists } from '../api/spotifySource.js';
 import { useMoodboard } from '../hooks/useMoodboard.js';
@@ -40,6 +41,11 @@ export function DashboardPresenter() {
     const [playlists, setPlaylists] = useState([]);
     const [selectedPlaylistId, setSelectedPlaylistId] = useState("");
     const { analysis: moodboardAnalysis, loading: moodboardLoading, error: moodboardError, analyze: analyzePlaylist } = useMoodboard();
+
+    // AI Recommendations state
+    const [recommendations, setRecommendations] = useState(null);
+    const [recLoading, setRecLoading] = useState(false);
+    const [recError, setRecError] = useState(null);
 
     // Load dashboard data and playlists
     useEffect(() => {
@@ -109,6 +115,30 @@ export function DashboardPresenter() {
         analyzePlaylist(selectedPlaylistId);
     }
 
+    async function handleGetRecommendationsACB() {
+        if (!topTracks || !topArtists || !topGenre) {
+            setRecError("Missing profile data. Please play more music on Spotify!");
+            return;
+        }
+
+        setRecLoading(true);
+        setRecError(null);
+        
+        try {
+            const data = await getAiRecommendations(topTracks, topArtists, topGenre);
+            if (data && data.recommendations) {
+                setRecommendations(data.recommendations);
+            } else {
+                setRecError("Failed to get valid recommendations.");
+            }
+        } catch (error) {
+            console.error("Recommendation Error:", error);
+            setRecError(`Error: ${error.message}`);
+        } finally {
+            setRecLoading(false);
+        }
+    }
+
     function navigateToLandingACB() {
         router.push('/');
     }
@@ -134,6 +164,12 @@ export function DashboardPresenter() {
             moodboardAnalysis={moodboardAnalysis}
             moodboardLoading={moodboardLoading}
             moodboardError={moodboardError}
+            
+            // AI Recommendations props
+            recommendations={recommendations}
+            recLoading={recLoading}
+            recError={recError}
+            onGetRecommendations={handleGetRecommendationsACB}
         />
     );
 }

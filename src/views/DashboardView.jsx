@@ -144,10 +144,57 @@ export function DashboardView(props) {
 
                 <Card className="border-light/40 bg-dark/40 hover:shadow-xl hover:shadow-green/[0.05] transition-shadow">
                     <CardHeader>
-                        <CardTitle className="text-xl font-semibold">Recommendations</CardTitle>
+                        <CardTitle className="text-xl font-semibold flex items-center justify-between">
+                            Recommendations
+                            {props.recLoading && <span className="text-xs text-green animate-pulse">Thinking...</span>}
+                        </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-light opacity-60">AI-powered song suggestions</p>
+                        {!props.recommendations ? (
+                            <div className="text-center py-4">
+                                <p className="text-light opacity-60 mb-4">
+                                    Get custom song suggestions based on your statistics.
+                                </p>
+                                <Button 
+                                    onClick={props.onGetRecommendations} 
+                                    disabled={props.recLoading}
+                                    variant="outline"
+                                    className="w-full hover:bg-green/10 hover:border-green hover:text-green transition-all"
+                                >
+                                    {props.recLoading ? "Analyzing..." : "Get Suggestions"}
+                                </Button>
+                                {props.recError && (
+                                    <p className="text-red-400 text-xs mt-3">{props.recError}</p>
+                                )}
+                            </div>
+                        ) : (
+                            <div className="space-y-4">
+                                {props.recommendations.map((rec, index) => (
+                                    <div key={index} className="p-3 bg-light/5 rounded border border-light/10 hover:border-green/30 transition-colors">
+                                        <div className="flex justify-between items-start mb-1">
+                                            <h4 className="font-semibold text-light">{rec.title}</h4>
+                                            <span className={`text-[10px] px-2 py-0.5 rounded-full border ${
+                                                rec.type === 'Safe Bet' ? 'border-blue-400/50 text-blue-300' :
+                                                rec.type === 'Wild Card' ? 'border-purple-400/50 text-purple-300' :
+                                                'border-green/50 text-green'
+                                            }`}>
+                                                {rec.type}
+                                            </span>
+                                        </div>
+                                        <p className="text-sm text-light/70 mb-2">{rec.artist}</p>
+                                        <p className="text-xs text-light/50 italic">"{rec.reason}"</p>
+                                    </div>
+                                ))}
+                                <Button 
+                                    onClick={props.onGetRecommendations} 
+                                    variant="ghost" 
+                                    size="sm"
+                                    className="w-full text-xs text-light/40 hover:text-green mt-2"
+                                >
+                                    Refresh
+                                </Button>
+                            </div>
+                        )}
                     </CardContent>
                 </Card>
 

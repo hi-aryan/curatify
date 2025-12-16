@@ -149,21 +149,34 @@ export async function getAiRecommendations(topTracks, topArtists, topGenre) {
     const artistsText = topArtists?.map(a => a.name).join(', ');
     
     const prompt = `
-        Based on this user's music taste:
+        You are an expert music curator. 
+        User Profile:
         - Top Tracks: ${tracksText}
         - Top Artists: ${artistsText}
         - Favorite Genre: ${topGenre}
 
-        Recommend exactly 3 songs in this JSON format:
+        Task: Recommend 3 songs using Google Search to verify they exist.
+    
+        IMPORTANT RESPONSE RULES:
+        1. Output ONLY a valid JSON object. 
+        2. Do NOT use Markdown code blocks (no \`\`\`json).
+        3. Do NOT write any introduction, explanation, or conclusion.
+        4. Start the response immediately with "{".
+    
+        Required Songs:
+        1. "Safe Bet": Matches their taste perfectly.
+        2. "Wild Card": A creative, unexpected choice that still fits their vibe (think adjancent genres or deep cuts). Verify this song exists.
+        3. "Discovery": A highly-rated, less-known gem.
+
+        Output JSON format:
         {
             "recommendations": [
                 {
-                    "title": "Song Title",
-                    "artist": "Artist Name",
-                    "type": "Safe Bet", // Strictly 'Safe Bet', 'Wild Card', or 'Discovery'
-                    "reason": "Brief explanation why"
-                },
-                ...
+                    "title": "Exact Song Title",
+                    "artist": "Exact Artist Name",
+                    "type": "Safe Bet", 
+                    "reason": "Convincing reason why they will like it."
+                }
             ]
         }
 
@@ -174,5 +187,5 @@ export async function getAiRecommendations(topTracks, topArtists, topGenre) {
         4. Return ONLY valid JSON.
     `;
 
-    return callGeminiJSON(prompt);
+    return callGeminiJSON(prompt, true);
 }

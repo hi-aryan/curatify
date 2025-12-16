@@ -7,7 +7,7 @@ import { clearTokenData, getValidAccessToken } from '../api/spotifyAuth.js';
 import { DashboardView } from '../views/DashboardView.jsx';
 import { fetchTopArtist, fetchTopTracks, fetchTopArtists, fetchTopGenre } from '../utils/dashboardUtils.js';
 
-import { getUserPlaylists } from '../api/spotifySource.js';
+import { getUserPlaylists, addItemToQueue } from '../api/spotifySource.js';
 import { useMoodboard } from '../hooks/useMoodboard.js';
 
 /*
@@ -117,6 +117,20 @@ export function DashboardPresenter() {
         router.push('/about');
     }
 
+    async function addToQueueACB(trackUri) {
+        if (!trackUri) return;
+        try {
+            const accessToken = await getValidAccessToken();
+            if (accessToken) {
+                await addItemToQueue(trackUri, accessToken);
+                // Optional: Show success toast/alert
+                console.log("Added to queue:", trackUri);
+            }
+        } catch (error) {
+            console.error("Failed to add to queue:", error);
+        }
+    }
+
     return (
         <DashboardView
             profile={profile}
@@ -134,6 +148,7 @@ export function DashboardPresenter() {
             moodboardAnalysis={moodboardAnalysis}
             moodboardLoading={moodboardLoading}
             moodboardError={moodboardError}
+            onAddToQueue={addToQueueACB}
         />
     );
 }

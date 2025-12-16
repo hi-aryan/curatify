@@ -33,6 +33,7 @@ import { Button } from "@/components/ui/button";
 import { CollapsibleCard } from "@/components/ui/collapsible-card";
 import { DropdownMenu } from "@/components/ui/dropdown-menu";
 import { MoodboardCard } from "@/components/MoodboardCard";
+import { ListPlus } from "lucide-react";
 
 export function DashboardView(props) {
     function logoutClickHandlerACB() {
@@ -171,7 +172,10 @@ export function DashboardView(props) {
                     peekContent={
                         /* Top 3 Tracks - Always visible */
                         <div>
-                            <h3 className="text-sm uppercase tracking-wide opacity-70 mb-3">Top 3 Tracks</h3> {/* TODO: this week? more specific! */}
+                            <div className="flex justify-between items-center mb-3">
+                                <h3 className="text-sm uppercase tracking-wide opacity-70">Top 3 Tracks</h3>
+                                <span className="text-xs uppercase tracking-wide opacity-50">Add to Spotify Queue</span>
+                            </div>
                             {props.topTracks && props.topTracks.length > 0 ? (
                                 <div className="space-y-2">
                                     {props.topTracks.map((track, index) => (
@@ -197,6 +201,15 @@ export function DashboardView(props) {
                                                     {track.artists?.map(a => a.name).join(', ')}
                                                 </p>
                                             </div>
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                className="h-8 w-8 text-light/50 hover:text-green hover:bg-green/10"
+                                                onClick={() => props.onAddToQueue(track.uri)}
+                                                title="Add to Spotify Queue"
+                                            >
+                                                <ListPlus className="h-4 w-4" />
+                                            </Button>
                                         </div>
                                     ))}
                                 </div>

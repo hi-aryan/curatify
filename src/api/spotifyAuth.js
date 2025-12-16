@@ -63,7 +63,7 @@ export async function redirectToSpotifyAuth() {
     client_id: SPOTIFY_CLIENT_ID,
     response_type: "code",
     redirect_uri: SPOTIFY_REDIRECT_URI,
-    scope: "user-read-private user-read-email user-top-read",
+    scope: "user-read-private user-read-email user-top-read user-modify-playback-state",
     code_challenge_method: "S256",
     code_challenge: challenge,
   });

@@ -26,6 +26,15 @@ import { SongCard } from "../components/SongCard";
 import { PlaylistDropZone } from "../components/PlaylistDropZone";
 import { COUNTRY_NAMES } from "../data/nordicCharts";
 import { CardBody, CardContainer, CardItem } from "../components/ui/3d-card";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
+} from "@/components/ui/navigation-menu";
 
 interface LandingViewProps {
   selectedCountry: string;
@@ -38,6 +47,7 @@ interface LandingViewProps {
   isLoggedIn: boolean;
   onLoginClick: () => void;
   onNavigateToDashboard: () => void;
+  isMobile: boolean;
 }
 
 export function LandingView({
@@ -51,6 +61,7 @@ export function LandingView({
   isLoggedIn,
   onLoginClick,
   onNavigateToDashboard,
+  isMobile,
 }: LandingViewProps) {
   function loginClickHandlerACB() {
     onLoginClick();
@@ -66,7 +77,7 @@ export function LandingView({
 
   return (
     <div className="h-screen flex flex-col overflow-hidden">
-      {/* Hero section - compact */}
+      {/* Navbar */}
       <header className="px-8 py-4 flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">Curatify</h1>
@@ -90,7 +101,6 @@ export function LandingView({
           </Button>
         )}
       </header>
-
       {/* Main content - side by side */}
       <section className="flex-1 px-8 pb-4 flex gap-8 min-h-0">
         {/* Nordic Map - Left side */}

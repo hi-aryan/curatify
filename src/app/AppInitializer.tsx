@@ -5,6 +5,9 @@ import { getValidAccessToken } from "../api/spotifyAuth";
 import { getUserProfile } from "../api/spotifySource";
 import { login } from "../store/userSlice";
 import { SuspenseView } from "../views/SuspenseView";
+import { setIsMobile } from "../store/uiSlice";
+
+const MOBILE_BREAKPOINT = 768;
 
 export default function AppInitializer({ children }) {
   const dispatch = useDispatch();
@@ -28,6 +31,18 @@ export default function AppInitializer({ children }) {
       }
     }
     restoreSessionACB();
+
+    const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`);
+
+    const handleResize = () => {
+      dispatch(setIsMobile(mql.matches));
+    };
+
+    handleResize();
+
+    mql.addEventListener("change", handleResize);
+
+    return () => mql.removeEventListener("change", handleResize);
   }, [dispatch]);
 
   if (isRestoring) {

@@ -31,7 +31,6 @@ export function LandingPresenter() {
     (state: RootState) => state.charts.dummyPlaylist
   );
   const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
-  const isMobile = useSelector((state: RootState) => state.ui.isMobile);
 
   // Get tracks for the selected country from local CSV data
   const countryTracks = selectedCountry
@@ -79,7 +78,6 @@ export function LandingPresenter() {
       onLoginClick={loginClickACB}
       onNavigateToDashboard={navigateToDashboardACB}
       onNavigateToAbout={navigateToAboutACB}
-      isMobile={isMobile}
     />
   );
 }

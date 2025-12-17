@@ -28,13 +28,11 @@ import { COUNTRY_NAMES } from "../data/nordicCharts";
 import { CardBody, CardContainer, CardItem } from "../components/ui/3d-card";
 import {
   NavigationMenu,
-  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
+import { MobileMenu } from "../components/MobileMenu";
 import logoImage from "@/assets/logo.png";
 import Image from "next/image";
 
@@ -86,13 +84,17 @@ export function LandingView({
   return (
     <div className="min-h-screen flex flex-col bg-dark/20 text-light overflow-y-auto lg:h-screen lg:overflow-hidden">
       {/* Navbar */}
-      <header className="px-4 py-4 lg:px-4 flex items-center justify-between shrink-0">
-        {/* Left: Logo + Brand + Desktop Links */}
-        <div className="flex items-center gap-6">
+      <header className="px-4 py-4 lg:px-4 flex items-center justify-between shrink-0 relative z-50 bg-dark/20">
+        {/* Left: Mobile Menu + Logo + Brand + Desktop Links */}
+        <div className="flex items-center gap-2 lg:gap-6">
+          {/* Mobile Navigation Menu (hamburger) */}
+          <MobileMenu onNavigateToAbout={navigateToAboutHandlerACB} />
+
+          {/* Logo and brand - hidden on mobile */}
           <button
             type="button"
             aria-label="Home"
-            className="flex items-center gap-2"
+            className="hidden lg:flex items-center gap-2"
             onClick={() => {
               /* TODO: route to home */
             }}
@@ -173,76 +175,6 @@ export function LandingView({
               Sign in with Spotify
             </Button>
           )}
-
-          {/* Mobile menu trigger (hamburger) */}
-          <NavigationMenu className="lg:hidden" aria-label="Mobile navigation">
-            <NavigationMenuList>
-              <NavigationMenuItem>
-                <NavigationMenuTrigger
-                  className="rounded-full border border-green/50 text-green bg-transparent hover:bg-green/10 p-2"
-                  aria-label="Open menu"
-                >
-                  <svg
-                    className="h-5 w-5"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    aria-hidden="true"
-                  >
-                    <line x1="3" y1="6" x2="21" y2="6" />
-                    <line x1="3" y1="12" x2="21" y2="12" />
-                    <line x1="3" y1="18" x2="21" y2="18" />
-                  </svg>
-                </NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <div className="p-3 w-48">
-                    <ul className="grid gap-1.5">
-                      <li>
-                        <NavigationMenuLink asChild>
-                          <button
-                            type="button"
-                            className="block w-full text-left px-3 py-2 rounded-md text-sm hover:bg-green/10"
-                            onClick={navigateToAboutHandlerACB}
-                          >
-                            About
-                          </button>
-                        </NavigationMenuLink>
-                      </li>
-                      <li>
-                        <NavigationMenuLink asChild>
-                          <button
-                            type="button"
-                            className="block w-full text-left px-3 py-2 rounded-md text-sm hover:bg-green/10"
-                            onClick={() => {
-                              /* TODO: route to Features */
-                            }}
-                          >
-                            Features
-                          </button>
-                        </NavigationMenuLink>
-                      </li>
-                      <li>
-                        <NavigationMenuLink asChild>
-                          <button
-                            type="button"
-                            className="block w-full text-left px-3 py-2 rounded-md text-sm hover:bg-green/10"
-                            onClick={() => {
-                              /* TODO: route to Contact */
-                            }}
-                          >
-                            Contact
-                          </button>
-                        </NavigationMenuLink>
-                      </li>
-                    </ul>
-                  </div>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-            </NavigationMenuList>
-          </NavigationMenu>
         </div>
       </header>
 
@@ -260,7 +192,7 @@ export function LandingView({
             className="flex-1 w-full"
             containerClassName="py-0 h-full"
           >
-            <CardBody className="w-full h-full flex items-center justify-center lg:scale-150">
+            <CardBody className="w-full h-full flex items-center justify-center md:scale-110 lg:scale-125 xl:scale-150 2xl:scale-[1.75] transition-transform duration-500 ease-in-out">
               <CardItem translateZ="80" className="max-h-full w-full">
                 <NordicMap
                   selectedCountry={selectedCountry}

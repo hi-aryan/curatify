@@ -47,7 +47,6 @@ interface LandingViewProps {
   isLoggedIn: boolean;
   onLoginClick: () => void;
   onNavigateToDashboard: () => void;
-  isMobile: boolean;
   onNavigateToAbout: () => void;
 }
 
@@ -62,7 +61,6 @@ export function LandingView({
   isLoggedIn,
   onLoginClick,
   onNavigateToDashboard,
-  isMobile,
   onNavigateToAbout,
 }: LandingViewProps) {
   function loginClickHandlerACB() {

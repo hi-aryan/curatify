@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import userReducer from "./userSlice";
 import chartsReducer from "./chartsSlice";
-import uiReducer from "./uiSlice";
+import sidebarReducer from "./sidebarSlice";
 
 /* global state object, composed of user and charts slices (manages UI state, temporary session in the browser) */
 export const makeStore = () => {
@@ -9,7 +9,7 @@ export const makeStore = () => {
     reducer: {
       user: userReducer,
       charts: chartsReducer,
-      ui: uiReducer,
+      sidebar: sidebarReducer,
     },
   });
 };

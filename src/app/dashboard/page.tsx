@@ -1,5 +1,5 @@
-import { DashboardPresenter } from '../../presenters/DashboardPresenter';
+import { DashboardPresenter } from "@/presenters/DashboardPresenter";
 
 export default function DashboardPage() {
-    return <DashboardPresenter />;
+  return <DashboardPresenter />;
 }

@@ -89,7 +89,7 @@ export function PlaylistDropZone({
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
       className={`
-                min-h-[200px] p-4 rounded-lg border-2 border-dashed
+                h-full overflow-y-auto pr-2 custom-scrollbar p-4 rounded-lg border-2 border-dashed
                 transition-colors duration-200
                 ${
                   isDragOver

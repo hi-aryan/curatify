@@ -132,9 +132,9 @@ export function LandingView({
                 </CardTitle>
               </div>
             </CardHeader>
-            <CardContent className="flex-1 min-h-0 pb-3">
+            <CardContent className="flex-1 min-h-0 pb-3 overflow-hidden">
               {selectedCountry ? (
-                <div className="h-full overflow-y-auto space-y-1.5 pr-2">
+                <div className="h-full overflow-y-auto space-y-1.5 pr-2 custom-scrollbar">
                   {countryTracks.map(renderSongCardCB)}
                 </div>
               ) : (

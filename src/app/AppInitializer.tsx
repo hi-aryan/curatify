@@ -31,7 +31,7 @@ export default function AppInitializer({ children }) {
   }, [dispatch]);
 
   if (isRestoring) {
-    return <SuspenseView promise={{}} error={null} />;
+    return <SuspenseView promise={Promise.resolve()} error={null} />;
   }
 
   return <>{children}</>;

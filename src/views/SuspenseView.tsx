@@ -6,9 +6,11 @@
 interface SuspenseViewProps {
   promise: Promise<unknown> | null;
   error: Error | null;
+  onRetry?: () => void;
+  loadingMessage?: string;
 }
 
-export function SuspenseView({ promise, error }: SuspenseViewProps) {
+export function SuspenseView({ promise, error, onRetry, loadingMessage }: SuspenseViewProps) {
   // no promise = no data requested
   if (!promise) {
     return <span className="text-light">No data</span>;

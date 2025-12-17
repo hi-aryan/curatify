@@ -6,7 +6,7 @@ import { CallbackPresenter } from '../presenters/CallbackPresenter';
 export default function Home({ searchParams }) {
     // Handle legacy callback redirection to root
     // In Next.js 15+, searchParams is a promise that must be unwrapped
-    const params = use(searchParams);
+    const params: any = use(searchParams);
     const code = params?.code;
 
     if (code) {

@@ -31,7 +31,7 @@ export function getPlaylistTracks(playlistId, accessToken) {
   }).then(gotResponseACB);
 }
 
-export function getUserTopArtists(accessToken, options = {}) {
+export function getUserTopArtists(accessToken, options: any = {}) {
   const { limit = 50, time_range = "short_term" } = options;
   const params = new URLSearchParams({
     limit: String(limit),
@@ -42,7 +42,7 @@ export function getUserTopArtists(accessToken, options = {}) {
   }).then(gotResponseACB);
 }
 
-export function getUserTopTracks(accessToken, options = {}) {
+export function getUserTopTracks(accessToken, options: any = {}) {
   const { limit = 50, time_range = "short_term" } = options;
   const params = new URLSearchParams({
     limit: String(limit),
@@ -72,7 +72,7 @@ export function getArtists(accessToken, artistIds) {
 }
 
 // Get user's playlists
-export function getUserPlaylists(accessToken, options = {}) {
+export function getUserPlaylists(accessToken, options: any = {}) {
   const { limit = 50, offset = 0 } = options;
   const params = new URLSearchParams({
     limit: String(limit),

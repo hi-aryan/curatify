@@ -101,7 +101,7 @@ export async function callGeminiAPI(prompt, useGoogleSearch = false) {
 
     const url = `${LLM_API_URL}?key=${LLM_API_KEY}`;
     
-    const requestBody = {
+    const requestBody: any = {
         contents: [{ parts: [{ text: prompt }] }],
     };
 

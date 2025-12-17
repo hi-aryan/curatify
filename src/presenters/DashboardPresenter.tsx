@@ -34,8 +34,8 @@ import { useMoodboard } from "../hooks/useMoodboard";
 export function DashboardPresenter() {
   const dispatch = useDispatch();
   const router = useRouter();
-  const profile = useSelector((state) => state.user.profile);
-  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const profile = useSelector((state: any) => state.user.profile);
+  const isLoggedIn = useSelector((state: any) => state.user.isLoggedIn);
 
   // Auth Protection
   useEffect(() => {
@@ -43,10 +43,10 @@ export function DashboardPresenter() {
       router.push("/");
     }
   }, [isLoggedIn, router]);
-  const topArtist = useSelector((state) => state.user.topArtist);
-  const topTracks = useSelector((state) => state.user.topTracks);
-  const topArtists = useSelector((state) => state.user.topArtists);
-  const topGenre = useSelector((state) => state.user.topGenre);
+  const topArtist = useSelector((state: any) => state.user.topArtist);
+  const topTracks = useSelector((state: any) => state.user.topTracks);
+  const topArtists = useSelector((state: any) => state.user.topArtists);
+  const topGenre = useSelector((state: any) => state.user.topGenre);
 
   // Moodboard state - hook gets its own token internally
   const [playlists, setPlaylists] = useState([]);

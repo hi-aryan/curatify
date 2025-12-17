@@ -108,7 +108,7 @@ function calculateTopGenreFromTracks(tracks, artists) {
   if (allGenres.length === 0) return null;
 
   // Count occurrences of each genre
-  const genreCount = {};
+  const genreCount: Record<string, number> = {};
   allGenres.forEach((genre) => {
     genreCount[genre] = (genreCount[genre] || 0) + 1;
   });

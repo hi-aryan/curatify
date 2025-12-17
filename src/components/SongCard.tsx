@@ -8,7 +8,13 @@
 */
 import { motion } from "motion/react";
 
-export function SongCard({ track, onDragStart, isDragging }) {
+interface SongCardProps {
+  track: any;
+  onDragStart?: (track: any) => void;
+  isDragging?: boolean;
+}
+
+export function SongCard({ track, onDragStart, isDragging }: SongCardProps) {
   function handleDragStart(event) {
     // Set drag data for the drop zone
     event.dataTransfer.setData("application/json", JSON.stringify(track));

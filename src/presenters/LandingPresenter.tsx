@@ -23,9 +23,9 @@ export function LandingPresenter() {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const selectedCountry = useSelector((state) => state.charts.selectedCountry);
-  const dummyPlaylist = useSelector((state) => state.charts.dummyPlaylist);
-  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const selectedCountry = useSelector((state: any) => state.charts.selectedCountry);
+  const dummyPlaylist = useSelector((state: any) => state.charts.dummyPlaylist);
+  const isLoggedIn = useSelector((state: any) => state.user.isLoggedIn);
 
   // Get tracks for the selected country from local CSV data
   const countryTracks = selectedCountry

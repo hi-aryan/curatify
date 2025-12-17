@@ -84,7 +84,7 @@ export function MoodboardCard({ playlists, selectedPlaylistId, onPlaylistSelect,
                             </div>
 
                             {/* Top Songs */}
-                            {analysis.topSongs && Object.entries(analysis.topSongs).map(([category, track]) => {
+                            {analysis.topSongs && Object.entries(analysis.topSongs).map(([category, track]: [string, any]) => {
                                 if (!track) return null;
                                 const categoryInfo = categories.find(cat => cat.key === category);
                                 const categoryLabel = categoryInfo?.topLabel || category;

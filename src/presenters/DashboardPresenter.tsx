@@ -137,6 +137,7 @@ export function DashboardPresenter() {
         setFollowedUsers(followed || []);
       } catch (error) {
         console.error("Failed to load followed users:", error);
+        setFollowError("Failed to load friends list. Please try refreshing.");
       }
     }
 

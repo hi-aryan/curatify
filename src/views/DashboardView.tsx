@@ -167,7 +167,6 @@ export function DashboardView(props) {
           <CardHeader>
             <CardTitle className="text-xl font-semibold flex items-center justify-between">
               Recommendations
-
             </CardTitle>
           </CardHeader>
           <CardContent>

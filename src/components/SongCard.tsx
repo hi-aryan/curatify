@@ -12,9 +12,15 @@ interface SongCardProps {
   track: any;
   onDragStart?: (track: any) => void;
   isDragging?: boolean;
+  onAdd?: (track: any) => void;
 }
 
-export function SongCard({ track, onDragStart, isDragging }: SongCardProps) {
+export function SongCard({
+  track,
+  onDragStart,
+  isDragging,
+  onAdd,
+}: SongCardProps) {
   function handleDragStart(event) {
     // Set drag data for the drop zone
     event.dataTransfer.setData("application/json", JSON.stringify(track));
@@ -44,14 +50,36 @@ export function SongCard({ track, onDragStart, isDragging }: SongCardProps) {
 
       {/* Track info */}
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-light truncate">
-          {track.trackName}
+        <p className="font-semibold truncate">
+          {track.trackName || track.name}
         </p>
         <p className="text-xs text-light/60 truncate">{track.artistName}</p>
       </div>
 
-      {/* Drag indicator */}
-      <div className="flex flex-col gap-0.5 px-1 opacity-40">
+      {/* Add Button (Mobile only) */}
+      <button
+        onClick={() => onAdd?.(track)}
+        className="lg:hidden p-2 -mr-2 text-green active:scale-95 transition-transform"
+        aria-label="Add to playlist"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+      </button>
+
+      {/* Drag indicator (Desktop only) */}
+      <div className="hidden lg:flex flex-col gap-0.5 px-1 opacity-40">
         <div className="w-4 h-0.5 bg-light/60 rounded" />
         <div className="w-4 h-0.5 bg-light/60 rounded" />
         <div className="w-4 h-0.5 bg-light/60 rounded" />

@@ -62,6 +62,10 @@ export function LandingPresenter() {
     router.push("/dashboard");
   }
 
+  function navigateToAboutACB() {
+    router.push("/about");
+  }
+
   return (
     <LandingView
       selectedCountry={selectedCountry}
@@ -74,6 +78,7 @@ export function LandingPresenter() {
       isLoggedIn={isLoggedIn}
       onLoginClick={loginClickACB}
       onNavigateToDashboard={navigateToDashboardACB}
+      onNavigateToAbout={navigateToAboutACB}
       isMobile={isMobile}
     />
   );

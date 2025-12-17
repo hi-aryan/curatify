@@ -35,6 +35,8 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
+import logoImage from "@/assets/logo.png";
+import Image from "next/image";
 
 interface LandingViewProps {
   selectedCountry: string;
@@ -48,6 +50,7 @@ interface LandingViewProps {
   onLoginClick: () => void;
   onNavigateToDashboard: () => void;
   isMobile: boolean;
+  onNavigateToAbout: () => void;
 }
 
 export function LandingView({
@@ -62,6 +65,7 @@ export function LandingView({
   onLoginClick,
   onNavigateToDashboard,
   isMobile,
+  onNavigateToAbout,
 }: LandingViewProps) {
   function loginClickHandlerACB() {
     onLoginClick();
@@ -71,42 +75,182 @@ export function LandingView({
     onNavigateToDashboard();
   }
 
+  function navigateToAboutHandlerACB() {
+    onNavigateToAbout();
+  }
+
   function renderSongCardCB(track) {
     return <SongCard key={track.id} track={track} />;
   }
 
   return (
     <div className="min-h-screen flex flex-col bg-dark/20 text-light overflow-y-auto lg:h-screen lg:overflow-hidden">
-      {/* Hero section */}
-      <header className="px-4 py-4 lg:px-8 flex flex-col lg:flex-row gap-4 items-center justify-between shrink-0">
-        <div className="text-center lg:text-left">
-          <h1 className="text-3xl font-bold">Curatify</h1>
-          <p className="text-sm opacity-70">Discover Nordic music charts</p>
+      {/* Navbar */}
+      <header className="px-4 py-4 lg:px-4 flex items-center justify-between shrink-0">
+        {/* Left: Logo + Brand + Desktop Links */}
+        <div className="flex items-center gap-6">
+          <button
+            type="button"
+            aria-label="Home"
+            className="flex items-center gap-2"
+            onClick={() => {
+              /* TODO: route to home */
+            }}
+          >
+            <Image
+              src={logoImage}
+              alt="Curatify logo"
+              className="h-12 w-12 rounded-md"
+              priority
+            />
+            <span className="text-2xl font-bold">Curatify</span>
+          </button>
+
+          {/* Desktop nav links */}
+          <NavigationMenu
+            className="hidden lg:flex"
+            aria-label="Primary navigation"
+          >
+            <NavigationMenuList className="justify-start">
+              <NavigationMenuItem>
+                <NavigationMenuLink asChild>
+                  <button
+                    type="button"
+                    className="px-3 py-2 text-sm rounded-full border border-transparent text-light/90 hover:text-green hover:bg-green/10"
+                    onClick={navigateToAboutHandlerACB}
+                  >
+                    About
+                  </button>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink asChild>
+                  <button
+                    type="button"
+                    className="px-3 py-2 text-sm rounded-full border border-transparent text-light/90 hover:text-green hover:bg-green/10"
+                    onClick={() => {
+                      /* TODO: route to Features */
+                    }}
+                  >
+                    Features
+                  </button>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink asChild>
+                  <button
+                    type="button"
+                    className="px-3 py-2 text-sm rounded-full border border-transparent text-light/90 hover:text-green hover:bg-green/10"
+                    onClick={() => {
+                      /* TODO: route to Contact */
+                    }}
+                  >
+                    Contact
+                  </button>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
         </div>
-        {isLoggedIn ? (
-          <Button
-            onClick={navigateToDashboardHandlerACB}
-            variant="outline"
-            className="rounded-full border-green/50 text-green hover:bg-green/10 hover:scale-105 transition-all duration-200"
-          >
-            Go to Dashboard
-          </Button>
-        ) : (
-          <Button
-            onClick={loginClickHandlerACB}
-            variant="outline"
-            className="rounded-full border-green/50 text-green hover:bg-green/10 hover:scale-105 transition-all duration-200 w-full lg:w-auto"
-          >
-            Sign in with Spotify
-          </Button>
-        )}
+
+        {/* Right: CTA + Mobile Menu */}
+        <div className="flex items-center gap-2">
+          {/* Sign in / Dashboard */}
+          {isLoggedIn ? (
+            <Button
+              onClick={navigateToDashboardHandlerACB}
+              variant="outline"
+              className="rounded-full border-green/50 text-green hover:bg-green/10 hover:scale-105 transition-all duration-200"
+            >
+              Go to Dashboard
+            </Button>
+          ) : (
+            <Button
+              onClick={loginClickHandlerACB}
+              variant="outline"
+              className="rounded-full border-green/50 text-green hover:bg-green/10 hover:scale-105 transition-all duration-200"
+            >
+              Sign in with Spotify
+            </Button>
+          )}
+
+          {/* Mobile menu trigger (hamburger) */}
+          <NavigationMenu className="lg:hidden" aria-label="Mobile navigation">
+            <NavigationMenuList>
+              <NavigationMenuItem>
+                <NavigationMenuTrigger
+                  className="rounded-full border border-green/50 text-green bg-transparent hover:bg-green/10 p-2"
+                  aria-label="Open menu"
+                >
+                  <svg
+                    className="h-5 w-5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <line x1="3" y1="6" x2="21" y2="6" />
+                    <line x1="3" y1="12" x2="21" y2="12" />
+                    <line x1="3" y1="18" x2="21" y2="18" />
+                  </svg>
+                </NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <div className="p-3 w-48">
+                    <ul className="grid gap-1.5">
+                      <li>
+                        <NavigationMenuLink asChild>
+                          <button
+                            type="button"
+                            className="block w-full text-left px-3 py-2 rounded-md text-sm hover:bg-green/10"
+                            onClick={navigateToAboutHandlerACB}
+                          >
+                            About
+                          </button>
+                        </NavigationMenuLink>
+                      </li>
+                      <li>
+                        <NavigationMenuLink asChild>
+                          <button
+                            type="button"
+                            className="block w-full text-left px-3 py-2 rounded-md text-sm hover:bg-green/10"
+                            onClick={() => {
+                              /* TODO: route to Features */
+                            }}
+                          >
+                            Features
+                          </button>
+                        </NavigationMenuLink>
+                      </li>
+                      <li>
+                        <NavigationMenuLink asChild>
+                          <button
+                            type="button"
+                            className="block w-full text-left px-3 py-2 rounded-md text-sm hover:bg-green/10"
+                            onClick={() => {
+                              /* TODO: route to Contact */
+                            }}
+                          >
+                            Contact
+                          </button>
+                        </NavigationMenuLink>
+                      </li>
+                    </ul>
+                  </div>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
+        </div>
       </header>
 
       {/* Main content - stacked on mobile, side-by-side on desktop */}
-      <section className="flex-1 px-4 pb-8 lg:px-8 lg:pb-4 flex flex-col lg:flex-row gap-8 min-h-0">
+      <section className="flex-1 px-4 pb-8 lg:px-8 lg:pb-4 flex flex-col lg:flex-row gap-8 lg:gap-6 min-h-0">
         {/* Nordic Map - Top/Left side */}
         <div className="w-full lg:flex-1 flex flex-col items-center min-h-[400px] lg:min-h-0 lg:h-full">
-          <div className="flex items-center gap-2 mb-2">
+          <div className="flex items-center gap-2 mb-8 lg:mb-0">
             <span className="flex items-center justify-center w-6 h-6 rounded-full bg-green/20 text-green text-xs font-bold">
               1
             </span>
@@ -116,7 +260,7 @@ export function LandingView({
             className="flex-1 w-full"
             containerClassName="py-0 h-full"
           >
-            <CardBody className="w-full h-full flex items-center justify-center">
+            <CardBody className="w-full h-full flex items-center justify-center lg:scale-150">
               <CardItem translateZ="80" className="max-h-full w-full">
                 <NordicMap
                   selectedCountry={selectedCountry}
@@ -128,7 +272,7 @@ export function LandingView({
         </div>
 
         {/* Playlist Cards - Bottom/Right side */}
-        <div className="w-full lg:w-96 flex flex-col gap-6 lg:gap-4 lg:h-full lg:min-h-0">
+        <div className="w-full lg:w-1/2 flex flex-col gap-6 lg:gap-4 lg:h-full lg:min-h-0 ">
           {/* Country Songs List */}
           <Card className="h-[400px] lg:h-0 lg:flex-1 flex flex-col border-light/40 bg-dark/40 min-h-0">
             <CardHeader className="py-2 lg:py-3 shrink-0">

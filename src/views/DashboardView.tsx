@@ -167,11 +167,7 @@ export function DashboardView(props) {
           <CardHeader>
             <CardTitle className="text-xl font-semibold flex items-center justify-between">
               Recommendations
-              {props.recLoading && (
-                <span className="text-xs text-green animate-pulse">
-                  Thinking...
-                </span>
-              )}
+
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -184,9 +180,15 @@ export function DashboardView(props) {
                   onClick={props.onGetRecommendations}
                   disabled={props.recLoading}
                   variant="outline"
-                  className="w-full hover:bg-green/10 hover:border-green hover:text-green transition-all"
+                  className="w-full border-light/40 text-light/90 hover:bg-green/5 hover:border-green/60 hover:text-green/90 transition-all"
                 >
-                  {props.recLoading ? "Analyzing..." : "Get Suggestions"}
+                  {props.recLoading ? (
+                    <span className="text-xs text-green animate-pulse">
+                      Analyzing...
+                    </span>
+                  ) : (
+                    "Get Suggestions"
+                  )}
                 </Button>
                 {props.recError && (
                   <p className="text-red-400 text-xs mt-3">{props.recError}</p>

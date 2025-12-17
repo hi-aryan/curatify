@@ -17,6 +17,16 @@ function gotResponseACB(response) {
   return response.json();
 }
 
+interface TopItemsOptions {
+  limit?: number;
+  time_range?: "short_term" | "medium_term" | "long_term";
+}
+
+interface PlaylistOptions {
+  limit?: number;
+  offset?: number;
+}
+
 // Get user's profile (requires auth)
 export function getUserProfile(accessToken) {
   return fetch(`${SPOTIFY_API_URL}/me`, {
@@ -31,7 +41,7 @@ export function getPlaylistTracks(playlistId, accessToken) {
   }).then(gotResponseACB);
 }
 
-export function getUserTopArtists(accessToken, options: any = {}) {
+export function getUserTopArtists(accessToken, options: TopItemsOptions = {}) {
   const { limit = 50, time_range = "short_term" } = options;
   const params = new URLSearchParams({
     limit: String(limit),
@@ -42,7 +52,7 @@ export function getUserTopArtists(accessToken, options: any = {}) {
   }).then(gotResponseACB);
 }
 
-export function getUserTopTracks(accessToken, options: any = {}) {
+export function getUserTopTracks(accessToken, options: TopItemsOptions = {}) {
   const { limit = 50, time_range = "short_term" } = options;
   const params = new URLSearchParams({
     limit: String(limit),
@@ -72,7 +82,7 @@ export function getArtists(accessToken, artistIds) {
 }
 
 // Get user's playlists
-export function getUserPlaylists(accessToken, options: any = {}) {
+export function getUserPlaylists(accessToken, options: PlaylistOptions = {}) {
   const { limit = 50, offset = 0 } = options;
   const params = new URLSearchParams({
     limit: String(limit),

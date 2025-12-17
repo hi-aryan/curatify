@@ -10,6 +10,23 @@ import { LLM_API_URL, LLM_API_KEY } from "../apiConfig";
     - Creating personality insights
 */
 
+interface GeminiPart {
+    text: string;
+}
+
+interface GeminiContent {
+    parts: GeminiPart[];
+}
+
+interface GeminiTool {
+    googleSearch: Record<string, never>;
+}
+
+interface GeminiRequest {
+    contents: GeminiContent[];
+    tools?: GeminiTool[];
+}
+
 function gotResponseACB(response) {
   if (!response.ok) {
     throw new Error("LLM API error: " + response.status);
@@ -101,7 +118,7 @@ export async function callGeminiAPI(prompt, useGoogleSearch = false) {
 
     const url = `${LLM_API_URL}?key=${LLM_API_KEY}`;
     
-    const requestBody: any = {
+    const requestBody: GeminiRequest = {
         contents: [{ parts: [{ text: prompt }] }],
     };
 

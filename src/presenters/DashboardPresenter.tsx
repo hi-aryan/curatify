@@ -9,6 +9,7 @@ import {
   setTopArtists,
   setTopGenre,
 } from "../store/userSlice";
+import { RootState } from "../store/store";
 import { clearTokenData, getValidAccessToken } from "../api/spotifyAuth";
 import { DashboardView } from "../views/DashboardView";
 import {
@@ -34,8 +35,8 @@ import { useMoodboard } from "../hooks/useMoodboard";
 export function DashboardPresenter() {
   const dispatch = useDispatch();
   const router = useRouter();
-  const profile = useSelector((state: any) => state.user.profile);
-  const isLoggedIn = useSelector((state: any) => state.user.isLoggedIn);
+  const profile = useSelector((state: RootState) => state.user.profile);
+  const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
 
   // Auth Protection
   useEffect(() => {
@@ -43,10 +44,10 @@ export function DashboardPresenter() {
       router.push("/");
     }
   }, [isLoggedIn, router]);
-  const topArtist = useSelector((state: any) => state.user.topArtist);
-  const topTracks = useSelector((state: any) => state.user.topTracks);
-  const topArtists = useSelector((state: any) => state.user.topArtists);
-  const topGenre = useSelector((state: any) => state.user.topGenre);
+  const topArtist = useSelector((state: RootState) => state.user.topArtist);
+  const topTracks = useSelector((state: RootState) => state.user.topTracks);
+  const topArtists = useSelector((state: RootState) => state.user.topArtists);
+  const topGenre = useSelector((state: RootState) => state.user.topGenre);
 
   // Moodboard state - hook gets its own token internally
   const [playlists, setPlaylists] = useState([]);

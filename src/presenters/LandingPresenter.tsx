@@ -8,6 +8,7 @@ import {
   reorderPlaylist,
 } from "../store/chartsSlice";
 import { redirectToSpotifyAuth } from "../api/spotifyAuth";
+import { RootState } from "../store/store";
 import { LandingView } from "../views/LandingView";
 import { getCountryTracks } from "../data/nordicCharts";
 
@@ -23,9 +24,9 @@ export function LandingPresenter() {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const selectedCountry = useSelector((state: any) => state.charts.selectedCountry);
-  const dummyPlaylist = useSelector((state: any) => state.charts.dummyPlaylist);
-  const isLoggedIn = useSelector((state: any) => state.user.isLoggedIn);
+  const selectedCountry = useSelector((state: RootState) => state.charts.selectedCountry);
+  const dummyPlaylist = useSelector((state: RootState) => state.charts.dummyPlaylist);
+  const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
 
   // Get tracks for the selected country from local CSV data
   const countryTracks = selectedCountry

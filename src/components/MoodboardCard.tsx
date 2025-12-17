@@ -13,6 +13,16 @@ const loadingStates = [
   { text: "Cooking up the results!" },
 ];
 
+interface MoodboardTrack {
+    id?: string;
+    name: string;
+    artists: { name: string }[];
+    album?: { images: { url: string }[] };
+    external_urls?: { spotify: string };
+    score: number;
+    uri?: string;
+}
+
 /**
  * MoodboardCard: Displays playlist mood analysis
  * 
@@ -84,7 +94,7 @@ export function MoodboardCard({ playlists, selectedPlaylistId, onPlaylistSelect,
                             </div>
 
                             {/* Top Songs */}
-                            {analysis.topSongs && Object.entries(analysis.topSongs).map(([category, track]: [string, any]) => {
+                            {analysis.topSongs && Object.entries(analysis.topSongs).map(([category, track]: [string, MoodboardTrack]) => {
                                 if (!track) return null;
                                 const categoryInfo = categories.find(cat => cat.key === category);
                                 const categoryLabel = categoryInfo?.topLabel || category;

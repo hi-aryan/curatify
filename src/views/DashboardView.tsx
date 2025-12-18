@@ -223,9 +223,7 @@ export function DashboardView(props) {
                         <div className="w-6 h-6 rounded-full bg-green/20 flex items-center justify-center text-green text-[10px]">
                           {user.name?.charAt(0) || "?"}
                         </div>
-                        <span className="text-sm font-medium">
-                          {user.name}
-                        </span>
+                        <span className="text-sm font-medium">{user.name}</span>
                       </div>
                       <Button
                         size="sm"
@@ -339,7 +337,27 @@ export function DashboardView(props) {
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             <Card className="border-light/40 bg-dark/40 hover:shadow-xl hover:shadow-green/[0.05] transition-all hover:-translate-y-1 cursor-pointer">
               <CardHeader>
-                <CardTitle className="text-lg">Playlist Stats</CardTitle>
+                <CardTitle className="text-lg">Recommendations</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm opacity-70 mb-4">
+                  Get AI-powered song suggestions for you.
+                </p>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full hover:bg-green/10 hover:border-green/50 hover:text-green"
+                  onClick={() =>
+                    (window.location.href = "/dashboard/recommender")
+                  }
+                >
+                  Discover
+                </Button>
+              </CardContent>
+            </Card>
+            <Card className="border-light/40 bg-dark/40 hover:shadow-xl hover:shadow-green/[0.05] transition-all hover:-translate-y-1 cursor-pointer">
+              <CardHeader>
+                <CardTitle className="text-lg">Analyze Playlists</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-sm opacity-70 mb-4">
@@ -360,27 +378,6 @@ export function DashboardView(props) {
 
             <Card className="border-light/40 bg-dark/40 hover:shadow-xl hover:shadow-green/[0.05] transition-all hover:-translate-y-1 cursor-pointer">
               <CardHeader>
-                <CardTitle className="text-lg">Recommendations</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm opacity-70 mb-4">
-                  Get AI-powered song suggestions for you.
-                </p>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="w-full hover:bg-green/10 hover:border-green/50 hover:text-green"
-                  onClick={() =>
-                    (window.location.href = "/dashboard/recommender")
-                  }
-                >
-                  Discover
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card className="border-light/40 bg-dark/40 hover:shadow-xl hover:shadow-green/[0.05] transition-all hover:-translate-y-1 cursor-pointer">
-              <CardHeader>
                 <CardTitle className="text-lg">My Stats</CardTitle>
               </CardHeader>
               <CardContent>
@@ -391,9 +388,7 @@ export function DashboardView(props) {
                   variant="outline"
                   size="sm"
                   className="w-full hover:bg-green/10 hover:border-green/50 hover:text-green"
-                  onClick={() =>
-                    (window.location.href = "/dashboard/my-stats")
-                  }
+                  onClick={() => (window.location.href = "/dashboard/my-stats")}
                 >
                   View Stats
                 </Button>
@@ -406,15 +401,13 @@ export function DashboardView(props) {
               </CardHeader>
               <CardContent>
                 <p className="text-sm opacity-70 mb-4">
-                  Organize and sort your playlists.
+                  Organize and sort your playlists. Coming soon!
                 </p>
                 <Button
                   variant="outline"
                   size="sm"
                   className="w-full hover:bg-green/10 hover:border-green/50 hover:text-green"
-                  onClick={() =>
-                    (window.location.href = "/dashboard/sorter")
-                  }
+                  onClick={() => (window.location.href = "/dashboard/sorter")}
                 >
                   Sort
                 </Button>
@@ -433,9 +426,7 @@ export function DashboardView(props) {
                   variant="outline"
                   size="sm"
                   className="w-full hover:bg-green/10 hover:border-green/50 hover:text-green"
-                  onClick={() =>
-                    (window.location.href = "/dashboard/settings")
-                  }
+                  onClick={() => (window.location.href = "/dashboard/settings")}
                 >
                   Configure
                 </Button>

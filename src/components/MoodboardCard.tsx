@@ -82,7 +82,7 @@ export function MoodboardCard({
       />
       <CardHeader>
         <CardTitle className="text-xl font-semibold">
-          Your Music Personality
+          Your Playlist Moodboard
         </CardTitle>
       </CardHeader>
       <CardContent>

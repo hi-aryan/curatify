@@ -24,7 +24,7 @@ export default function PlaylistStatsView({
   return (
     <div className="min-h-screen p-8">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-4xl font-bold mb-6">Playlist Stats</h1>
+        <h1 className="text-4xl font-bold mb-6">Analyze Playlist</h1>
         <p className="text-light/60 mb-8">
           Deep dive into your playlists and discover their mood profiles.
         </p>

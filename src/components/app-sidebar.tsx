@@ -92,24 +92,24 @@ export function AppSidebar() {
               <SidebarMenuItem>
                 <SidebarMenuButton
                   asChild
-                  isActive={pathname === "/dashboard/sorter"}
-                  tooltip="Sorter"
-                >
-                  <Link href="/dashboard/sorter">
-                    <Wand2 />
-                    <span>Sorter</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  asChild
                   isActive={pathname === "/dashboard/recommender"}
                   tooltip="Recommender"
                 >
                   <Link href="/dashboard/recommender">
                     <Sparkles />
                     <span>Recommender</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  isActive={pathname === "/dashboard/playlist-stats"}
+                  tooltip="Analyze Playlist"
+                >
+                  <Link href="/dashboard/playlist-stats">
+                    <BarChart3 />
+                    <span>Analyze Playlist</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -122,18 +122,6 @@ export function AppSidebar() {
           <SidebarGroupLabel>Analytics</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  asChild
-                  isActive={pathname === "/dashboard/playlist-stats"}
-                  tooltip="Playlist Stats"
-                >
-                  <Link href="/dashboard/playlist-stats">
-                    <BarChart3 />
-                    <span>Playlist Stats</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton
                   asChild
@@ -164,6 +152,27 @@ export function AppSidebar() {
                   <Link href="/dashboard/friends">
                     <Users />
                     <span>Friends</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {/* Coming Soon Section */}
+        <SidebarGroup>
+          <SidebarGroupLabel>Coming Soon</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  isActive={pathname === "/dashboard/sorter"}
+                  tooltip="Sorter"
+                >
+                  <Link href="/dashboard/sorter">
+                    <Wand2 />
+                    <span>Sorter</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>

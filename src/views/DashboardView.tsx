@@ -40,7 +40,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { Music } from "lucide-react";
+import { InfiniteTrackScroll } from "@/components/InfiniteTrackScroll";
 
 export function DashboardView(props) {
   function logoutClickHandlerACB() {
@@ -56,7 +56,7 @@ export function DashboardView(props) {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 max-w-full w-full min-w-0 overflow-x-hidden">
       {/* Header with user profile and favorite artist */}
       <header>
         <div className="flex flex-wrap gap-8 justify-between items-start mb-6">
@@ -280,56 +280,9 @@ export function DashboardView(props) {
       )}
 
       {/* Main content - Top tracks preview */}
-      <main>
+      <main className="overflow-x-hidden max-w-full">
         <h2 className="text-2xl font-bold mb-4">Your Top Tracks</h2>
-        <div className="grid gap-4 md:grid-cols-3">
-          {props.topTracks && props.topTracks.length > 0 ? (
-            props.topTracks.map((track, index) => (
-              <Card
-                key={index}
-                className="border-light/40 bg-dark/40 hover:shadow-xl hover:shadow-green/[0.05] transition-all hover:-translate-y-1"
-              >
-                <CardContent className="pt-6">
-                  <div className="flex flex-col items-center text-center">
-                    {track.album?.images?.[0]?.url && (
-                      <img
-                        src={track.album.images[0].url}
-                        alt={track.name}
-                        className="w-24 h-24 rounded-lg mb-4 object-cover"
-                      />
-                    )}
-                    <div className="flex items-center justify-center gap-2 mb-2">
-                      <Music className="w-4 h-4 text-green" />
-                      <span className="text-xs text-green font-semibold">
-                        #{index + 1} Top Track
-                      </span>
-                    </div>
-                    <h3 className="font-semibold text-light mb-1 line-clamp-2">
-                      {track.name}
-                    </h3>
-                    <p className="text-sm opacity-70 line-clamp-1">
-                      {track.artists?.map((a) => a.name).join(", ")}
-                    </p>
-                    {track.external_urls?.spotify && (
-                      <a
-                        href={track.external_urls.spotify}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="mt-4 text-xs text-green hover:text-green/80 transition-colors"
-                      >
-                        Listen on Spotify →
-                      </a>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            ))
-          ) : (
-            <p className="text-light/60 col-span-3 text-center py-8">
-              Loading your top tracks...
-            </p>
-          )}
-        </div>
+        <InfiniteTrackScroll tracks={props.topTracks} />
 
         {/* Quick links to tools */}
         <div className="mt-12">

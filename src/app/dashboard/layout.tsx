@@ -14,8 +14,8 @@ export default function DashboardLayout({
 
       {/* SidebarInset is crucial here: it handles the layout shift 
           so your content sits next to the sidebar, not under it. */}
-      <SidebarInset>
-        <div className="w-full max-w-6xl mx-auto">
+      <SidebarInset className="overflow-x-hidden">
+        <div className="w-full">
           <header className="flex h-16 shrink-0 items-center gap-2 px-4">
             <SidebarTrigger />
             <div className="h-4 w-px bg-sidebar-border" />
@@ -23,7 +23,7 @@ export default function DashboardLayout({
           </header>
         </div>
 
-        <main className="flex-1 w-full max-w-6xl mx-auto p-4 md:p-8">
+        <main className="flex-1 w-full min-w-0 p-4 md:p-8 overflow-x-hidden">
           {children}
         </main>
       </SidebarInset>

@@ -87,7 +87,7 @@ export function DashboardPresenter() {
     async function loadDashboardDataACB() {
       try {
         const accessToken = await getValidAccessToken();
-        
+
         // If getting a valid token fails (session dead), logout and redirect
         if (!accessToken) {
           console.warn("Session invalid or expired. Logging out.");
@@ -215,7 +215,10 @@ export function DashboardPresenter() {
       const accessToken = await getValidAccessToken();
       if (accessToken) {
         await addItemToQueue(trackUri, accessToken);
-        setQueueNotification({ type: "success", message: "Added to queue!" });
+        setQueueNotification({
+          type: "success",
+          message: "Added to queue! Check your Spotify app 👀",
+        });
         // Auto-dismiss success message after 3 seconds
         setTimeout(() => setQueueNotification(null), 3000);
       }

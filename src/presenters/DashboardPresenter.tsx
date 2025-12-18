@@ -80,64 +80,76 @@ export function DashboardPresenter() {
   // Load dashboard data and playlists
   useEffect(() => {
     async function loadDashboardDataACB() {
-      const accessToken = await getValidAccessToken();
-      if (!accessToken) return;
-
-      // Load playlists
       try {
-        const response = await getUserPlaylists(accessToken, { limit: 50 });
-        setPlaylists(response?.items || []);
+        const accessToken = await getValidAccessToken();
+        
+        // If getting a valid token fails (session dead), logout and redirect
+        if (!accessToken) {
+          console.warn("Session invalid or expired. Logging out.");
+          logoutACB();
+          return;
+        }
+
+        // Load playlists
+        try {
+          const response = await getUserPlaylists(accessToken, { limit: 50 });
+          setPlaylists(response?.items || []);
+        } catch (error) {
+          console.error("Failed to fetch playlists:", error);
+        }
+
+        // Load top artist
+        if (!topArtist) {
+          try {
+            const artist = await fetchTopArtist(accessToken);
+            if (artist) dispatch(setTopArtist(artist));
+          } catch (error) {
+            console.error("Failed to fetch top artist:", error);
+          }
+        }
+
+        // Load top tracks
+        if (!topTracks) {
+          try {
+            const tracks = await fetchTopTracks(accessToken, 3);
+            dispatch(setTopTracks(tracks));
+          } catch (error) {
+            console.error("Failed to fetch top tracks:", error);
+          }
+        }
+
+        // Load top artists
+        if (!topArtists) {
+          try {
+            const artists = await fetchTopArtists(accessToken, 10);
+            dispatch(setTopArtists(artists));
+          } catch (error) {
+            console.error("Failed to fetch top artists:", error);
+          }
+        }
+
+        // Load top genre
+        if (!topGenre) {
+          try {
+            const genre = await fetchTopGenre(accessToken);
+            if (genre) dispatch(setTopGenre(genre));
+          } catch (error) {
+            console.error("Failed to fetch top genre:", error);
+          }
+        }
+
+        // Load followed users
+        try {
+          const followed = await getFollowedUsers(profile?.id);
+          setFollowedUsers(followed || []);
+        } catch (error) {
+          console.error("Failed to load followed users:", error);
+          setFollowError("Failed to load friends list. Please try refreshing.");
+        }
       } catch (error) {
-        console.error("Failed to fetch playlists:", error);
-      }
-
-      // Load top artist
-      if (!topArtist) {
-        try {
-          const artist = await fetchTopArtist(accessToken);
-          if (artist) dispatch(setTopArtist(artist));
-        } catch (error) {
-          console.error("Failed to fetch top artist:", error);
-        }
-      }
-
-      // Load top tracks
-      if (!topTracks) {
-        try {
-          const tracks = await fetchTopTracks(accessToken, 3);
-          dispatch(setTopTracks(tracks));
-        } catch (error) {
-          console.error("Failed to fetch top tracks:", error);
-        }
-      }
-
-      // Load top artists
-      if (!topArtists) {
-        try {
-          const artists = await fetchTopArtists(accessToken, 10);
-          dispatch(setTopArtists(artists));
-        } catch (error) {
-          console.error("Failed to fetch top artists:", error);
-        }
-      }
-
-      // Load top genre
-      if (!topGenre) {
-        try {
-          const genre = await fetchTopGenre(accessToken);
-          if (genre) dispatch(setTopGenre(genre));
-        } catch (error) {
-          console.error("Failed to fetch top genre:", error);
-        }
-      }
-
-      // Load followed users
-      try {
-        const followed = await getFollowedUsers(profile?.id);
-        setFollowedUsers(followed || []);
-      } catch (error) {
-        console.error("Failed to load followed users:", error);
-        setFollowError("Failed to load friends list. Please try refreshing.");
+        console.error("Critical dashboard loading error:", error);
+        // On unexpected critical errors, logout to be safe
+        logoutACB();
       }
     }
 

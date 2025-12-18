@@ -26,8 +26,8 @@ import { SongCard } from "../components/SongCard";
 import { PlaylistDropZone } from "../components/PlaylistDropZone";
 import { COUNTRY_NAMES } from "../data/nordicCharts";
 import { CardBody, CardContainer, CardItem } from "../components/ui/3d-card";
-import logoImage from "@/assets/logo.png";
-import Image from "next/image";
+
+
 
 interface LandingViewProps {
   selectedCountry: string;
@@ -77,12 +77,7 @@ export function LandingView({
       {/* Header - Minimal: Logo + Auth CTA */}
       <header className="px-4 py-4 lg:px-8 flex items-center justify-between shrink-0 relative z-50 bg-dark/20 backdrop-blur-sm border-b border-transparent">
         <div className="flex items-center gap-2">
-          <Image
-            src={logoImage}
-            alt="Curatify logo"
-            className="h-10 w-10 lg:h-12 lg:w-12 rounded-md"
-            priority
-          />
+
           <span className="text-xl lg:text-2xl font-bold tracking-tight">Curatify</span>
         </div>
 

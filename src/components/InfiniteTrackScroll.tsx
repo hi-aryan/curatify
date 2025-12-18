@@ -82,9 +82,16 @@ export function InfiniteTrackScroll({ tracks }: InfiniteTrackScrollProps) {
                   <img
                     src={track.album.images[0].url}
                     alt={track.name}
-                    className="w-24 h-24 rounded-lg mb-4 object-cover"
+                    className="w-24 h-24 rounded-lg mb-3 object-cover"
                   />
                 )}
+                <div className="flex items-center justify-center gap-2 mb-2">
+                  <Music className="w-4 h-4 text-green opacity-90" />
+                  <span className="text-xs text-green font-semibold opacity-90">
+                    #{(index % tracks.length) + 1} Top Track
+                  </span>
+                </div>
+
                 <h3 className="font-semibold text-light line-clamp-2">
                   {track.name}
                 </h3>
@@ -96,7 +103,7 @@ export function InfiniteTrackScroll({ tracks }: InfiniteTrackScrollProps) {
                     href={track.external_urls.spotify}
                     target="_blank"
                     rel="noreferrer"
-                    className="mt-3 text-xs text-green hover:text-green/80 transition-colors"
+                    className="mt-3 text-xs text-green/80 hover:text-green/70 transition-colors"
                   >
                     Listen on Spotify →
                   </a>

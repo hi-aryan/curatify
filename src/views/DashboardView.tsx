@@ -34,6 +34,7 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { InfiniteTrackScroll } from "@/components/InfiniteTrackScroll";
+import { Music, BarChart2, ListMusic, Settings, Sparkles } from "lucide-react";
 
 interface DashboardViewProps {
   profile: any;
@@ -319,21 +320,20 @@ export function DashboardView(props: DashboardViewProps) {
         <InfiniteTrackScroll tracks={props.topTracks} />
 
         {/* Quick links to tools */}
-        <div className="mt-12">
-          <h2 className="text-2xl font-bold mb-4">Tools & Features</h2>
+        <div className="mt-12 mb-4">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            <Card className="border-light/40 bg-dark/40 hover:shadow-xl hover:shadow-green/[0.05] transition-shadow cursor-pointer">
-              <CardHeader>
-                <CardTitle className="text-lg">Recommendations</CardTitle>
+            <Card className="border-light/10 bg-gradient-to-br from-white/[0.08] to-transparent hover:border-green/50 hover:shadow-2xl hover:shadow-green/[0.1] transition-all duration-300 h-full flex flex-col group relative overflow-hidden">
+              <div className="absolute right-[-20px] top-[-20px] opacity-[0.03] group-hover:opacity-[0.1] transition-opacity duration-300 transform rotate-12 pointer-events-none">
+                <Sparkles size={120} />
+              </div>
+              <CardHeader className="relative z-10">
+                <CardTitle className="text-xl font-bold tracking-tight">
+                  Song Recommendations
+                </CardTitle>
               </CardHeader>
-              <CardContent>
-                <p className="text-sm opacity-70 mb-4">
-                  Get AI-powered song suggestions for you.
-                </p>
+              <CardContent className="flex-1 flex flex-col justify-end relative z-10">
                 <Button
-                  variant="outline"
-                  size="sm"
-                  className="w-full hover:bg-green/10 hover:border-green/50 hover:text-green"
+                  className="w-full bg-white/10 hover:bg-green/80 hover:text-dark border-0 backdrop-blur-sm transition-all duration-300 font-semibold"
                   onClick={() =>
                     (window.location.href = "/dashboard/recommender")
                   }
@@ -342,18 +342,19 @@ export function DashboardView(props: DashboardViewProps) {
                 </Button>
               </CardContent>
             </Card>
-            <Card className="border-light/40 bg-dark/40 hover:shadow-xl hover:shadow-green/[0.05] transition-shadow cursor-pointer">
-              <CardHeader>
-                <CardTitle className="text-lg">Analyze Playlists</CardTitle>
+
+            <Card className="border-light/10 bg-gradient-to-br from-white/[0.08] to-transparent hover:border-green/50 hover:shadow-2xl hover:shadow-green/[0.1] transition-all duration-300 h-full flex flex-col group relative overflow-hidden">
+              <div className="absolute right-[-20px] top-[-20px] opacity-[0.03] group-hover:opacity-[0.1] transition-opacity duration-300 transform rotate-12 pointer-events-none">
+                <BarChart2 size={120} />
+              </div>
+              <CardHeader className="relative z-10">
+                <CardTitle className="text-xl font-bold tracking-tight">
+                  Analyze Your Playlists
+                </CardTitle>
               </CardHeader>
-              <CardContent>
-                <p className="text-sm opacity-70 mb-4">
-                  Analyze your playlists and discover mood profiles.
-                </p>
+              <CardContent className="flex-1 flex flex-col justify-end relative z-10">
                 <Button
-                  variant="outline"
-                  size="sm"
-                  className="w-full hover:bg-green/10 hover:border-green/50 hover:text-green"
+                  className="w-full bg-white/10 hover:bg-green/80 hover:text-dark border-0 backdrop-blur-sm transition-all duration-300 font-semibold"
                   onClick={() =>
                     (window.location.href = "/dashboard/playlist-stats")
                   }
@@ -363,18 +364,18 @@ export function DashboardView(props: DashboardViewProps) {
               </CardContent>
             </Card>
 
-            <Card className="border-light/40 bg-dark/40 hover:shadow-xl hover:shadow-green/[0.05] transition-shadow cursor-pointer">
-              <CardHeader>
-                <CardTitle className="text-lg">My Stats</CardTitle>
+            <Card className="border-light/10 bg-gradient-to-br from-white/[0.08] to-transparent hover:border-green/50 hover:shadow-2xl hover:shadow-green/[0.1] transition-all duration-300 h-full flex flex-col group relative overflow-hidden">
+              <div className="absolute right-[-20px] top-[-20px] opacity-[0.03] group-hover:opacity-[0.1] transition-opacity duration-300 transform rotate-12 pointer-events-none">
+                <Music size={120} />
+              </div>
+              <CardHeader className="relative z-10">
+                <CardTitle className="text-xl font-bold tracking-tight">
+                  Your Listening Statistics
+                </CardTitle>
               </CardHeader>
-              <CardContent>
-                <p className="text-sm opacity-70 mb-4">
-                  Deep dive into your listening statistics.
-                </p>
+              <CardContent className="flex-1 flex flex-col justify-end relative z-10">
                 <Button
-                  variant="outline"
-                  size="sm"
-                  className="w-full hover:bg-green/10 hover:border-green/50 hover:text-green"
+                  className="w-full bg-white/10 hover:bg-green/80 hover:text-dark border-0 backdrop-blur-sm transition-all duration-300 font-semibold"
                   onClick={() => (window.location.href = "/dashboard/my-stats")}
                 >
                   View Stats
@@ -382,18 +383,18 @@ export function DashboardView(props: DashboardViewProps) {
               </CardContent>
             </Card>
 
-            <Card className="border-light/40 bg-dark/40 hover:shadow-xl hover:shadow-green/[0.05] transition-shadow cursor-pointer">
-              <CardHeader>
-                <CardTitle className="text-lg">Playlist Sorter</CardTitle>
+            <Card className="border-light/10 bg-gradient-to-br from-white/[0.08] to-transparent hover:border-green/50 hover:shadow-2xl hover:shadow-green/[0.1] transition-all duration-300 h-full flex flex-col group relative overflow-hidden">
+              <div className="absolute right-[-20px] top-[-20px] opacity-[0.03] group-hover:opacity-[0.1] transition-opacity duration-300 transform rotate-12 pointer-events-none">
+                <ListMusic size={120} />
+              </div>
+              <CardHeader className="relative z-10">
+                <CardTitle className="text-xl font-bold tracking-tight">
+                  Sort Your Playlists
+                </CardTitle>
               </CardHeader>
-              <CardContent>
-                <p className="text-sm opacity-70 mb-4">
-                  Organize and sort your playlists. Coming soon!
-                </p>
+              <CardContent className="flex-1 flex flex-col justify-end relative z-10">
                 <Button
-                  variant="outline"
-                  size="sm"
-                  className="w-full hover:bg-green/10 hover:border-green/50 hover:text-green"
+                  className="w-full bg-white/10 hover:bg-green/80 hover:text-dark border-0 backdrop-blur-sm transition-all duration-300 font-semibold"
                   onClick={() => (window.location.href = "/dashboard/sorter")}
                 >
                   Sort
@@ -401,18 +402,18 @@ export function DashboardView(props: DashboardViewProps) {
               </CardContent>
             </Card>
 
-            <Card className="border-light/40 bg-dark/40 hover:shadow-xl hover:shadow-green/[0.05] transition-shadow cursor-pointer">
-              <CardHeader>
-                <CardTitle className="text-lg">Settings</CardTitle>
+            <Card className="border-light/10 bg-gradient-to-br from-white/[0.08] to-transparent hover:border-green/50 hover:shadow-2xl hover:shadow-green/[0.1] transition-all duration-300 h-full flex flex-col group relative overflow-hidden">
+              <div className="absolute right-[-20px] top-[-20px] opacity-[0.03] group-hover:opacity-[0.1] transition-opacity duration-300 transform rotate-12 pointer-events-none">
+                <Settings size={120} />
+              </div>
+              <CardHeader className="relative z-10">
+                <CardTitle className="text-xl font-bold tracking-tight">
+                  Settings
+                </CardTitle>
               </CardHeader>
-              <CardContent>
-                <p className="text-sm opacity-70 mb-4">
-                  Manage your account and preferences.
-                </p>
+              <CardContent className="flex-1 flex flex-col justify-end relative z-10">
                 <Button
-                  variant="outline"
-                  size="sm"
-                  className="w-full hover:bg-green/10 hover:border-green/50 hover:text-green"
+                  className="w-full bg-white/10 hover:bg-green/80 hover:text-dark border-0 backdrop-blur-sm transition-all duration-300 font-semibold"
                   onClick={() => (window.location.href = "/dashboard/settings")}
                 >
                   Configure

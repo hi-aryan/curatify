@@ -145,7 +145,6 @@ function extractArtistIdsFromTracks(tracks) {
 
 /**
  * Analyze playlist mood using Gemini API
- * Returns simplified structure with only averages and top song per category
  * @param {string} playlistId - Spotify playlist ID
  * @param {string} accessToken - Spotify access token
  * @returns {Promise<Object>} - { averages: {...}, topSongs: {...} }
@@ -153,73 +152,102 @@ function extractArtistIdsFromTracks(tracks) {
 export async function analyzePlaylistMood(playlistId, accessToken) {
   // 1. Get playlist tracks
   const playlistData = await getPlaylistTracks(playlistId, accessToken);
-  const tracks =
+  const rawTracks =
     playlistData?.items?.filter(
       (item) => item.track && !item.track.is_local && item.track.name
     ) || [];
 
-  if (tracks.length === 0) {
+  if (rawTracks.length === 0) {
     throw new Error("No valid tracks found in playlist");
   }
 
-  // 2. Pass raw Spotify track data directly to Gemini (no transformation needed)
-  const prompt =
-    MOODBOARD_PROMPT + JSON.stringify({ tracks: { items: tracks } }, null, 2);
+  // 2. Map to minimal format for Gemini
+  const tracksForGemini = rawTracks.map((item, index) => ({
+    index,
+    name: item.track.name,
+    artists: item.track.artists?.map((a) => a.name).join(", ") || "Unknown",
+  }));
+
+  // 3. Call Gemini
+  const prompt = MOODBOARD_PROMPT + JSON.stringify(tracksForGemini, null, 2);
   const result = await callGeminiJSON(prompt);
 
-  // 3. Validate response
-  if (!result.averages || !result.top_three) {
-    throw new Error("Analysis result missing required fields");
+  if (!result.analysis || !Array.isArray(result.analysis)) {
+    throw new Error("Invalid analysis format from AI");
   }
 
-  // 4. Create lookup map: "track_name|artist_name" -> full track object
-  const trackMap = new Map();
-  tracks.forEach((item) => {
-    const track = item.track;
-    const artistNames = track.artists?.map((a) => a.name).join(", ") || "";
-    const key = `${track.name}|${artistNames}`.toLowerCase();
-    trackMap.set(key, track);
+  // 4. Match scores back to original tracks
+  const analysisMap = new Map();
+  result.analysis.forEach((item) => {
+    analysisMap.set(item.index, item.scores);
   });
 
-  // 5. Match Gemini results back to original tracks
-  const topSongs = Object.fromEntries(
-    Object.entries(result.top_three || {})
-      .map(([category, songs]) => {
-        const topSong = songs?.[0];
-        if (!topSong) return [category, null];
+  const categoryAverages: Record<string, number> = {
+    happiness: 0,
+    sadness: 0,
+    energy: 0,
+    aura: 0,
+  };
 
-        // Match by track name + artist name
-        const key =
-          `${topSong.track_name}|${topSong.artist_name}`.toLowerCase();
-        const matchedTrack = trackMap.get(key);
+  const scoredTracks = rawTracks
+    .map((item, index) => {
+      const scores = analysisMap.get(index);
+      if (!scores) return null;
 
-        if (matchedTrack) {
-          return [
-            category,
-            {
-              ...matchedTrack,
-              score: topSong.score,
-            },
-          ];
-        }
+      // Add to averages
+      Object.keys(categoryAverages).forEach((cat) => {
+        categoryAverages[cat] += scores[cat] || 0;
+      });
 
-        // Fallback: return Gemini data if no match found
-        return [
-          category,
-          {
-            name: topSong.track_name,
-            artists: topSong.artist_name.split(", ").map((name) => ({ name })),
-            external_urls: { spotify: null },
-            album: { images: [] },
-            score: topSong.score,
-          },
-        ];
-      })
-      .filter(([_, song]) => song !== null)
+      return {
+        ...item.track,
+        scores,
+      };
+    })
+    .filter((t) => t !== null);
+
+  if (scoredTracks.length === 0) {
+    throw new Error("Failed to match any tracks with AI analysis");
+  }
+
+  // 5. Calculate Final Averages
+  const averages = Object.fromEntries(
+    Object.entries(categoryAverages).map(([cat, total]) => [
+      cat,
+      Number((total / scoredTracks.length).toFixed(3)),
+    ])
   );
 
+  // 6. Identify Top Songs per category (Greedy Unique Selection)
+  const categories = ["happiness", "sadness", "energy", "aura"];
+  const selectedTrackIds = new Set<string>();
+  const topSongs: Record<string, any> = {};
+
+  categories.forEach((cat) => {
+    // Sort tracks by score in this category
+    const sorted = [...scoredTracks].sort(
+      (a, b) => (b.scores[cat] || 0) - (a.scores[cat] || 0)
+    );
+
+    // Try to find the best song that hasn't been picked yet
+    let bestUniqueTrack = sorted.find((t) => !selectedTrackIds.has(t.id));
+
+    // Fallback: if playlist is small or all songs picked, just take the absolute best
+    if (!bestUniqueTrack) {
+      bestUniqueTrack = sorted[0];
+    }
+
+    if (bestUniqueTrack) {
+      selectedTrackIds.add(bestUniqueTrack.id);
+      topSongs[cat] = {
+        ...bestUniqueTrack,
+        score: bestUniqueTrack.scores[cat] || 0,
+      };
+    }
+  });
+
   return {
-    averages: result.averages,
+    averages,
     topSongs,
   };
 }

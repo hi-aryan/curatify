@@ -42,19 +42,37 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { InfiniteTrackScroll } from "@/components/InfiniteTrackScroll";
 
-export function DashboardView(props) {
-  function logoutClickHandlerACB() {
-    props.onLogout();
-  }
+interface DashboardViewProps {
+  profile: any;
+  favoriteArtist: any;
+  topTracks: any[];
+  topArtists: any[];
+  topGenre: string;
+  onLogout: () => void;
+  onNavigateToLanding: () => void;
+  onNavigateToAbout: () => void;
+  playlists: any[];
+  selectedPlaylistId: string;
+  onPlaylistSelect: (id: string) => void;
+  onAnalyzePlaylist: () => void;
+  moodboardAnalysis: any;
+  moodboardLoading: boolean;
+  moodboardError: string | null;
+  followedUsers: any[];
+  followLoading: boolean;
+  followError: string | null;
+  isFriendsOpen: boolean;
+  friendInput: string;
+  onFriendsOpen: (open: boolean) => void;
+  onFriendInputChange: (val: string) => void;
+  onSearchUsers: (e: React.FormEvent) => void;
+  searchResults: any[];
+  searchLoading: boolean;
+  onAddFriend: (name: string) => void;
+  onUnfollowUser: (id: number) => void;
+}
 
-  function navigateToLandingHandlerACB() {
-    props.onNavigateToLanding();
-  }
-
-  function navigateToAboutHandlerACB() {
-    props.onNavigateToAbout();
-  }
-
+export function DashboardView(props: DashboardViewProps) {
   return (
     <div className="space-y-8 max-w-full w-full min-w-0 overflow-x-hidden">
       {/* Header with user profile and favorite artist */}
@@ -62,37 +80,40 @@ export function DashboardView(props) {
         <div className="flex flex-wrap gap-8 justify-between items-start mb-6">
           {/* Left: Profile info */}
           <div className="flex items-center gap-4">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
+            {props.profile?.external_urls?.spotify ? (
+              <a
+                href={props.profile.external_urls.spotify}
+                target="_blank"
+                rel="noreferrer"
+                className="transition-transform duration-200 hover:scale-105"
+              >
                 {props.profile?.images?.[0]?.url ? (
                   <img
                     src={props.profile.images[0].url}
                     alt={props.profile.display_name || "Profile"}
-                    className="w-12 h-12 rounded-full object-cover border border-light/40 cursor-pointer transition-transform duration-200 hover:scale-105"
+                    className="w-12 h-12 rounded-full object-cover border border-light/40 cursor-pointer"
                   />
                 ) : (
                   <div className="w-12 h-12 rounded-full bg-light/20 flex items-center justify-center border border-light/20 text-sm cursor-pointer">
                     👤
                   </div>
                 )}
-              </DropdownMenuTrigger>
-
-              <DropdownMenuContent align="start" className="w-44">
-                <DropdownMenuItem disabled>
-                  {props.profile?.display_name ?? "Account"}
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={navigateToLandingHandlerACB}>
-                  Home
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={navigateToAboutHandlerACB}>
-                  About
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={logoutClickHandlerACB}>
-                  Logout
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+              </a>
+            ) : (
+              <div className="transition-transform duration-200 hover:scale-105">
+                {props.profile?.images?.[0]?.url ? (
+                  <img
+                    src={props.profile.images[0].url}
+                    alt={props.profile.display_name || "Profile"}
+                    className="w-12 h-12 rounded-full object-cover border border-light/40"
+                  />
+                ) : (
+                  <div className="w-12 h-12 rounded-full bg-light/20 flex items-center justify-center border border-light/20 text-sm">
+                    👤
+                  </div>
+                )}
+              </div>
+            )}
             <div>
               <h1 className="text-3xl font-bold">
                 Welcome, {props.profile?.display_name || "User"}
@@ -116,7 +137,7 @@ export function DashboardView(props) {
         {/* Favorite artist and genre row */}
         <div className="grid gap-4 md:grid-cols-2">
           {/* Favorite Artist */}
-          <div className="flex items-center gap-4 p-4 rounded-lg border border-light/20 bg-light/5">
+          <div className="flex items-center gap-4 p-4 rounded-lg border border-light/20 bg-light/5 group hover:border-green/50 transition-colors">
             {props.favoriteArtist?.image &&
               (props.favoriteArtist?.url ? (
                 <a
@@ -128,7 +149,7 @@ export function DashboardView(props) {
                   <img
                     src={props.favoriteArtist.image}
                     alt={props.favoriteArtist.name}
-                    className="w-16 h-16 rounded-full object-cover border border-light/40"
+                    className="w-16 h-16 rounded-full object-cover border border-light/40 group-hover:scale-105 transition-transform duration-300"
                   />
                 </a>
               ) : (
@@ -142,20 +163,40 @@ export function DashboardView(props) {
               <p className="text-xs uppercase tracking-wide opacity-70 mb-1">
                 Favourite artist
               </p>
-              <p className="text-xl font-bold text-green">
-                {props.favoriteArtist?.name || "Not available"}
+              <p className="text-xl font-bold">
+                {(props.favoriteArtist?.name || "Not available")
+                  .split("")
+                  .map((char, index) => (
+                    <span
+                      key={`${char}-${index}`}
+                      className="inline-block transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:text-green"
+                      style={{ transitionDelay: `${index * 30}ms` }}
+                    >
+                      {char === " " ? "\u00A0" : char}
+                    </span>
+                  ))}
               </p>
             </div>
           </div>
 
           {/* Favorite Genre */}
-          <div className="flex items-center justify-center p-4 rounded-lg border border-light/20 bg-light/5">
+          <div className="flex items-center justify-center p-4 rounded-lg border border-light/20 bg-light/5 group hover:border-green/50 transition-colors">
             <div className="text-center">
               <p className="text-xs uppercase tracking-wide opacity-70 mb-2">
                 Favourite genre
               </p>
-              <p className="text-2xl font-bold text-blue">
-                {props.topGenre || "Not available"}
+              <p className="text-2xl font-bold capitalize">
+                {(props.topGenre || "Not available")
+                  .split("")
+                  .map((char, index) => (
+                    <span
+                      key={`${char}-${index}`}
+                      className="inline-block transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:text-green"
+                      style={{ transitionDelay: `${index * 30}ms` }}
+                    >
+                      {char === " " ? "\u00A0" : char}
+                    </span>
+                  ))}
               </p>
             </div>
           </div>

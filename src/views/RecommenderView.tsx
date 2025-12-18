@@ -1,5 +1,6 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Sparkles } from "lucide-react";
 
 /*
     RecommenderView: displays AI music recommendations
@@ -36,33 +37,33 @@ export default function RecommenderView({
   profile,
 }: RecommenderViewProps) {
   return (
-    <div className="min-h-screen p-8">
-      <div className="max-w-5xl mx-auto">
+    <div className="h-full p-8">
+      <div className="max-w-6xl mx-auto">
         <h1 className="text-4xl font-bold mb-2">Song Recommendations</h1>
         <p className="text-light/60 mb-8">
-          Get AI-powered song suggestions based on your music taste.
+          Get song suggestions based on your recent listening history.
         </p>
 
-        <Card className="border-light/40 bg-dark/40 hover:shadow-xl hover:shadow-green/[0.05] transition-shadow">
-          <CardHeader>
-            <CardTitle className="text-xl font-semibold flex items-center justify-between">
+        <Card className="border-light/10 bg-gradient-to-br from-white/[0.08] to-transparent hover:border-green/50 hover:shadow-2xl hover:shadow-green/[0.1] transition-all duration-300 relative overflow-hidden group">
+          <div className="absolute right-[-20px] top-[-20px] opacity-[0.03] group-hover:opacity-[0.1] transition-opacity duration-300 transform rotate-12 pointer-events-none">
+            <Sparkles size={200} />
+          </div>
+          <CardHeader className="relative z-10">
+            <CardTitle className="text-xl font-bold tracking-tight flex items-center justify-between opacity-80">
               Recommendations
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="relative z-10">
             {!recommendations ? (
               <div className="text-center py-4">
-                <p className="text-light opacity-60 mb-4">
-                  Get custom song suggestions based on your statistics.
-                </p>
                 <Button
                   onClick={onGetRecommendations}
                   disabled={recLoading}
-                  variant="outline"
-                  className="w-full border-light/40 text-light/90 hover:bg-green/5 hover:border-green/60 hover:text-green/90 transition-all"
+                  className="w-full bg-white/10 text-white/90 hover:bg-green/80 hover:text-dark border-0 backdrop-blur-sm transition-all duration-300 font-semibold py-6"
                 >
                   {recLoading ? (
-                    <span className="text-xs text-green animate-pulse">
+                    <span className="flex items-center gap-2 text-green animate-pulse">
+                      <Sparkles className="w-4 h-4" />
                       Analyzing...
                     </span>
                   ) : (
@@ -104,9 +105,9 @@ export default function RecommenderView({
                   onClick={onGetRecommendations}
                   variant="ghost"
                   size="sm"
-                  className="w-full text-xs text-light/40 hover:text-green mt-2"
+                  className="w-full text-xs text-light/40 hover:text-green hover:bg-green/10 mt-4 transition-colors"
                 >
-                  Refresh
+                  Refresh suggestions
                 </Button>
               </div>
             )}

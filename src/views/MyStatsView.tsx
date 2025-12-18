@@ -1,6 +1,6 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ListPlus, ChevronDown, ChevronUp } from "lucide-react";
+import { ListPlus, ChevronDown, ChevronUp, Music } from "lucide-react";
 
 /*
     MyStatsView: Deep dive into user's listening statistics
@@ -111,13 +111,16 @@ export default function MyStatsView({
 
         {/* Favorite Genre */}
         {topGenre ? (
-          <Card className="border-light/40 bg-dark/40 hover:shadow-xl hover:shadow-green/[0.05] transition-shadow mb-8">
-            <CardHeader>
-              <CardTitle className="text-2xl font-semibold">
+          <Card className="border-light/10 bg-gradient-to-br from-white/[0.08] to-transparent hover:border-green/40 hover:shadow-2xl hover:shadow-green/[0.1] transition-all duration-300 relative overflow-hidden group mb-8">
+            <div className="absolute right-[-20px] top-[-20px] opacity-[0.03] group-hover:opacity-[0.1] transition-opacity duration-300 transform rotate-12 pointer-events-none">
+              <Music size={200} />
+            </div>
+            <CardHeader className="relative z-10">
+              <CardTitle className="text-2xl font-semibold opacity-90">
                 Your Favorite Genre
               </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="relative z-10">
               <p className="text-5xl font-bold capitalize text-green mb-4">
                 {topGenre}
               </p>
@@ -127,9 +130,9 @@ export default function MyStatsView({
             </CardContent>
           </Card>
         ) : (
-          <Card className="border-light/40 bg-dark/40 mb-8">
+          <Card className="border-light/10 bg-gradient-to-br from-white/[0.08] to-transparent mb-8">
             <CardHeader>
-              <CardTitle className="text-2xl font-semibold">
+              <CardTitle className="text-2xl font-semibold opacity-90">
                 Your Favorite Genre
               </CardTitle>
             </CardHeader>

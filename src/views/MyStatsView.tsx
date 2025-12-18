@@ -17,6 +17,15 @@ import { ListPlus } from "lucide-react";
     - topGenre: favorite genre calculated from top 50 tracks
     - onAddToQueue: callback to add track to Spotify queue
 */
+interface MyStatsViewProps {
+  topTracks: any[];
+  topArtists: any[];
+  topGenre: string;
+  onAddToQueue: (uri: string) => void;
+  queueNotification: any;
+  onCloseQueueNotification: () => void;
+}
+
 export default function MyStatsView({
   topTracks,
   topArtists,
@@ -24,7 +33,7 @@ export default function MyStatsView({
   onAddToQueue,
   queueNotification,
   onCloseQueueNotification,
-}) {
+}: MyStatsViewProps) {
   return (
     <div className="min-h-screen p-8">
       <div className="max-w-6xl mx-auto">
@@ -136,7 +145,7 @@ export default function MyStatsView({
                       href={artist.external_urls?.spotify}
                       target="_blank"
                       rel="noreferrer"
-                      className="p-4 border border-light/20 rounded-lg hover:border-green/50 hover:shadow-lg hover:shadow-green/10 transition-all duration-200 flex items-start gap-4"
+                      className="group relative p-4 border border-light/20 rounded-lg hover:border-green/50 hover:shadow-lg hover:shadow-green/10 transition-all duration-200 flex items-center gap-4 overflow-hidden"
                     >
                       {artist.images?.[0]?.url && (
                         <img
@@ -149,16 +158,13 @@ export default function MyStatsView({
                         <div className="text-xs text-green font-semibold mb-1">
                           #{index + 1}
                         </div>
-                        <p className="font-semibold text-light truncate">
+                        <p className="font-semibold text-light opacity-90 truncate group-hover:text-green transition-colors">
                           {artist.name}
                         </p>
-                        <p className="text-sm text-light/60">
-                          {artist.genres?.[0] || "Artist"}
-                        </p>
                       </div>
-                      <div className="text-right">
-                        <p className="text-xs text-light/40 opacity-0 group-hover:opacity-100 transition-opacity">
-                          Open on Spotify →
+                      <div className="absolute right-3 bottom-3 translate-y-1 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none">
+                        <p className="text-[10px] text-green opacity-90 font-medium uppercase tracking-wider">
+                          Open Spotify →
                         </p>
                       </div>
                     </a>

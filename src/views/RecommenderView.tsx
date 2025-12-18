@@ -11,13 +11,30 @@ import { Button } from "@/components/ui/button";
     - onGetRecommendations: callback to trigger recommendation fetch
     - onAddToQueue: callback to add track to Spotify queue
 */
+interface Recommendation {
+  title: string;
+  artist: string;
+  reason: string;
+  type: string;
+}
+
+interface RecommenderViewProps {
+  recommendations: Recommendation[] | null;
+  recLoading: boolean;
+  recError: string | null;
+  onGetRecommendations: () => void;
+  onAddToQueue: (uri: string) => void;
+  profile: any;
+}
+
 export default function RecommenderView({
   recommendations,
   recLoading,
   recError,
   onGetRecommendations,
   onAddToQueue,
-}) {
+  profile,
+}: RecommenderViewProps) {
   return (
     <div className="min-h-screen p-8">
       <div className="max-w-5xl mx-auto">

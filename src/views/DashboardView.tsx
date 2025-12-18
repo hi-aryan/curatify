@@ -36,7 +36,37 @@ import { Button } from "@/components/ui/button";
 
 import { Music } from "lucide-react";
 
-export function DashboardView(props) {
+interface DashboardViewProps {
+  profile: any;
+  favoriteArtist: any;
+  topTracks: any[];
+  topArtists: any[];
+  topGenre: string;
+  onLogout: () => void;
+  onNavigateToLanding: () => void;
+  onNavigateToAbout: () => void;
+  playlists: any[];
+  selectedPlaylistId: string;
+  onPlaylistSelect: (id: string) => void;
+  onAnalyzePlaylist: () => void;
+  moodboardAnalysis: any;
+  moodboardLoading: boolean;
+  moodboardError: string | null;
+  followedUsers: any[];
+  followLoading: boolean;
+  followError: string | null;
+  isFriendsOpen: boolean;
+  friendInput: string;
+  onFriendsOpen: (open: boolean) => void;
+  onFriendInputChange: (val: string) => void;
+  onSearchUsers: (e: React.FormEvent) => void;
+  searchResults: any[];
+  searchLoading: boolean;
+  onAddFriend: (name: string) => void;
+  onUnfollowUser: (id: number) => void;
+}
+
+export function DashboardView(props: DashboardViewProps) {
   return (
     <div className="space-y-8">
       {/* Header with user profile and favorite artist */}

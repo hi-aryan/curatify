@@ -60,7 +60,7 @@ export function RecommenderPresenter() {
       // Load top tracks
       if (!topTracks) {
         try {
-          const tracks = await fetchTopTracks(accessToken, 3);
+          const tracks = await fetchTopTracks(accessToken, 50);
           dispatch(setTopTracks(tracks));
         } catch (error) {
           console.error("Failed to fetch top tracks:", error);
@@ -70,7 +70,7 @@ export function RecommenderPresenter() {
       // Load top artists
       if (!topArtists) {
         try {
-          const artists = await fetchTopArtists(accessToken, 10);
+          const artists = await fetchTopArtists(accessToken, 50);
           dispatch(setTopArtists(artists));
         } catch (error) {
           console.error("Failed to fetch top artists:", error);

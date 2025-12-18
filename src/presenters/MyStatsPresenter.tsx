@@ -30,6 +30,10 @@ export function MyStatsPresenter() {
     message: string;
   } | null>(null);
 
+  // UI state for visibility (MVP Refactor)
+  const [visibleArtistsCount, setVisibleArtistsCount] = useState(6);
+  const [showAllTracks, setShowAllTracks] = useState(false);
+
   // Auth Protection
   useEffect(() => {
     if (!isLoggedIn) {
@@ -114,6 +118,18 @@ export function MyStatsPresenter() {
     setQueueNotification(null);
   }
 
+  function handleShowMoreArtistsACB() {
+    setVisibleArtistsCount((prev) => prev + 6);
+  }
+
+  function handleShowLessArtistsACB() {
+    setVisibleArtistsCount(6);
+  }
+
+  function handleToggleTracksACB() {
+    setShowAllTracks((prev) => !prev);
+  }
+
   return (
     <MyStatsView
       topTracks={topTracks}
@@ -122,6 +138,11 @@ export function MyStatsPresenter() {
       onAddToQueue={handleAddToQueueACB}
       queueNotification={queueNotification}
       onCloseQueueNotification={handleCloseQueueNotificationACB}
+      visibleArtistsCount={visibleArtistsCount}
+      showAllTracks={showAllTracks}
+      onShowMoreArtists={handleShowMoreArtistsACB}
+      onShowLessArtists={handleShowLessArtistsACB}
+      onToggleTracks={handleToggleTracksACB}
     />
   );
 }

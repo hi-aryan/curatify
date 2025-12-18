@@ -1,6 +1,6 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ListPlus } from "lucide-react";
+import { ListPlus, ChevronDown, ChevronUp } from "lucide-react";
 
 /*
     MyStatsView: Deep dive into user's listening statistics
@@ -24,6 +24,11 @@ interface MyStatsViewProps {
   onAddToQueue: (uri: string) => void;
   queueNotification: any;
   onCloseQueueNotification: () => void;
+  visibleArtistsCount: number;
+  showAllTracks: boolean;
+  onShowMoreArtists: () => void;
+  onShowLessArtists: () => void;
+  onToggleTracks: () => void;
 }
 
 export default function MyStatsView({
@@ -33,14 +38,16 @@ export default function MyStatsView({
   onAddToQueue,
   queueNotification,
   onCloseQueueNotification,
+  visibleArtistsCount,
+  showAllTracks,
+  onShowMoreArtists,
+  onShowLessArtists,
+  onToggleTracks,
 }: MyStatsViewProps) {
   return (
     <div className="min-h-screen p-8">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-4xl font-bold mb-2">Your Listening Statistics</h1>
-        <p className="text-light/60 mb-8">
-          Deep dive into your music taste and listening history.
-        </p>
+        <h1 className="text-4xl font-bold mb-8">Your Listening Statistics</h1>
 
         {queueNotification && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in duration-200">
@@ -139,7 +146,7 @@ export default function MyStatsView({
             <CardContent className="pt-6">
               {topArtists && topArtists.length > 0 ? (
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                  {topArtists.map((artist, index) => (
+                  {topArtists.slice(0, visibleArtistsCount).map((artist, index) => (
                     <a
                       key={artist.id}
                       href={artist.external_urls?.spotify}
@@ -175,6 +182,31 @@ export default function MyStatsView({
                   Loading artists...
                 </p>
               )}
+
+              {topArtists && (topArtists.length > visibleArtistsCount || visibleArtistsCount > 6) && (
+                <div className="mt-8 flex justify-center gap-4">
+                  {topArtists.length > visibleArtistsCount && (
+                    <Button
+                      variant="outline"
+                      onClick={onShowMoreArtists}
+                      className="border-light/20 hover:border-green/50 hover:text-green group transition-all"
+                    >
+                      Show 6 More
+                      <ChevronDown className="ml-2 w-4 h-4 group-hover:translate-y-0.5 transition-transform" />
+                    </Button>
+                  )}
+                  {visibleArtistsCount > 6 && (
+                    <Button
+                      variant="outline"
+                      onClick={onShowLessArtists}
+                      className="border-light/20 hover:border-red-500/50 hover:text-red-400 group transition-all"
+                    >
+                      Show Less
+                      <ChevronUp className="ml-2 w-4 h-4 group-hover:-translate-y-0.5 transition-transform" />
+                    </Button>
+                  )}
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
@@ -186,53 +218,72 @@ export default function MyStatsView({
             <CardContent className="pt-6">
               {topTracks && topTracks.length > 0 ? (
                 <div className="space-y-3">
-                  {topTracks.map((track, index) => (
-                    <div
-                      key={track.id}
-                      className="flex items-center gap-4 p-4 rounded-lg border border-light/10 hover:border-green/30 hover:bg-green/5 transition-all duration-200"
-                    >
-                      <span className="text-xl font-bold text-light/40 w-8 text-center flex-shrink-0">
-                        {index + 1}
-                      </span>
-
-                      {track.album?.images?.[2]?.url && (
-                        <img
-                          src={track.album.images[2].url}
-                          alt={track.name}
-                          className="w-12 h-12 rounded object-cover flex-shrink-0"
-                        />
-                      )}
-
-                      <div className="flex-1 min-w-0">
-                        <a
-                          href={track.external_urls?.spotify}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="block font-semibold text-light truncate hover:text-green transition-colors duration-150"
-                        >
-                          {track.name}
-                        </a>
-                        <p className="text-sm text-light/60 truncate">
-                          {track.artists?.map((a) => a.name).join(", ")}
-                        </p>
-                      </div>
-
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8 text-light/50 hover:text-green hover:bg-green/10 flex-shrink-0"
-                        onClick={() => onAddToQueue && onAddToQueue(track.uri)}
-                        title="Add to Spotify Queue"
+                  {(showAllTracks ? topTracks : topTracks.slice(0, 10)).map(
+                    (track, index) => (
+                      <div
+                        key={track.id}
+                        className="flex items-center gap-4 p-4 rounded-lg border border-light/10 hover:border-green/30 hover:bg-green/5 transition-all duration-200"
                       >
-                        <ListPlus className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  ))}
+                        <span className="text-xl font-bold text-light/40 w-8 text-center flex-shrink-0">
+                          {index + 1}
+                        </span>
+
+                        {track.album?.images?.[2]?.url && (
+                          <img
+                            src={track.album.images[2].url}
+                            alt={track.name}
+                            className="w-12 h-12 rounded object-cover flex-shrink-0"
+                          />
+                        )}
+
+                        <div className="flex-1 min-w-0">
+                          <a
+                            href={track.external_urls?.spotify}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="block font-semibold text-light truncate hover:text-green transition-colors duration-150"
+                          >
+                            {track.name}
+                          </a>
+                          <p className="text-sm text-light/60 truncate">
+                            {track.artists?.map((a) => a.name).join(", ")}
+                          </p>
+                        </div>
+
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 text-light/50 hover:text-green hover:bg-green/10 flex-shrink-0"
+                          onClick={() => onAddToQueue && onAddToQueue(track.uri)}
+                          title="Add to Spotify Queue"
+                        >
+                          <ListPlus className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    )
+                  )}
                 </div>
               ) : (
                 <p className="text-light/60 text-center py-8">
                   Loading tracks...
                 </p>
+              )}
+
+              {topTracks && topTracks.length > 10 && (
+                <div className="mt-8 flex justify-center">
+                  <Button
+                    variant="outline"
+                    onClick={onToggleTracks}
+                    className="border-light/20 hover:border-green/50 hover:text-green group transition-all"
+                  >
+                    {showAllTracks ? "Show Less" : "Show All 50 Tracks"}
+                    {showAllTracks ? (
+                      <ChevronUp className="ml-2 w-4 h-4 group-hover:-translate-y-0.5 transition-transform" />
+                    ) : (
+                      <ChevronDown className="ml-2 w-4 h-4 group-hover:translate-y-0.5 transition-transform" />
+                    )}
+                  </Button>
+                </div>
               )}
             </CardContent>
           </Card>

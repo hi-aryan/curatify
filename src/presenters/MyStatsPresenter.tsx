@@ -1,5 +1,5 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { RootState } from "../store/store";
@@ -25,6 +25,10 @@ export function MyStatsPresenter() {
   const dispatch = useDispatch();
   const router = useRouter();
   const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
+  const [queueNotification, setQueueNotification] = useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
 
   // Auth Protection
   useEffect(() => {
@@ -83,11 +87,31 @@ export function MyStatsPresenter() {
       const accessToken = await getValidAccessToken();
       if (accessToken) {
         await addItemToQueue(trackUri, accessToken);
-        console.log("Added to queue:", trackUri);
+        setQueueNotification({
+          type: "success",
+          message: "Added to queue! Check your Spotify app 👀",
+        });
+        setTimeout(() => setQueueNotification(null), 3000);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Failed to add to queue:", error);
+      if (error.message && error.message.includes("404")) {
+        setQueueNotification({
+          type: "error",
+          message:
+            "No active device found. Please start playing Spotify on a device to use this feature.",
+        });
+      } else {
+        setQueueNotification({
+          type: "error",
+          message: "Failed to add to queue. Please try again.",
+        });
+      }
     }
+  }
+
+  function handleCloseQueueNotificationACB() {
+    setQueueNotification(null);
   }
 
   return (
@@ -96,6 +120,8 @@ export function MyStatsPresenter() {
       topArtists={topArtists}
       topGenre={topGenre}
       onAddToQueue={handleAddToQueueACB}
+      queueNotification={queueNotification}
+      onCloseQueueNotification={handleCloseQueueNotificationACB}
     />
   );
 }

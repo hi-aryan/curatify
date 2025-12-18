@@ -173,46 +173,6 @@ export function DashboardPresenter() {
     router.push("/about");
   }
 
-  // Queue Notification State
-  const [queueNotification, setQueueNotification] = useState<{
-    type: "success" | "error";
-    message: string;
-  } | null>(null);
-
-  async function addToQueueACB(trackUri) {
-    if (!trackUri) return;
-    try {
-      const accessToken = await getValidAccessToken();
-      if (accessToken) {
-        await addItemToQueue(trackUri, accessToken);
-        setQueueNotification({
-          type: "success",
-          message: "Added to queue! Check your Spotify app 👀",
-        });
-        // Auto-dismiss success message after 3 seconds
-        setTimeout(() => setQueueNotification(null), 3000);
-      }
-    } catch (error: any) {
-      console.error("Failed to add to queue:", error);
-      if (error.message && error.message.includes("404")) {
-        setQueueNotification({
-          type: "error",
-          message:
-            "No active device found. Please start playing Spotify on a device to use this feature.",
-        });
-      } else {
-        setQueueNotification({
-          type: "error",
-          message: "Failed to add to queue. Please try again.",
-        });
-      }
-    }
-  }
-
-  function closeQueueNotificationACB() {
-    setQueueNotification(null);
-  }
-
   async function handleFollowUserACB(targetName: string) {
     setFollowLoading(true);
     setFollowError(null);
@@ -312,7 +272,6 @@ export function DashboardPresenter() {
       moodboardAnalysis={moodboardAnalysis}
       moodboardLoading={moodboardLoading}
       moodboardError={moodboardError}
-      onAddToQueue={null}
       // Friends Props
       followedUsers={followedUsers}
       followLoading={followLoading}
@@ -327,9 +286,6 @@ export function DashboardPresenter() {
       searchLoading={searchLoading}
       onAddFriend={handleAddFriendACB}
       onUnfollowUser={handleUnfollowUserACB}
-      // New Notification Props
-      queueNotification={queueNotification}
-      onCloseQueueNotification={closeQueueNotificationACB}
     />
   );
 }

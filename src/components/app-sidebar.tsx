@@ -2,10 +2,12 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useSelector } from "react-redux";
+import { usePathname, useRouter } from "next/navigation";
+import { useSelector, useDispatch } from "react-redux";
 
 import { RootState } from "@/store/store";
+import { logout } from "@/store/userSlice";
+import { clearTokenData } from "@/api/spotifyAuth";
 import {
   Home,
   Wand2,
@@ -45,6 +47,8 @@ import {
 
 export function AppSidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const dispatch = useDispatch();
   const profile = useSelector((state: RootState) => state.user.profile);
 
   return (
@@ -252,8 +256,12 @@ export function AppSidebar() {
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                  onClick={() => console.log("Implement Logout logic here")}
-                  className="text-pink hover:text-pink/90"
+                  onClick={() => {
+                    dispatch(logout());
+                    clearTokenData();
+                    router.push("/");
+                  }}
+                  className="text-pink hover:text-pink/90 cursor-pointer"
                 >
                   <LogOut className="h-4 w-4" />
                   <span>Log out</span>

@@ -33,28 +33,10 @@
 
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
+
 import { Music } from "lucide-react";
 
 export function DashboardView(props) {
-  function logoutClickHandlerACB() {
-    props.onLogout();
-  }
-
-  function navigateToLandingHandlerACB() {
-    props.onNavigateToLanding();
-  }
-
-  function navigateToAboutHandlerACB() {
-    props.onNavigateToAbout();
-  }
-
   return (
     <div className="space-y-8">
       {/* Header with user profile and favorite artist */}
@@ -62,37 +44,40 @@ export function DashboardView(props) {
         <div className="flex flex-wrap gap-8 justify-between items-start mb-6">
           {/* Left: Profile info */}
           <div className="flex items-center gap-4">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
+            {props.profile?.external_urls?.spotify ? (
+              <a
+                href={props.profile.external_urls.spotify}
+                target="_blank"
+                rel="noreferrer"
+                className="transition-transform duration-200 hover:scale-105"
+              >
                 {props.profile?.images?.[0]?.url ? (
                   <img
                     src={props.profile.images[0].url}
                     alt={props.profile.display_name || "Profile"}
-                    className="w-12 h-12 rounded-full object-cover border border-light/40 cursor-pointer transition-transform duration-200 hover:scale-105"
+                    className="w-12 h-12 rounded-full object-cover border border-light/40 cursor-pointer"
                   />
                 ) : (
                   <div className="w-12 h-12 rounded-full bg-light/20 flex items-center justify-center border border-light/20 text-sm cursor-pointer">
                     👤
                   </div>
                 )}
-              </DropdownMenuTrigger>
-
-              <DropdownMenuContent align="start" className="w-44">
-                <DropdownMenuItem disabled>
-                  {props.profile?.display_name ?? "Account"}
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={navigateToLandingHandlerACB}>
-                  Home
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={navigateToAboutHandlerACB}>
-                  About
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={logoutClickHandlerACB}>
-                  Logout
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+              </a>
+            ) : (
+              <div className="transition-transform duration-200 hover:scale-105">
+                {props.profile?.images?.[0]?.url ? (
+                  <img
+                    src={props.profile.images[0].url}
+                    alt={props.profile.display_name || "Profile"}
+                    className="w-12 h-12 rounded-full object-cover border border-light/40"
+                  />
+                ) : (
+                  <div className="w-12 h-12 rounded-full bg-light/20 flex items-center justify-center border border-light/20 text-sm">
+                    👤
+                  </div>
+                )}
+              </div>
+            )}
             <div>
               <h1 className="text-3xl font-bold">
                 Welcome, {props.profile?.display_name || "User"}

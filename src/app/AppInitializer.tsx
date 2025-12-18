@@ -19,10 +19,7 @@ export default function AppInitializer({ children }) {
           dispatch(login({ profile }));
         }
       } catch (error) {
-        // Suppress expected error for guest users
-        if (error.message !== "No refresh token available") {
-          console.error("Session restoration failed:", error);
-        }
+        console.error("Session restoration failed:", error);
       } finally {
         setIsRestoring(false);
       }

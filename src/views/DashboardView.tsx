@@ -292,6 +292,66 @@ export function DashboardView(props) {
             </div>
           )}
 
+          {/* Queue Notification Popup */}
+          {props.queueNotification && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+              <div className="bg-dark border border-light/20 rounded-xl p-6 max-w-sm w-full shadow-2xl scale-100 animate-in zoom-in-95 duration-200 text-center">
+                {props.queueNotification.type === "success" ? (
+                  <div className="w-12 h-12 rounded-full bg-green/20 text-green flex items-center justify-center mx-auto mb-4">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </div>
+                ) : (
+                  <div className="w-12 h-12 rounded-full bg-red-500/20 text-red-400 flex items-center justify-center mx-auto mb-4">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <line x1="12" y1="8" x2="12" y2="12"></line>
+                      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                  </div>
+                )}
+                <h3 className="text-lg font-bold mb-2">
+                  {props.queueNotification.type === "success"
+                    ? "Success"
+                    : "Action Required"}
+                </h3>
+                <p className="text-light/70 text-sm mb-6">
+                  {props.queueNotification.message}
+                </p>
+                <Button
+                  onClick={props.onCloseQueueNotification}
+                  className={`w-full ${
+                    props.queueNotification.type === "success"
+                      ? "bg-green hover:bg-green/90 text-dark"
+                      : "bg-light/10 hover:bg-light/20 text-light"
+                  }`}
+                >
+                  Okay
+                </Button>
+              </div>
+            </div>
+          )}
           {/* Main content - Top tracks preview */}
           <main className="p-8">
             <div className="max-w-6xl mx-auto">

@@ -322,7 +322,7 @@ export function DashboardView(props: DashboardViewProps) {
         <div className="mt-12">
           <h2 className="text-2xl font-bold mb-4">Tools & Features</h2>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            <Card className="border-light/40 bg-dark/40 hover:shadow-xl hover:shadow-green/[0.05] transition-all hover:-translate-y-1 cursor-pointer">
+            <Card className="border-light/40 bg-dark/40 hover:shadow-xl hover:shadow-green/[0.05] transition-shadow cursor-pointer">
               <CardHeader>
                 <CardTitle className="text-lg">Recommendations</CardTitle>
               </CardHeader>
@@ -342,7 +342,7 @@ export function DashboardView(props: DashboardViewProps) {
                 </Button>
               </CardContent>
             </Card>
-            <Card className="border-light/40 bg-dark/40 hover:shadow-xl hover:shadow-green/[0.05] transition-all hover:-translate-y-1 cursor-pointer">
+            <Card className="border-light/40 bg-dark/40 hover:shadow-xl hover:shadow-green/[0.05] transition-shadow cursor-pointer">
               <CardHeader>
                 <CardTitle className="text-lg">Analyze Playlists</CardTitle>
               </CardHeader>
@@ -363,7 +363,7 @@ export function DashboardView(props: DashboardViewProps) {
               </CardContent>
             </Card>
 
-            <Card className="border-light/40 bg-dark/40 hover:shadow-xl hover:shadow-green/[0.05] transition-all hover:-translate-y-1 cursor-pointer">
+            <Card className="border-light/40 bg-dark/40 hover:shadow-xl hover:shadow-green/[0.05] transition-shadow cursor-pointer">
               <CardHeader>
                 <CardTitle className="text-lg">My Stats</CardTitle>
               </CardHeader>
@@ -382,7 +382,7 @@ export function DashboardView(props: DashboardViewProps) {
               </CardContent>
             </Card>
 
-            <Card className="border-light/40 bg-dark/40 hover:shadow-xl hover:shadow-green/[0.05] transition-all hover:-translate-y-1 cursor-pointer">
+            <Card className="border-light/40 bg-dark/40 hover:shadow-xl hover:shadow-green/[0.05] transition-shadow cursor-pointer">
               <CardHeader>
                 <CardTitle className="text-lg">Playlist Sorter</CardTitle>
               </CardHeader>
@@ -401,7 +401,7 @@ export function DashboardView(props: DashboardViewProps) {
               </CardContent>
             </Card>
 
-            <Card className="border-light/40 bg-dark/40 hover:shadow-xl hover:shadow-green/[0.05] transition-all hover:-translate-y-1 cursor-pointer">
+            <Card className="border-light/40 bg-dark/40 hover:shadow-xl hover:shadow-green/[0.05] transition-shadow cursor-pointer">
               <CardHeader>
                 <CardTitle className="text-lg">Settings</CardTitle>
               </CardHeader>

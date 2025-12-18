@@ -74,7 +74,7 @@ export function InfiniteTrackScroll({ tracks }: InfiniteTrackScrollProps) {
         {[...tracks, ...tracks, ...tracks].map((track, index) => (
           <Card
             key={index}
-            className="min-w-[300px] border-light/40 bg-dark/40 transition-all hover:scale-105"
+            className="min-w-[300px] border-light/30 bg-dark/40 transition-all hover:scale-105"
           >
             <CardContent className="pt-6">
               <div className="flex flex-col items-center text-center">
@@ -85,7 +85,7 @@ export function InfiniteTrackScroll({ tracks }: InfiniteTrackScrollProps) {
                     className="w-24 h-24 rounded-lg mb-4 object-cover"
                   />
                 )}
-                <h3 className="font-semibold text-light mb-1 line-clamp-2">
+                <h3 className="font-semibold text-light line-clamp-2">
                   {track.name}
                 </h3>
                 <p className="text-sm opacity-70 line-clamp-1">
@@ -96,7 +96,7 @@ export function InfiniteTrackScroll({ tracks }: InfiniteTrackScrollProps) {
                     href={track.external_urls.spotify}
                     target="_blank"
                     rel="noreferrer"
-                    className="mt-4 text-xs text-green hover:text-green/80 transition-colors"
+                    className="mt-3 text-xs text-green hover:text-green/80 transition-colors"
                   >
                     Listen on Spotify →
                   </a>

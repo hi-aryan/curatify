@@ -18,8 +18,6 @@ export default function DashboardLayout({
         <div className="w-full">
           <header className="flex h-16 shrink-0 items-center gap-2 px-4">
             <SidebarTrigger />
-            <div className="h-4 w-px bg-sidebar-border" />
-            <span>Dashboard</span>
           </header>
         </div>
 

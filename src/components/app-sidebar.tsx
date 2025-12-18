@@ -50,13 +50,16 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon">
       {/* Header: Logo or Brand Name */}
-      <SidebarHeader className="h-16 border-b border-sidebar-border">
-        <div className="flex items-center gap-2 px-2">
+      <SidebarHeader className="h-16 border-b border-sidebar-border justify-center">
+        <Link
+          href="/"
+          className="flex items-center gap-2 px-2 group-data-[collapsible=icon]:justify-center hover:opacity-80 transition-opacity"
+        >
           <Disc3 className="h-7 w-7 text-light" />
           <span className="font-bold text-lg text-light group-data-[collapsible=icon]:hidden">
             Curatify
           </span>
-        </div>
+        </Link>
       </SidebarHeader>
 
       {/* Main Navigation */}

@@ -25,7 +25,7 @@ import {
   unfollowUser,
 } from "../actions/friendActions";
 
-import { getUserPlaylists } from "../api/spotifySource";
+import { addItemToQueue, getUserPlaylists } from "../api/spotifySource";
 import { useMoodboard } from "../hooks/useMoodboard";
 
 /*

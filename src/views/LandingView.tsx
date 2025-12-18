@@ -26,13 +26,6 @@ import { SongCard } from "../components/SongCard";
 import { PlaylistDropZone } from "../components/PlaylistDropZone";
 import { COUNTRY_NAMES } from "../data/nordicCharts";
 import { CardBody, CardContainer, CardItem } from "../components/ui/3d-card";
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-} from "@/components/ui/navigation-menu";
-import { MobileMenu } from "../components/MobileMenu";
 import logoImage from "@/assets/logo.png";
 import Image from "next/image";
 
@@ -81,86 +74,24 @@ export function LandingView({
 
   return (
     <div className="min-h-screen flex flex-col bg-dark/20 text-light overflow-y-auto lg:h-screen lg:overflow-hidden">
-      {/* Navbar */}
-      <header className="px-4 py-4 lg:px-4 flex items-center justify-between shrink-0 relative z-50 bg-dark/20">
-        {/* Left: Mobile Menu + Logo + Brand + Desktop Links */}
-        <div className="flex items-center gap-2 lg:gap-6">
-          {/* Mobile Navigation Menu (hamburger) */}
-          <MobileMenu onNavigateToAbout={navigateToAboutHandlerACB} />
-
-          {/* Logo and brand - hidden on mobile */}
-          <button
-            type="button"
-            aria-label="Home"
-            className="hidden lg:flex items-center gap-2"
-            onClick={() => {
-              /* TODO: route to home */
-            }}
-          >
-            <Image
-              src={logoImage}
-              alt="Curatify logo"
-              className="h-12 w-12 rounded-md"
-              priority
-            />
-            <span className="text-2xl font-bold">Curatify</span>
-          </button>
-
-          {/* Desktop nav links */}
-          <NavigationMenu
-            className="hidden lg:flex"
-            aria-label="Primary navigation"
-          >
-            <NavigationMenuList className="justify-start">
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild>
-                  <button
-                    type="button"
-                    className="px-3 py-2 text-sm rounded-full border border-transparent text-light/90 hover:text-green hover:bg-green/10"
-                    onClick={navigateToAboutHandlerACB}
-                  >
-                    About
-                  </button>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild>
-                  <button
-                    type="button"
-                    className="px-3 py-2 text-sm rounded-full border border-transparent text-light/90 hover:text-green hover:bg-green/10"
-                    onClick={() => {
-                      /* TODO: route to Features */
-                    }}
-                  >
-                    Features
-                  </button>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild>
-                  <button
-                    type="button"
-                    className="px-3 py-2 text-sm rounded-full border border-transparent text-light/90 hover:text-green hover:bg-green/10"
-                    onClick={() => {
-                      /* TODO: route to Contact */
-                    }}
-                  >
-                    Contact
-                  </button>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-            </NavigationMenuList>
-          </NavigationMenu>
+      {/* Header - Minimal: Logo + Auth CTA */}
+      <header className="px-4 py-4 lg:px-8 flex items-center justify-between shrink-0 relative z-50 bg-dark/20 backdrop-blur-sm border-b border-transparent">
+        <div className="flex items-center gap-2">
+          <Image
+            src={logoImage}
+            alt="Curatify logo"
+            className="h-10 w-10 lg:h-12 lg:w-12 rounded-md"
+            priority
+          />
+          <span className="text-xl lg:text-2xl font-bold tracking-tight">Curatify</span>
         </div>
 
-        {/* Right: CTA + Mobile Menu */}
-        <div className="flex items-center gap-2">
-          {/* Sign in / Dashboard */}
+        <div>
           {isLoggedIn ? (
             <Button
               onClick={navigateToDashboardHandlerACB}
               variant="outline"
-              className="rounded-full border-green/50 text-green hover:bg-green/10 hover:scale-105 transition-all duration-200"
+              className="rounded-full border-green/50 text-green hover:bg-green/10 hover:scale-105 transition-all duration-200 shadow-sm"
             >
               Go to Dashboard
             </Button>
@@ -168,7 +99,7 @@ export function LandingView({
             <Button
               onClick={loginClickHandlerACB}
               variant="outline"
-              className="rounded-full border-green/50 text-green hover:bg-green/10 hover:scale-105 transition-all duration-200"
+              className="rounded-full border-green/50 text-green hover:bg-green/10 hover:scale-105 transition-all duration-200 shadow-sm"
             >
               Sign in with Spotify
             </Button>
@@ -190,7 +121,7 @@ export function LandingView({
             className="flex-1 w-full"
             containerClassName="py-0 h-full"
           >
-            <CardBody className="w-full h-full flex items-center justify-center md:scale-110 lg:scale-125 xl:scale-150 2xl:scale-[1.75] transition-transform duration-500 ease-in-out">
+            <CardBody className="w-full h-full flex items-center justify-center lg:scale-110 xl:scale-125 2xl:scale-150 transition-transform duration-500 ease-in-out">
               <CardItem translateZ="80" className="max-h-full w-full">
                 <NordicMap
                   selectedCountry={selectedCountry}
@@ -264,6 +195,32 @@ export function LandingView({
           </Card>
         </div>
       </section>
+
+      {/* Footer - Minimal Navigation */}
+      <footer className="px-4 py-3 lg:px-8 border-t border-light/5 bg-dark/20 flex flex-col md:flex-row items-center justify-between gap-4 text-xs lg:text-sm text-light/50">
+        <p>© 2025 Curatify.</p>
+        
+        <nav className="flex items-center gap-6">
+          <button 
+            onClick={navigateToAboutHandlerACB}
+            className="hover:text-green transition-colors"
+          >
+            About
+          </button>
+          <button 
+            onClick={() => {/* TODO: Features */}}
+            className="hover:text-green transition-colors"
+          >
+            Features
+          </button>
+          <button 
+            onClick={() => {/* TODO: Contact */}}
+            className="hover:text-green transition-colors"
+          >
+            Contact
+          </button>
+        </nav>
+      </footer>
     </div>
   );
 }

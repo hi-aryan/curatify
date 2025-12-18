@@ -45,7 +45,7 @@ export default function MyStatsView({
   onToggleTracks,
 }: MyStatsViewProps) {
   return (
-    <div className="min-h-screen p-8">
+    <div className="min-h-screen md:p-8">
       <div className="max-w-6xl mx-auto">
         <h1 className="text-4xl font-bold mb-8">Your Listening Statistics</h1>
 

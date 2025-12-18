@@ -37,7 +37,7 @@ export default function RecommenderView({
   profile,
 }: RecommenderViewProps) {
   return (
-    <div className="h-full p-8">
+    <div className="h-full md:p-8">
       <div className="max-w-6xl mx-auto">
         <h1 className="text-4xl font-bold mb-2">Song Recommendations</h1>
         <p className="text-light/60 mb-8">

@@ -69,7 +69,7 @@
 
     --sidebar-accent-foreground: 147 60% 64%; /* #6CE395 (green) */
 
-    --sidebar-border: 79 96% 96% / 0.4; /* light with 40% opacity */
+    --sidebar-border: 79 96% 96% / 0.1; /* light with 20% opacity */
 
     --sidebar-ring: 147 60% 64%; /* #6CE395 (green) */
   }
@@ -134,7 +134,7 @@
 
     --sidebar-accent-foreground: 147 60% 64%; /* #6CE395 (green) */
 
-    --sidebar-border: 79 96% 96% / 0.4; /* light with 40% opacity */
+    --sidebar-border: 79 96% 96% / 0.2; /* light with 20% opacity */
 
     --sidebar-ring: 147 60% 64%; /* #6CE395 (green) */
   }

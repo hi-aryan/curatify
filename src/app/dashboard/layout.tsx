@@ -15,13 +15,17 @@ export default function DashboardLayout({
       {/* SidebarInset is crucial here: it handles the layout shift 
           so your content sits next to the sidebar, not under it. */}
       <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center gap-2 px-4">
-          <SidebarTrigger />
-          <div className="h-4 w-px bg-slate-200 dark:bg-slate-700" />
-          <span>Dashboard</span>
-        </header>
+        <div className="w-full max-w-6xl mx-auto">
+          <header className="flex h-16 shrink-0 items-center gap-2 px-4">
+            <SidebarTrigger />
+            <div className="h-4 w-px bg-sidebar-border" />
+            <span>Dashboard</span>
+          </header>
+        </div>
 
-        <div className="p-4">{children}</div>
+        <main className="flex-1 w-full max-w-6xl mx-auto p-4 md:p-8">
+          {children}
+        </main>
       </SidebarInset>
     </ReduxSidebarProvider>
   );

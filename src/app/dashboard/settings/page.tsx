@@ -2,7 +2,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 export default function SettingsPage() {
   return (
-    <div className="min-h-screen p-8">
+    <div>
       <div className="max-w-2xl mx-auto">
         <h1 className="text-4xl font-bold mb-6">Settings</h1>
         <p className="text-light/60 mb-8">

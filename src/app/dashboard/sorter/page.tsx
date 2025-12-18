@@ -2,8 +2,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 export default function SorterPage() {
   return (
-    <div className="min-h-screen p-8">
-      <div className="max-w-6xl mx-auto">
+    <div>
         <h1 className="text-4xl font-bold mb-6">Sorter</h1>
         <p className="text-light/60 mb-8">
           The heavy lifting tool for organizing your playlists.
@@ -19,7 +18,6 @@ export default function SorterPage() {
             <p className="text-light opacity-60">Coming soon...</p>
           </CardContent>
         </Card>
-      </div>
     </div>
   );
 }

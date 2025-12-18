@@ -35,7 +35,7 @@ export function InfiniteTrackScroll({ tracks }: InfiniteTrackScrollProps) {
       {
         repeat: Infinity,
         repeatType: "loop",
-        duration: tracks.length * 3, // 3 seconds per track for smooth speed
+        duration: tracks.length * 2, // 3 seconds per track for smooth speed
         ease: "linear",
       }
     );
@@ -85,12 +85,6 @@ export function InfiniteTrackScroll({ tracks }: InfiniteTrackScrollProps) {
                     className="w-24 h-24 rounded-lg mb-4 object-cover"
                   />
                 )}
-                <div className="flex items-center justify-center gap-2 mb-2">
-                  <Music className="w-4 h-4 text-green" />
-                  <span className="text-xs text-green font-semibold">
-                    #{(index % tracks.length) + 1} Top Track
-                  </span>
-                </div>
                 <h3 className="font-semibold text-light mb-1 line-clamp-2">
                   {track.name}
                 </h3>

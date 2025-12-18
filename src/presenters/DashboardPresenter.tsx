@@ -19,7 +19,12 @@ import {
   fetchTopGenre,
 } from "../utils/dashboardUtils";
 import { getAiRecommendations } from "../api/llmSource";
-import { followUser, getFollowedUsers, searchUsers, unfollowUser } from "../actions/friendActions";
+import {
+  followUser,
+  getFollowedUsers,
+  searchUsers,
+  unfollowUser,
+} from "../actions/friendActions";
 
 import { getUserPlaylists, addItemToQueue } from "../api/spotifySource";
 import { useMoodboard } from "../hooks/useMoodboard";
@@ -69,7 +74,7 @@ export function DashboardPresenter() {
   const [followedUsers, setFollowedUsers] = useState<any[]>([]);
   const [followLoading, setFollowLoading] = useState(false);
   const [followError, setFollowError] = useState<string | null>(null);
-  
+
   // UI State moved from View (MVP)
   const [isFriendsOpen, setIsFriendsOpen] = useState(false);
   const [friendInput, setFriendInput] = useState("");
@@ -198,102 +203,124 @@ export function DashboardPresenter() {
     router.push("/about");
   }
 
+  // Queue Notification State
+  const [queueNotification, setQueueNotification] = useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
+
   async function addToQueueACB(trackUri) {
     if (!trackUri) return;
     try {
       const accessToken = await getValidAccessToken();
       if (accessToken) {
         await addItemToQueue(trackUri, accessToken);
-        // Optional: Show success toast/alert
-        console.log("Added to queue:", trackUri);
+        setQueueNotification({ type: "success", message: "Added to queue!" });
+        // Auto-dismiss success message after 3 seconds
+        setTimeout(() => setQueueNotification(null), 3000);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Failed to add to queue:", error);
+      if (error.message && error.message.includes("404")) {
+        setQueueNotification({
+          type: "error",
+          message:
+            "No active device found. Please start playing Spotify on a device to use this feature.",
+        });
+      } else {
+        setQueueNotification({
+          type: "error",
+          message: "Failed to add to queue. Please try again.",
+        });
+      }
     }
   }
 
+  function closeQueueNotificationACB() {
+    setQueueNotification(null);
+  }
+
   async function handleFollowUserACB(targetName: string) {
-      setFollowLoading(true);
-      setFollowError(null);
-      try {
-          const result = await followUser(profile?.id, targetName);
-          if (result.success) {
-              // Reload list
-              const followed = await getFollowedUsers(profile?.id);
-              setFollowedUsers(followed || []);
-          } else {
-              setFollowError(result.error || "Failed to follow user");
-          }
-      } catch (error) {
-          setFollowError("An unexpected error occurred");
-          console.error(error);
-      } finally {
-          setFollowLoading(false);
+    setFollowLoading(true);
+    setFollowError(null);
+    try {
+      const result = await followUser(profile?.id, targetName);
+      if (result.success) {
+        // Reload list
+        const followed = await getFollowedUsers(profile?.id);
+        setFollowedUsers(followed || []);
+      } else {
+        setFollowError(result.error || "Failed to follow user");
       }
+    } catch (error) {
+      setFollowError("An unexpected error occurred");
+      console.error(error);
+    } finally {
+      setFollowLoading(false);
+    }
   }
 
   function handleFriendsOpen(open: boolean) {
-      setIsFriendsOpen(open);
-      if (!open) {
-          setFriendInput("");
-          setFollowError(null);
-          setSearchResults([]); // Reset search
-      }
+    setIsFriendsOpen(open);
+    if (!open) {
+      setFriendInput("");
+      setFollowError(null);
+      setSearchResults([]); // Reset search
+    }
   }
 
   function handleFriendInputChange(val: string) {
-      setFriendInput(val);
+    setFriendInput(val);
   }
 
   // --- New Logic: Search First ---
   async function handleSearchUsersACB(e: React.FormEvent) {
-      e.preventDefault();
-      if (!friendInput.trim()) return;
-      
-      setSearchLoading(true);
-      setFollowError(null);
-      
-      try {
-          const results = await searchUsers(profile?.id, friendInput.trim());
-          setSearchResults(results || []);
-          
-          if (results && results.length === 0) {
-              setFollowError("No users found.");
-          }
-      } catch (err) {
-          console.error(err);
-          setFollowError("Error searching users.");
-      } finally {
-          setSearchLoading(false);
+    e.preventDefault();
+    if (!friendInput.trim()) return;
+
+    setSearchLoading(true);
+    setFollowError(null);
+
+    try {
+      const results = await searchUsers(profile?.id, friendInput.trim());
+      setSearchResults(results || []);
+
+      if (results && results.length === 0) {
+        setFollowError("No users found.");
       }
+    } catch (err) {
+      console.error(err);
+      setFollowError("Error searching users.");
+    } finally {
+      setSearchLoading(false);
+    }
   }
 
   async function handleUnfollowUserACB(targetUserId: number) {
-      if(!confirm("Are you sure you want to unfollow?")) return;
+    if (!confirm("Are you sure you want to unfollow?")) return;
 
-      setFollowLoading(true);
-      try {
-          const result = await unfollowUser(profile?.id, targetUserId);
-          if (result.success) {
-               // Update list locally for speed
-               setFollowedUsers(prev => prev.filter(u => u.id !== targetUserId));
-          } else {
-              console.error(result.error);
-          }
-      } catch (err) {
-          console.error(err);
-      } finally {
-          setFollowLoading(false);
+    setFollowLoading(true);
+    try {
+      const result = await unfollowUser(profile?.id, targetUserId);
+      if (result.success) {
+        // Update list locally for speed
+        setFollowedUsers((prev) => prev.filter((u) => u.id !== targetUserId));
+      } else {
+        console.error(result.error);
       }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setFollowLoading(false);
+    }
   }
 
   async function handleAddFriendACB(targetNameOrId: string) {
-      // Direct add from search result
-      await handleFollowUserACB(targetNameOrId);
-      // Clean up search after adding? optional.
-      // setSearchResults([]); 
+    // Direct add from search result
+    await handleFollowUserACB(targetNameOrId);
+    // Clean up search after adding? optional.
+    // setSearchResults([]);
   }
-
 
   return (
     <DashboardView
@@ -332,6 +359,9 @@ export function DashboardPresenter() {
       searchLoading={searchLoading}
       onAddFriend={handleAddFriendACB}
       onUnfollowUser={handleUnfollowUserACB}
+      // New Notification Props
+      queueNotification={queueNotification}
+      onCloseQueueNotification={closeQueueNotificationACB}
     />
   );
 }

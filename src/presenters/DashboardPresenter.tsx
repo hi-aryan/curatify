@@ -68,6 +68,9 @@ export function DashboardPresenter() {
   const [followedUsers, setFollowedUsers] = useState<any[]>([]);
   const [followLoading, setFollowLoading] = useState(false);
   const [followError, setFollowError] = useState<string | null>(null);
+  
+  // Initialize loading based on whether data is missing
+  const [genreLoading, setGenreLoading] = useState(!topGenre);
 
   // UI State moved from View (MVP)
   const [isFriendsOpen, setIsFriendsOpen] = useState(false);
@@ -129,11 +132,14 @@ export function DashboardPresenter() {
 
         // Load top genre
         if (!topGenre) {
+          setGenreLoading(true);
           try {
             const genre = await fetchTopGenre(accessToken);
             if (genre) dispatch(setTopGenre(genre));
           } catch (error) {
             console.error("Failed to fetch top genre:", error);
+          } finally {
+            setGenreLoading(false);
           }
         }
 
@@ -153,7 +159,8 @@ export function DashboardPresenter() {
     }
 
     loadDashboardDataACB();
-  }, [topArtist, topTracks, topArtists, topGenre, dispatch]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [profile?.id, isLoggedIn, dispatch]);
 
   function logoutACB() {
     clearTokenData();
@@ -286,6 +293,7 @@ export function DashboardPresenter() {
       searchLoading={searchLoading}
       onAddFriend={handleAddFriendACB}
       onUnfollowUser={handleUnfollowUserACB}
+      genreLoading={genreLoading}
     />
   );
 }

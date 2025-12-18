@@ -64,6 +64,7 @@ interface DashboardViewProps {
   searchLoading: boolean;
   onAddFriend: (name: string) => void;
   onUnfollowUser: (id: number) => void;
+  genreLoading: boolean;
 }
 
 export function DashboardView(props: DashboardViewProps) {
@@ -180,7 +181,10 @@ export function DashboardView(props: DashboardViewProps) {
                 Favourite genre
               </p>
               <p className="text-2xl font-bold capitalize">
-                {(props.topGenre || "Not available")
+                {(props.genreLoading
+                  ? "Calculating..."
+                  : props.topGenre || "Not available"
+                )
                   .split("")
                   .map((char, index) => (
                     <span

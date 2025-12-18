@@ -18,7 +18,6 @@ import {
   fetchTopArtists,
   fetchTopGenre,
 } from "../utils/dashboardUtils";
-import { getAiRecommendations } from "../api/llmSource";
 import {
   followUser,
   getFollowedUsers,
@@ -26,7 +25,7 @@ import {
   unfollowUser,
 } from "../actions/friendActions";
 
-import { getUserPlaylists, addItemToQueue } from "../api/spotifySource";
+import { getUserPlaylists } from "../api/spotifySource";
 import { useMoodboard } from "../hooks/useMoodboard";
 
 /*
@@ -64,11 +63,6 @@ export function DashboardPresenter() {
     error: moodboardError,
     analyze: analyzePlaylist,
   } = useMoodboard();
-
-  // AI Recommendations state
-  const [recommendations, setRecommendations] = useState(null);
-  const [recLoading, setRecLoading] = useState(false);
-  const [recError, setRecError] = useState(null);
 
   // Friends State
   const [followedUsers, setFollowedUsers] = useState<any[]>([]);
@@ -169,30 +163,6 @@ export function DashboardPresenter() {
 
   function analyzePlaylistACB() {
     analyzePlaylist(selectedPlaylistId);
-  }
-
-  async function handleGetRecommendationsACB() {
-    if (!topTracks || !topArtists || !topGenre) {
-      setRecError("Missing profile data. Please play more music on Spotify!");
-      return;
-    }
-
-    setRecLoading(true);
-    setRecError(null);
-
-    try {
-      const data = await getAiRecommendations(topTracks, topArtists, topGenre);
-      if (data && data.recommendations) {
-        setRecommendations(data.recommendations);
-      } else {
-        setRecError("Failed to get valid recommendations.");
-      }
-    } catch (error) {
-      console.error("Recommendation Error:", error);
-      setRecError(`Error: ${error.message}`);
-    } finally {
-      setRecLoading(false);
-    }
   }
 
   function navigateToLandingACB() {
@@ -342,12 +312,7 @@ export function DashboardPresenter() {
       moodboardAnalysis={moodboardAnalysis}
       moodboardLoading={moodboardLoading}
       moodboardError={moodboardError}
-      onAddToQueue={addToQueueACB}
-      // AI Recommendations props
-      recommendations={recommendations}
-      recLoading={recLoading}
-      recError={recError}
-      onGetRecommendations={handleGetRecommendationsACB}
+      onAddToQueue={null}
       // Friends Props
       followedUsers={followedUsers}
       followLoading={followLoading}

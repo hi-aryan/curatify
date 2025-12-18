@@ -139,7 +139,7 @@ export const MultiStepLoader = ({
             fullScreen ? "fixed inset-0 z-[100]" : "absolute inset-0 rounded-xl"
           )}
         >
-          <div className="h-60 relative flex items-center">
+          <div className="relative flex items-center justify-center w-full h-full min-h-[300px]">
             <LoaderCore value={currentState} loadingStates={loadingStates} />
           </div>
         </motion.div>

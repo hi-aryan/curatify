@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ListPlus } from "lucide-react";
@@ -73,7 +74,10 @@ export function MoodboardCard({
   ];
 
   return (
-    <Card className="border-light/40 bg-dark/40 hover:shadow-xl hover:shadow-green/[0.05] transition-shadow relative overflow-hidden">
+    <Card className={cn(
+      "border-light/40 bg-dark/40 hover:shadow-xl hover:shadow-green/[0.05] transition-shadow relative overflow-hidden",
+      loading && "min-h-[400px]"
+    )}>
       <MultiStepLoader
         loadingStates={loadingStates}
         loading={loading}

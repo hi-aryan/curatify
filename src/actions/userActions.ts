@@ -10,7 +10,7 @@ import { users } from "../db/schema";
   Serves as the "Model" interface for the server.
   Allows Client Components (like Presenters) to securely interact with the DB.
 */
-export async function saveUserToDb(profile) {
+export async function saveUserToDb(profile, topArtists = []) {
   try {
     if (!profile?.id) {
       console.error("❌ saveUserToDb: No profile ID provided");
@@ -18,7 +18,7 @@ export async function saveUserToDb(profile) {
     }
 
     console.log(
-      `💾 Saving user to DB: ${profile.id} (${profile.display_name})`
+      `💾 Saving user to DB: ${profile.id} (${profile.display_name}) with ${topArtists.length} top artists`
     );
 
     // Upsert: Insert new user, or update name if they already exist
@@ -27,10 +27,14 @@ export async function saveUserToDb(profile) {
       .values({
         spotifyId: profile.id,
         name: profile.display_name,
+        topArtists: topArtists,
       })
       .onConflictDoUpdate({
         target: users.spotifyId,
-        set: { name: profile.display_name },
+        set: { 
+          name: profile.display_name,
+          topArtists: topArtists,
+        },
       });
 
     console.log("✅ User saved successfully");

@@ -28,10 +28,14 @@ export async function followUser(currentSpotifyId: string, targetNameOrId: strin
         // 2. Find Target User
         // Strategy: Try exact match on 'spotifyId' OR 'name'
         const targetUser = await db.query.users.findFirst({
-            where: (users, { or, eq }) => or(
-                eq(users.spotifyId, targetNameOrId),
-                eq(users.name, targetNameOrId)
-            ),
+            where: (users, { or, eq }) => {
+                const searchId = Number(targetNameOrId);
+                return or(
+                    eq(users.spotifyId, targetNameOrId),
+                    eq(users.name, targetNameOrId),
+                    !isNaN(searchId) ? eq(users.id, searchId) : undefined
+                );
+            },
         });
 
         if (!targetUser) return { success: false, error: 'User not found' };

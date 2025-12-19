@@ -4,7 +4,9 @@ import { Users } from "lucide-react";
 
 interface User {
   id: string | number;
+  spotifyId: string;
   name: string;
+  topArtists?: any[];
 }
 
 interface FriendsViewProps {
@@ -84,13 +86,20 @@ export default function FriendsView({
                         <div className="w-6 h-6 rounded-full bg-green/20 flex items-center justify-center text-green text-[10px]">
                           {user.name?.charAt(0) || "?"}
                         </div>
-                        <span className="text-sm font-medium">{user.name}</span>
+                        <div className="flex flex-col">
+                          <span className="text-sm font-medium">{user.name}</span>
+                          {user.topArtists && user.topArtists.length > 0 && (
+                            <span className="text-[10px] opacity-60 truncate max-w-[150px]">
+                              Current Top Artist: {user.topArtists[0].name}
+                            </span>
+                          )}
+                        </div>
                       </div>
                       <Button
                         size="sm"
                         variant="ghost"
                         className="h-7 text-xs hover:bg-green/20 hover:text-green"
-                        onClick={() => onFollowUser(user.id.toString())}
+                        onClick={() => onFollowUser(user.spotifyId)}
                       >
                         Add
                       </Button>
@@ -116,7 +125,14 @@ export default function FriendsView({
                         <div className="w-8 h-8 rounded-full bg-green/20 flex items-center justify-center text-green text-xs">
                           {friend.name?.charAt(0) || "?"}
                         </div>
-                        <span className="text-sm font-medium">{friend.name}</span>
+                        <div className="flex flex-col">
+                          <span className="text-sm font-medium">{friend.name}</span>
+                          {friend.topArtists && friend.topArtists.length > 0 && (
+                            <span className="text-[10px] opacity-60 truncate max-w-[200px]">
+                              Current Top Artist: {friend.topArtists[0].name}
+                            </span>
+                          )}
+                        </div>
                       </div>
                       <Button
                         variant="ghost"

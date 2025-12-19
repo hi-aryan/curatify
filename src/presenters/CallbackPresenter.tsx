@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { login } from "../store/userSlice";
 import { getAccessToken } from "../api/spotifyAuth";
-import { getUserProfile } from "../api/spotifySource";
+import { getUserProfile, getUserTopArtists } from "../api/spotifySource";
 import { saveUserToDb } from "../actions/userActions";
 import { SuspenseView } from "../views/SuspenseView";
 // resolvePromise removed as we handle state locally for React compatibility
@@ -50,9 +50,23 @@ export function CallbackPresenter() {
         // getAccessToken exchanges code and stores all token data internally
         const accessToken = await getAccessToken(code);
         const profile = await getUserProfile(accessToken);
+        
+        // Fetch top artist to persist (top 1 artist)
+        let topArtists = [];
+        try {
+          const topArtistsResponse = await getUserTopArtists(accessToken, { limit: 1 });
+          // Refine: Only store the top one artist to keep DB lean
+          topArtists = (topArtistsResponse.items || []).slice(0, 1).map((artist: any) => ({
+            id: artist.id,
+            name: artist.name,
+            image: artist.images?.[0]?.url 
+          }));
+        } catch (error) {
+          console.error("Failed to fetch top artists for persistence:", error);
+        }
 
         // Persist user to database (Fire and forget, or await if critical)
-        await saveUserToDb(profile);
+        await saveUserToDb(profile, topArtists);
 
         dispatch(login({ profile }));
         // Redirect to dashboard on success

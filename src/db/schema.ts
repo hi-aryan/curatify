@@ -1,10 +1,11 @@
-import { pgTable, serial, text, timestamp, integer } from 'drizzle-orm/pg-core';
+import { pgTable, serial, text, timestamp, integer, jsonb } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 
 export const users = pgTable('users', {
     id: serial('id').primaryKey(),
     spotifyId: text('spotify_id').unique().notNull(),
     name: text('name'),
+    topArtists: jsonb('top_artists'),
     createdAt: timestamp('created_at').defaultNow(),
 });
 

@@ -133,7 +133,7 @@ export function DashboardView(props: DashboardViewProps) {
         <div className="grid gap-4 md:grid-cols-2">
           {/* Favorite Artist */}
           <div className="flex items-center gap-4 p-4 rounded-lg border border-light/10 bg-gradient-to-br from-white/[0.05] to-transparent group hover:border-green/30 hover:shadow-xl hover:shadow-green/[0.05] transition-all duration-300 relative overflow-hidden h-24">
-            <div className="absolute right-[-10px] top-[-10px] opacity-[0.03] group-hover:opacity-[0.08] transition-opacity duration-300 transform rotate-12 pointer-events-none">
+            <div className="absolute right-[-10px] top-[-10px] opacity-[0.02] group-hover:opacity-[0.07] transition-opacity duration-300 transform rotate-12 pointer-events-none">
               <Mic size={100} />
             </div>
             <div className="relative z-10 flex items-center gap-4">
@@ -181,7 +181,7 @@ export function DashboardView(props: DashboardViewProps) {
 
           {/* Favorite Genre */}
           <div className="flex items-center justify-center p-4 rounded-lg border border-light/10 bg-gradient-to-br from-white/[0.05] to-transparent group hover:border-green/30 hover:shadow-xl hover:shadow-green/[0.05] transition-all duration-300 relative overflow-hidden h-24">
-            <div className="absolute left-[-10px] bottom-[-10px] opacity-[0.03] group-hover:opacity-[0.08] transition-opacity duration-300 transform -rotate-12 pointer-events-none">
+            <div className="absolute left-[-10px] bottom-[-10px] opacity-[0.02] group-hover:opacity-[0.07] transition-opacity duration-300 transform -rotate-12 pointer-events-none">
               <Library size={100} />
             </div>
             <div className="text-center relative z-10">
@@ -335,7 +335,7 @@ export function DashboardView(props: DashboardViewProps) {
         <div className="mt-12 mb-4">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             <Card className="border-light/10 bg-gradient-to-br from-white/[0.08] to-transparent hover:border-green/50 hover:shadow-2xl hover:shadow-green/[0.1] transition-all duration-300 h-full flex flex-col group relative overflow-hidden">
-              <div className="absolute right-[-20px] top-[-20px] opacity-[0.03] group-hover:opacity-[0.1] transition-opacity duration-300 transform rotate-12 pointer-events-none">
+              <div className="absolute right-[-20px] top-[-20px] opacity-[0.02] group-hover:opacity-[0.08] transition-opacity duration-300 transform rotate-12 pointer-events-none">
                 <Sparkles size={120} />
               </div>
               <CardHeader className="relative z-10">
@@ -356,7 +356,7 @@ export function DashboardView(props: DashboardViewProps) {
             </Card>
 
             <Card className="border-light/10 bg-gradient-to-br from-white/[0.08] to-transparent hover:border-green/50 hover:shadow-2xl hover:shadow-green/[0.1] transition-all duration-300 h-full flex flex-col group relative overflow-hidden">
-              <div className="absolute right-[-20px] top-[-20px] opacity-[0.03] group-hover:opacity-[0.1] transition-opacity duration-300 transform rotate-12 pointer-events-none">
+              <div className="absolute right-[-20px] top-[-20px] opacity-[0.02] group-hover:opacity-[0.08] transition-opacity duration-300 transform rotate-12 pointer-events-none">
                 <BarChart2 size={120} />
               </div>
               <CardHeader className="relative z-10">
@@ -377,7 +377,7 @@ export function DashboardView(props: DashboardViewProps) {
             </Card>
 
             <Card className="border-light/10 bg-gradient-to-br from-white/[0.08] to-transparent hover:border-green/50 hover:shadow-2xl hover:shadow-green/[0.1] transition-all duration-300 h-full flex flex-col group relative overflow-hidden">
-              <div className="absolute right-[-20px] top-[-20px] opacity-[0.03] group-hover:opacity-[0.1] transition-opacity duration-300 transform rotate-12 pointer-events-none">
+              <div className="absolute right-[-20px] top-[-20px] opacity-[0.02] group-hover:opacity-[0.08] transition-opacity duration-300 transform rotate-12 pointer-events-none">
                 <Music size={120} />
               </div>
               <CardHeader className="relative z-10">
@@ -396,7 +396,7 @@ export function DashboardView(props: DashboardViewProps) {
             </Card>
 
             <Card className="border-light/10 bg-gradient-to-br from-white/[0.08] to-transparent hover:border-green/50 hover:shadow-2xl hover:shadow-green/[0.1] transition-all duration-300 h-full flex flex-col group relative overflow-hidden">
-              <div className="absolute right-[-20px] top-[-20px] opacity-[0.03] group-hover:opacity-[0.1] transition-opacity duration-300 transform rotate-12 pointer-events-none">
+              <div className="absolute right-[-20px] top-[-20px] opacity-[0.02] group-hover:opacity-[0.08] transition-opacity duration-300 transform rotate-12 pointer-events-none">
                 <ListMusic size={120} />
               </div>
               <CardHeader className="relative z-10">
@@ -415,7 +415,7 @@ export function DashboardView(props: DashboardViewProps) {
             </Card>
 
             <Card className="border-light/10 bg-gradient-to-br from-white/[0.08] to-transparent hover:border-green/50 hover:shadow-2xl hover:shadow-green/[0.1] transition-all duration-300 h-full flex flex-col group relative overflow-hidden">
-              <div className="absolute right-[-20px] top-[-20px] opacity-[0.03] group-hover:opacity-[0.1] transition-opacity duration-300 transform rotate-12 pointer-events-none">
+              <div className="absolute right-[-20px] top-[-20px] opacity-[0.02] group-hover:opacity-[0.08] transition-opacity duration-300 transform rotate-12 pointer-events-none">
                 <Settings size={120} />
               </div>
               <CardHeader className="relative z-10">

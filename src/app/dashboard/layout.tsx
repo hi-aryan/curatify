@@ -13,7 +13,7 @@ export default function DashboardLayout({
       <AppSidebar />
 
       {/* SidebarInset is crucial here: it handles the layout shift 
-          so your content sits next to the sidebar, not under it. */}
+          so the content sits next to the sidebar, not under it. */}
       <SidebarInset className="overflow-x-hidden">
         <div className="w-full">
           <header className="flex h-16 shrink-0 items-center gap-2 px-4">

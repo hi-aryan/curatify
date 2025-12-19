@@ -21,15 +21,15 @@ export function AboutView(props) {
         <CardContent className="space-y-6 pt-6 text-light/80 leading-relaxed">
           <p>
             Welcome to our Spotify-integrated music companion! This application
-            leverages the power of Spotify's Web API and Google's Gemini LLM to
-            provide you with a personalized music experience.
+            leverages the power of Spotify's Web API and some other magic to
+            provide you a personalized music experience.
           </p>
 
           <div className="space-y-2">
             <h3 className="text-lg font-semibold text-light">Key Features:</h3>
             <ul className="list-disc list-inside space-y-1 ml-4 opacity-90">
               <li>Explore your top tracks and artists</li>
-              <li>Analyze your music taste with AI</li>
+              <li>Analyze your music taste</li>
               <li>Get personalized song recommendations</li>
               <li>Visualize your playlists with Moodboards</li>
             </ul>
@@ -84,11 +84,11 @@ export function AboutView(props) {
             </div>
           </div>
 
-          <p className="text-sm opacity-60 pt-4 border-t border-light/10">
+          <p className="text-sm opacity-20 pt-4 border-t border-light/10">
             Developed for DH2642 Interaction Programming and the Dynamic Web.
           </p>
 
-          <div className="flex justify-center pt-4">
+          <div className="flex justify-center pt-2">
             <Button
               onClick={navigateToHomeHandlerACB}
               className="bg-green hover:bg-green/80 text-dark font-semibold px-8 transition-transform hover:scale-105"

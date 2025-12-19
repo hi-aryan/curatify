@@ -34,7 +34,7 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { InfiniteTrackScroll } from "@/components/InfiniteTrackScroll";
-import { Music, BarChart2, ListMusic, Settings, Sparkles } from "lucide-react";
+import { Music, BarChart2, ListMusic, Settings, Sparkles, Mic, Library } from "lucide-react";
 
 interface DashboardViewProps {
   profile: any;
@@ -132,55 +132,63 @@ export function DashboardView(props: DashboardViewProps) {
         {/* Favorite artist and genre row */}
         <div className="grid gap-4 md:grid-cols-2">
           {/* Favorite Artist */}
-          <div className="flex items-center gap-4 p-4 rounded-lg border border-light/20 bg-light/5 group hover:border-green/50 transition-colors">
-            {props.favoriteArtist?.image &&
-              (props.favoriteArtist?.url ? (
-                <a
-                  href={props.favoriteArtist.url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-block transition-opacity hover:opacity-80"
-                >
+          <div className="flex items-center gap-4 p-4 rounded-lg border border-light/10 bg-gradient-to-br from-white/[0.05] to-transparent group hover:border-green/30 hover:shadow-xl hover:shadow-green/[0.05] transition-all duration-300 relative overflow-hidden h-24">
+            <div className="absolute right-[-10px] top-[-10px] opacity-[0.03] group-hover:opacity-[0.08] transition-opacity duration-300 transform rotate-12 pointer-events-none">
+              <Mic size={100} />
+            </div>
+            <div className="relative z-10 flex items-center gap-4">
+              {props.favoriteArtist?.image &&
+                (props.favoriteArtist?.url ? (
+                  <a
+                    href={props.favoriteArtist.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-block transition-opacity hover:opacity-80"
+                  >
+                    <img
+                      src={props.favoriteArtist.image}
+                      alt={props.favoriteArtist.name}
+                      className="w-14 h-14 rounded-full object-cover border border-light/40 group-hover:scale-110 transition-transform duration-500"
+                    />
+                  </a>
+                ) : (
                   <img
                     src={props.favoriteArtist.image}
                     alt={props.favoriteArtist.name}
-                    className="w-16 h-16 rounded-full object-cover border border-light/40 group-hover:scale-105 transition-transform duration-300"
+                    className="w-14 h-14 rounded-full object-cover border border-light/40"
                   />
-                </a>
-              ) : (
-                <img
-                  src={props.favoriteArtist.image}
-                  alt={props.favoriteArtist.name}
-                  className="w-16 h-16 rounded-full object-cover border border-light/40"
-                />
-              ))}
-            <div>
-              <p className="text-xs uppercase tracking-wide opacity-70 mb-1">
-                Favourite artist
-              </p>
-              <p className="text-xl font-bold">
-                {(props.favoriteArtist?.name || "Not available")
-                  .split("")
-                  .map((char, index) => (
-                    <span
-                      key={`${char}-${index}`}
-                      className="inline-block transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:text-green"
-                      style={{ transitionDelay: `${index * 30}ms` }}
-                    >
-                      {char === " " ? "\u00A0" : char}
-                    </span>
-                  ))}
-              </p>
+                ))}
+              <div>
+                <p className="text-[10px] uppercase tracking-widest opacity-50 mb-0.5">
+                  Favourite artist
+                </p>
+                <p className="text-xl font-bold tracking-tight">
+                  {(props.favoriteArtist?.name || "Not available")
+                    .split("")
+                    .map((char, index) => (
+                      <span
+                        key={`${char}-${index}`}
+                        className="inline-block transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:text-green"
+                        style={{ transitionDelay: `${index * 20}ms` }}
+                      >
+                        {char === " " ? "\u00A0" : char}
+                      </span>
+                    ))}
+                </p>
+              </div>
             </div>
           </div>
 
           {/* Favorite Genre */}
-          <div className="flex items-center justify-center p-4 rounded-lg border border-light/20 bg-light/5 group hover:border-green/50 transition-colors">
-            <div className="text-center">
-              <p className="text-xs uppercase tracking-wide opacity-70 mb-2">
+          <div className="flex items-center justify-center p-4 rounded-lg border border-light/10 bg-gradient-to-br from-white/[0.05] to-transparent group hover:border-green/30 hover:shadow-xl hover:shadow-green/[0.05] transition-all duration-300 relative overflow-hidden h-24">
+            <div className="absolute left-[-10px] bottom-[-10px] opacity-[0.03] group-hover:opacity-[0.08] transition-opacity duration-300 transform -rotate-12 pointer-events-none">
+              <Library size={100} />
+            </div>
+            <div className="text-center relative z-10">
+              <p className="text-[10px] uppercase tracking-widest opacity-50 mb-1">
                 Favourite genre
               </p>
-              <p className="text-2xl font-bold capitalize">
+              <p className="text-2xl font-bold capitalize tracking-tight">
                 {(props.genreLoading
                   ? "Calculating..."
                   : props.topGenre || "Not available"
@@ -189,8 +197,8 @@ export function DashboardView(props: DashboardViewProps) {
                   .map((char, index) => (
                     <span
                       key={`${char}-${index}`}
-                      className="inline-block transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:text-green"
-                      style={{ transitionDelay: `${index * 30}ms` }}
+                      className="inline-block transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:text-green"
+                      style={{ transitionDelay: `${index * 20}ms` }}
                     >
                       {char === " " ? "\u00A0" : char}
                     </span>

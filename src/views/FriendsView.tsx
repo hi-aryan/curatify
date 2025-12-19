@@ -82,14 +82,14 @@ export default function FriendsView({
                       key={user.id}
                       className="flex items-center justify-between p-2 rounded bg-light/5 border border-light/10"
                     >
-                      <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 rounded-full bg-green/20 flex items-center justify-center text-green text-[10px]">
+                      <div className="flex items-center gap-2 flex-1 min-w-0">
+                        <div className="w-6 h-6 rounded-full bg-green/20 flex items-center justify-center text-green text-[10px] flex-shrink-0">
                           {user.name?.charAt(0) || "?"}
                         </div>
-                        <div className="flex flex-col">
-                          <span className="text-sm font-medium">{user.name}</span>
+                        <div className="flex flex-col flex-1 min-w-0">
+                          <span className="text-sm font-medium truncate">{user.name}</span>
                           {user.topArtists && user.topArtists.length > 0 && (
-                            <span className="text-[10px] opacity-60 truncate max-w-[150px]">
+                            <span className="text-[10px] opacity-60 truncate">
                               Current Top Artist: {user.topArtists[0].name}
                             </span>
                           )}
@@ -119,16 +119,16 @@ export default function FriendsView({
                   followedUsers.map((friend) => (
                     <div
                       key={friend.id}
-                      className="flex items-center justify-between p-2 rounded bg-light/5"
+                      className="flex items-center justify-between p-2 rounded bg-light/5 gap-4"
                     >
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-green/20 flex items-center justify-center text-green text-xs">
+                      <div className="flex items-center gap-3 flex-1 min-w-0">
+                        <div className="w-8 h-8 rounded-full bg-green/20 flex items-center justify-center text-green text-xs flex-shrink-0">
                           {friend.name?.charAt(0) || "?"}
                         </div>
-                        <div className="flex flex-col">
-                          <span className="text-sm font-medium">{friend.name}</span>
+                        <div className="flex flex-col flex-1 min-w-0">
+                          <span className="text-sm font-medium truncate">{friend.name}</span>
                           {friend.topArtists && friend.topArtists.length > 0 && (
-                            <span className="text-[10px] opacity-60 truncate max-w-[200px]">
+                            <span className="text-[10px] opacity-60 truncate">
                               Current Top Artist: {friend.topArtists[0].name}
                             </span>
                           )}

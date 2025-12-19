@@ -1,9 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { useRouter } from "next/navigation";
-import { RootState } from "../store/store";
-import { clearTokenData, getValidAccessToken } from "../api/spotifyAuth";
+import { getValidAccessToken } from "../api/spotifyAuth";
 import { getUserPlaylists, addItemToQueue } from "../api/spotifySource";
 import { useMoodboard } from "../hooks/useMoodboard";
 import PlaylistStatsView from "../views/PlaylistStatsView";
@@ -17,9 +14,6 @@ import PlaylistStatsView from "../views/PlaylistStatsView";
     - Handle playlist selection and analysis
 */
 export function PlaylistStatsPresenter() {
-  const dispatch = useDispatch();
-  const router = useRouter();
-
   // Moodboard state - hook gets its own token internally
   const [playlists, setPlaylists] = useState([]);
   const [selectedPlaylistId, setSelectedPlaylistId] = useState("");

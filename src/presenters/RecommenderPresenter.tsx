@@ -3,17 +3,15 @@ import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { RootState } from "../store/store";
-import { clearTokenData, getValidAccessToken } from "../api/spotifyAuth";
+import { getValidAccessToken } from "../api/spotifyAuth";
 import { getAiRecommendations } from "../api/llmSource";
 import { addItemToQueue } from "../api/spotifySource";
 import {
-  setTopArtist,
   setTopTracks,
   setTopArtists,
   setTopGenre,
 } from "../store/userSlice";
 import {
-  fetchTopArtist,
   fetchTopTracks,
   fetchTopArtists,
   fetchTopGenre,

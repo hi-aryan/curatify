@@ -62,7 +62,7 @@ export default function FriendsView({
               <Button
                 type="submit"
                 disabled={!friendInput.trim() || searchLoading}
-                className="bg-green hover:bg-green/90 text-dark font-medium"
+                className="bg-green/90 hover:bg-green/80 text-dark font-medium"
               >
                 {searchLoading ? "..." : "Search"}
               </Button>

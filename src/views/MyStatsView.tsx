@@ -145,7 +145,7 @@ export default function MyStatsView({
         {/* Top Artists */}
         <div className="mb-8">
           <h2 className="text-2xl font-bold mb-4">Top Artists</h2>
-          <Card className="border-light/40 bg-dark/40 hover:shadow-xl hover:shadow-green/[0.05] transition-shadow">
+          <Card className="border-light/20 bg-dark/40 hover:shadow-xl hover:shadow-green/[0.05] transition-shadow">
             <CardContent className="pt-6">
               {topArtists && topArtists.length > 0 ? (
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -192,7 +192,7 @@ export default function MyStatsView({
                     <Button
                       variant="outline"
                       onClick={onShowMoreArtists}
-                      className="border-light/20 hover:border-green/50 hover:text-green group transition-all"
+                      className="border-light/20 text-light/80 hover:border-green/50 hover:text-green group transition-all"
                     >
                       Show 6 More
                       <ChevronDown className="ml-2 w-4 h-4 group-hover:translate-y-0.5 transition-transform" />
@@ -202,7 +202,7 @@ export default function MyStatsView({
                     <Button
                       variant="outline"
                       onClick={onShowLessArtists}
-                      className="border-light/20 hover:border-red-500/50 hover:text-red-400 group transition-all"
+                      className="border-light/20 text-light/80 hover:border-red-500/50 hover:text-red-400 group transition-all"
                     >
                       Show Less
                       <ChevronUp className="ml-2 w-4 h-4 group-hover:-translate-y-0.5 transition-transform" />
@@ -217,7 +217,7 @@ export default function MyStatsView({
         {/* Top Tracks */}
         <div>
           <h2 className="text-2xl font-bold mb-4">Top Tracks</h2>
-          <Card className="border-light/40 bg-dark/40 hover:shadow-xl hover:shadow-green/[0.05] transition-shadow">
+          <Card className="border-light/20 bg-dark/40 hover:shadow-xl hover:shadow-green/[0.05] transition-shadow">
             <CardContent className="pt-6">
               {topTracks && topTracks.length > 0 ? (
                 <div className="space-y-3">
@@ -277,7 +277,7 @@ export default function MyStatsView({
                   <Button
                     variant="outline"
                     onClick={onToggleTracks}
-                    className="border-light/20 hover:border-green/50 hover:text-green group transition-all"
+                    className="border-light/20 text-light/80 hover:border-green/50 hover:text-green group transition-all"
                   >
                     {showAllTracks ? "Show Less" : "Show All 50 Tracks"}
                     {showAllTracks ? (

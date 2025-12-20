@@ -34,7 +34,7 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { InfiniteTrackScroll } from "@/components/InfiniteTrackScroll";
-import { Music, BarChart2, ListMusic, Settings, Sparkles, Mic, Library } from "lucide-react";
+import { Music, BarChart2, ListMusic, Settings, Sparkles, Mic, Library, Users } from "lucide-react";
 
 interface DashboardViewProps {
   profile: any;
@@ -121,10 +121,10 @@ export function DashboardView(props: DashboardViewProps) {
           <div className="flex items-center gap-3">
             <Button
               onClick={() => props.onFriendsOpen(true)}
-              variant="outline"
-              className="hover:bg-green/10 hover:text-green hover:border-green/50 transition-all duration-200"
+              className="bg-green/10 text-green rounded-full border-2 border-green/50 hover:bg-green/20 transition-all duration-300 font-bold flex items-center gap-2 px-6 shadow-[0_0_15px_rgba(108,227,149,0.1)] group/friends"
             >
-              Friends
+              <Users size={18} className="group-hover/friends:scale-110 transition-transform duration-300" />
+              <span>Friends</span>
             </Button>
           </div>
         </div>

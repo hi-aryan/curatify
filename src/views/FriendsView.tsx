@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Users } from "lucide-react";
+import { Users, Search as SearchIcon } from "lucide-react";
 
 interface User {
   id: string | number;
@@ -62,9 +62,16 @@ export default function FriendsView({
               <Button
                 type="submit"
                 disabled={!friendInput.trim() || searchLoading}
-                className="bg-green/90 hover:bg-green/80 text-dark font-medium"
+                className="bg-green text-dark font-bold flex items-center gap-2 px-6 shadow-lg shadow-green/10 transition-all duration-300 group/search"
               >
-                {searchLoading ? "..." : "Search"}
+                {searchLoading ? (
+                  "..."
+                ) : (
+                  <>
+                    <SearchIcon size={18} className="group-hover/search:scale-110 transition-transform duration-300" />
+                    <span>Search</span>
+                  </>
+                )}
               </Button>
             </form>
 

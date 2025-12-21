@@ -34,7 +34,7 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { InfiniteTrackScroll } from "@/components/InfiniteTrackScroll";
-import { Music, BarChart2, ListMusic, Settings, Sparkles, Mic, Library, Users, Brain, Info } from "lucide-react";
+import { Music, BarChart2, ListMusic, Settings, Sparkles, Mic, Library, Users, Brain, Info, Wand2 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 
 interface DashboardViewProps {
@@ -128,7 +128,7 @@ export function DashboardView(props: DashboardViewProps) {
           <div className="flex items-center gap-3">
             <Button
               onClick={() => props.onFriendsOpen(true)}
-              className="bg-green/10 text-green rounded-full border-2 border-green/50 hover:bg-green/20 transition-all duration-300 font-bold flex items-center gap-2 px-6 shadow-[0_0_15px_rgba(108,227,149,0.1)] group/friends"
+              className="bg-green/10 text-green rounded-full border-2 border-green/50 hover:bg-green/20 transition-all duration-300 font-bold flex items-center gap-2 px-6 group/friends"
             >
               <Users size={18} className="group-hover/friends:scale-110 transition-transform duration-300" />
               <span>Friends</span>
@@ -335,8 +335,8 @@ export function DashboardView(props: DashboardViewProps) {
 
       {/* Deep Analysis Spotlight */}
       {props.hasQuiz && (
-        <section className="animate-in slide-in-from-bottom-4 duration-700">
-          <Card className="overflow-hidden border-2 border-green/20 bg-dark/40 shadow-2xl relative">
+        <section className="max-w-4xl mx-auto mb-8 animate-in slide-in-from-bottom-4 duration-700">
+          <Card className="overflow-hidden border-2 border-green/20 bg-dark/40 min-[1240px]:shadow-2xl relative transition-shadow duration-500">
             
             <CardHeader className="border-b border-light/5 py-4 px-6 flex flex-row items-center justify-between bg-dark/20 backdrop-blur-sm relative z-10">
               <div className="flex items-center gap-3">
@@ -344,15 +344,17 @@ export function DashboardView(props: DashboardViewProps) {
                   <BarChart2 size={20} />
                 </div>
                 <div>
-                  <CardTitle className="text-lg font-bold">Deep Music Analysis</CardTitle>
+                  <CardTitle className="text-lg font-bold">Overview Analysis</CardTitle>
                 </div>
               </div>
               {!props.deepAnalysis && !props.analysisLoading && (
                 <Button 
                    onClick={props.onTriggerAnalysis}
-                   className="bg-green hover:bg-green/90 text-dark font-bold rounded-full h-10 px-8 transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(30,215,96,0.2)] active:scale-95"
+                   className="group/reveal relative bg-green hover:bg-green text-dark font-bold rounded-full h-10 px-8 transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(30,215,96,0.2)] hover:shadow-[0_0_30px_rgba(30,215,96,0.3)] flex items-center gap-2 overflow-hidden border-2 border-white/10"
                 >
-                  Reveal Insights
+                  <span className="relative z-10">Reveal Insights</span>
+                  {/* Shine effect */}
+                  <div className="absolute top-0 -left-[100%] w-1/2 h-full bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-[-25deg] group-hover/reveal:left-[100%] transition-all duration-1000 ease-in-out" />
                 </Button>
               )}
             </CardHeader>
@@ -422,17 +424,7 @@ export function DashboardView(props: DashboardViewProps) {
               ) : (
                 <div className="p-8 flex flex-col lg:flex-row items-center justify-between gap-6 border-t border-light/5">
                   <div className="space-y-1 text-center lg:text-left">
-                     <h3 className="text-lg font-bold">Uncover your Hidden Profile</h3>
-                     <p className="text-xs text-light/50 max-w-sm">Comparing your Nordic vibe with your Spotify history.</p>
-                  </div>
-                  <div className="flex gap-4">
-                    <div className="hidden sm:flex -space-x-3">
-                       {[1,2,3].map(i => (
-                         <div key={i} className="w-10 h-10 rounded-full border-2 border-dark bg-dark/20 flex items-center justify-center">
-                            <Music size={14} className="opacity-40" />
-                         </div>
-                       ))}
-                    </div>
+                     <p className="text-xs text-light/50 max-w-sm">Combining your quiz answers with your Spotify history.</p>
                   </div>
                 </div>
               )}

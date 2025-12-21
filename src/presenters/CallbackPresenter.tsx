@@ -66,12 +66,9 @@ export function CallbackPresenter() {
           console.error("Failed to fetch top artists for persistence:", error);
         }
 
-        // Fetch quiz answers from persistence if any
-        const quizState = loadQuizPersistence();
-        const quizAnswers = quizState?.completed ? quizState.answers : null;
-
-        // Persist user to database (Fire and forget, or await if critical)
-        await saveUserToDb(profile, topArtists, quizAnswers);
+        // Persist user to database (Core profile only)
+        // Note: Quiz sync is handled by DashboardPresenter to trigger the "First-time" reward flow.
+        await saveUserToDb(profile, topArtists);
 
         dispatch(login({ profile }));
         // Redirect to dashboard on success

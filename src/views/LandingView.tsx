@@ -248,45 +248,49 @@ export function LandingView({
       {/* Global Reveal Overlay */}
       {quizState.completed && (
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/40 backdrop-blur-md animate-in fade-in zoom-in-95 duration-500"
+          className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/40 backdrop-blur-md animate-in fade-in duration-300"
           onClick={onQuizClose}
         >
           <Card 
-            className="w-full max-w-md bg-dark border-light/10 shadow-xl p-8 text-center relative pointer-events-auto"
+            className="group w-full max-w-md bg-dark border-light/10 shadow-xl p-8 text-center relative pointer-events-auto animate-in slide-in-from-bottom-8 zoom-in-95 duration-500 overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
+            {/* Background Icon Asset */}
+            <div className="absolute -right-8 -top-8 text-green opacity-[0.03] group-hover:opacity-10 group-hover:rotate-12 group-hover:scale-110 transition-all duration-700 pointer-events-none">
+               <Music size={240} />
+            </div>
+
              <button 
               onClick={onQuizClose}
-              className="absolute top-4 right-4 text-light/20 hover:text-light transition-colors p-2"
+              className="absolute top-4 right-4 text-light/20 hover:text-light transition-colors p-2 z-20"
             >
               ✕
             </button>
 
-            <div className="mb-6 inline-flex p-3 rounded-full bg-green/10 text-green">
-               <Music size={24} />
-            </div>
             
-            <h2 className="text-2xl font-bold mb-2 text-white">
-              Analysis Ready!
-            </h2>
-            <p className="text-sm opacity-60 mb-8 leading-relaxed">
-              We've blended your Nordic vibe with the charts. <br/>
-              Ready to reveal your profile?
-            </p>
-
-            <Button 
-              onClick={onLoginClick}
-              className="w-full h-12 bg-green hover:bg-green/90 text-dark font-bold rounded-full transition-all"
-            >
-              Reveal Insights
-            </Button>
-
-            <button 
-              onClick={onQuizClose}
-              className="mt-6 text-xs uppercase tracking-widest opacity-40 hover:opacity-100 transition-opacity"
-            >
-              Explore the charts first
-            </button>
+            <div className="relative z-10">
+              <h2 className="text-2xl font-bold mb-2 text-white">
+                Analysis Ready!
+              </h2>
+              <p className="text-sm opacity-60 mb-8 leading-relaxed">
+                We've blended your vibe with the charts. <br/>
+                Ready to reveal your profile?
+              </p>
+  
+              <Button 
+                onClick={onLoginClick}
+                className="w-fit h-12 px-10 mx-auto bg-green hover:bg-green/90 text-dark font-bold rounded-full transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(30,215,96,0.2)] active:scale-95 flex items-center justify-center"
+              >
+                Reveal Insights
+              </Button>
+  
+              <button 
+                onClick={onQuizClose}
+                className="mt-6 text-xs uppercase tracking-widest opacity-40 hover:opacity-100 transition-opacity"
+              >
+                Explore the charts first
+              </button>
+            </div>
           </Card>
         </div>
       )}
@@ -302,7 +306,7 @@ export function LandingView({
           
           {/* Sliding Content */}
           <div className="bg-dark text-green px-2 py-4 rounded-r-lg font-bold text-[10px] [writing-mode:vertical-lr] uppercase tracking-widest flex items-center transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out border-y border-r border-light/10 bg-dark/80 backdrop-blur-sm">
-            Resume Analysis
+            Analysis Resume
           </div>
         </button>
       )}

@@ -350,7 +350,7 @@ export function DashboardView(props: DashboardViewProps) {
               {!props.deepAnalysis && !props.analysisLoading && (
                 <Button 
                    onClick={props.onTriggerAnalysis}
-                   className="bg-green hover:bg-green/90 text-dark font-bold rounded-full h-9 px-6 animate-pulse hover:animate-none"
+                   className="bg-green hover:bg-green/90 text-dark font-bold rounded-full h-10 px-8 transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(30,215,96,0.2)] active:scale-95"
                 >
                   Reveal Insights
                 </Button>

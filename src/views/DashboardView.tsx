@@ -344,7 +344,7 @@ export function DashboardView(props: DashboardViewProps) {
                   <BarChart2 size={20} />
                 </div>
                 <div>
-                  <CardTitle className="text-lg font-bold">Overview Analysis</CardTitle>
+                  <CardTitle className="text-lg font-bold">Your Report</CardTitle>
                 </div>
               </div>
               {!props.deepAnalysis && !props.analysisLoading && (
@@ -411,9 +411,8 @@ export function DashboardView(props: DashboardViewProps) {
                     </div>
                     
                     <div className="bg-green/5 border border-green/10 rounded-2xl p-6 relative overflow-hidden group">
-                      <Info className="absolute top-4 right-4 text-green/20 group-hover:text-green/40 transition-colors" size={24} />
                       <h4 className="text-sm font-bold text-green mb-3 flex items-center gap-2">
-                         The Psychological Core
+                         The Diagnosis
                       </h4>
                       <p className="text-sm lg:text-base leading-relaxed text-light/80 italic font-medium">
                         "{props.deepAnalysis.profile}"

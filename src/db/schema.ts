@@ -6,6 +6,7 @@ export const users = pgTable('users', {
     spotifyId: text('spotify_id').unique().notNull(),
     name: text('name'),
     topArtists: jsonb('top_artists'),
+    quizAnswers: jsonb('quiz_answers'),
     createdAt: timestamp('created_at').defaultNow(),
 });
 

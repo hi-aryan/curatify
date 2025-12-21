@@ -24,6 +24,9 @@ import {
   searchUsers,
   unfollowUser,
 } from "../actions/friendActions";
+import { getUserFromDb, saveUserToDb } from "../actions/userActions";
+import { getDeepAnalysis } from "../api/llmSource";
+import { loadQuizPersistence } from "../utils/quizUtils";
 
 import { addItemToQueue, getUserPlaylists } from "../api/spotifySource";
 import { useMoodboard } from "../hooks/useMoodboard";
@@ -79,86 +82,102 @@ export function DashboardPresenter() {
   const [searchResults, setSearchResults] = useState<any[]>([]); // New for Search
   const [searchLoading, setSearchLoading] = useState(false); // New for Search
 
-  // Load dashboard data and playlists
-  useEffect(() => {
-    async function loadDashboardDataACB() {
-      try {
-        const accessToken = await getValidAccessToken();
+  // Deep Analysis State
+  const [dbUser, setDbUser] = useState<any>(null);
+  const [deepAnalysis, setDeepAnalysis] = useState<any>(null);
+  const [analysisLoading, setAnalysisLoading] = useState(false);
+  const [analysisError, setAnalysisError] = useState<string | null>(null);
+  const [showAnalysisSpotlight, setShowAnalysisSpotlight] = useState(false);
 
-        // If getting a valid token fails (session dead), logout and redirect
+  // Persistence for AI Analysis to avoid redo on every mount/subpage navigation
+  useEffect(() => {
+    if (typeof window !== "undefined" && profile?.id) {
+      const saved = localStorage.getItem(`analysis_${profile.id}`);
+      if (saved) {
+        try {
+          setDeepAnalysis(JSON.parse(saved));
+        } catch (e) {
+          console.error("Failed to parse saved analysis", e);
+        }
+      }
+    }
+  }, [profile?.id]);
+
+  useEffect(() => {
+    if (deepAnalysis && profile?.id) {
+      localStorage.setItem(`analysis_${profile.id}`, JSON.stringify(deepAnalysis));
+    }
+  }, [deepAnalysis, profile?.id]);
+
+  // Consolidate data loading and sync logic
+  useEffect(() => {
+    async function initializeDashboardACB() {
+      if (!profile?.id || !isLoggedIn) return;
+
+      try {
+        // 1. Core Data: Token & Profile
+        const accessToken = await getValidAccessToken();
         if (!accessToken) {
-          console.warn("Session invalid or expired. Logging out.");
           logoutACB();
           return;
         }
 
-        // Load playlists
-        try {
-          const response = await getUserPlaylists(accessToken, { limit: 50 });
-          setPlaylists(response?.items || []);
-        } catch (error) {
-          console.error("Failed to fetch playlists:", error);
-        }
+        // 2. Fetch Dependent Data (Needed for Syncing/Analysis)
+        // We fetch these first to ensure we have the results before syncing to DB
+        let currentTopArtists = topArtists;
+        
+        const spotifyPromises = [
+          !topArtist && fetchTopArtist(accessToken).then(a => a && dispatch(setTopArtist(a))),
+          !topTracks && fetchTopTracks(accessToken, 50).then(t => dispatch(setTopTracks(t))),
+          !topArtists && fetchTopArtists(accessToken, 50).then(a => {
+            currentTopArtists = a; // Capture for sync below
+            dispatch(setTopArtists(a));
+          }),
+          !topGenre && (async () => {
+            setGenreLoading(true);
+            try {
+              const g = await fetchTopGenre(accessToken);
+              if (g) dispatch(setTopGenre(g));
+            } finally {
+              setGenreLoading(false);
+            }
+          })(),
+          getUserPlaylists(accessToken, { limit: 50 }).then(r => setPlaylists(r?.items || [])),
+          getFollowedUsers(profile.id).then(f => setFollowedUsers(f || []))
+        ];
 
-        // Load top artist
-        if (!topArtist) {
-          try {
-            const artist = await fetchTopArtist(accessToken);
-            if (artist) dispatch(setTopArtist(artist));
-          } catch (error) {
-            console.error("Failed to fetch top artist:", error);
+        // Wait for Spotify data to be at least "on its way" or finished
+        // We can run DB checks concurrently but MUST ensure sync waits for currentTopArtists
+        const dbUserPromise = getUserFromDb(profile.id).then(async (user) => {
+          const localQuiz = loadQuizPersistence();
+          const hasLocal = !!(localQuiz?.completed && localQuiz.answers.length > 0);
+
+          const dbHasQuiz = !!(Array.isArray(user?.quizAnswers) && user.quizAnswers.length > 0);
+          
+          if (hasLocal && !dbHasQuiz) {
+            // First time onboarding detected
+            setShowAnalysisSpotlight(true);
+            
+            if (!currentTopArtists) {
+              console.log("⏳ Waiting for top artists before sync...");
+              currentTopArtists = await fetchTopArtists(accessToken, 50);
+            }
+            console.log("🔄 Syncing local quiz to DB with fresh data...");
+            await saveUserToDb(profile, currentTopArtists || [], localQuiz.answers);
+            const updatedUser = await getUserFromDb(profile.id);
+            setDbUser(updatedUser);
+          } else {
+            setDbUser(user);
           }
-        }
+        });
 
-        // Load top tracks
-        if (!topTracks) {
-          try {
-            const tracks = await fetchTopTracks(accessToken, 50);
-            dispatch(setTopTracks(tracks));
-          } catch (error) {
-            console.error("Failed to fetch top tracks:", error);
-          }
-        }
-
-        // Load top artists
-        if (!topArtists) {
-          try {
-            const artists = await fetchTopArtists(accessToken, 50);
-            dispatch(setTopArtists(artists));
-          } catch (error) {
-            console.error("Failed to fetch top artists:", error);
-          }
-        }
-
-        // Load top genre
-        if (!topGenre) {
-          setGenreLoading(true);
-          try {
-            const genre = await fetchTopGenre(accessToken);
-            if (genre) dispatch(setTopGenre(genre));
-          } catch (error) {
-            console.error("Failed to fetch top genre:", error);
-          } finally {
-            setGenreLoading(false);
-          }
-        }
-
-        // Load followed users
-        try {
-          const followed = await getFollowedUsers(profile?.id);
-          setFollowedUsers(followed || []);
-        } catch (error) {
-          console.error("Failed to load followed users:", error);
-          setFollowError("Failed to load friends list. Please try refreshing.");
-        }
+        await Promise.allSettled([...spotifyPromises, dbUserPromise]);
       } catch (error) {
-        console.error("Critical dashboard loading error:", error);
-        // On unexpected critical errors, logout to be safe
-        logoutACB();
+        console.error("Dashboard init error:", error);
       }
     }
 
-    loadDashboardDataACB();
+    initializeDashboardACB();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile?.id, isLoggedIn, dispatch]);
 
@@ -254,12 +273,32 @@ export function DashboardPresenter() {
       setFollowLoading(false);
     }
   }
-
   async function handleAddFriendACB(targetNameOrId: string) {
     // Direct add from search result
     await handleFollowUserACB(targetNameOrId);
-    // Clean up search after adding? optional.
-    // setSearchResults([]);
+  }
+
+  async function handleTriggerAnalysisACB() {
+    const quizAnswers = dbUser?.quizAnswers;
+    const hasQuizValid = Array.isArray(quizAnswers) && quizAnswers.length > 0;
+    
+    if (!hasQuizValid || !topTracks || !topArtists) {
+      console.warn("Analysis skipped: missing requirements", { hasQuizValid, hasTracks: !!topTracks, hasArtists: !!topArtists });
+      return;
+    }
+    
+    setAnalysisLoading(true);
+    setAnalysisError(null);
+    try {
+      console.log("🧠 Triggering Deep Analysis with:", { quizAnswers, tracks: topTracks?.length, artists: topArtists?.length });
+      const result = await getDeepAnalysis(topTracks, topArtists, quizAnswers);
+      setDeepAnalysis(result);
+    } catch (error) {
+      console.error("Analysis failed:", error);
+      setAnalysisError("The music psychologist is busy. Please try again later.");
+    } finally {
+      setAnalysisLoading(false);
+    }
   }
 
   return (
@@ -294,6 +333,12 @@ export function DashboardPresenter() {
       onAddFriend={handleAddFriendACB}
       onUnfollowUser={handleUnfollowUserACB}
       genreLoading={genreLoading}
+      // Analysis Props: Spotlight only for first-time session
+      hasQuiz={showAnalysisSpotlight}
+      deepAnalysis={deepAnalysis}
+      analysisLoading={analysisLoading}
+      analysisError={analysisError}
+      onTriggerAnalysis={handleTriggerAnalysisACB}
     />
   );
 }

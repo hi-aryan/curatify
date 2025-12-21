@@ -34,7 +34,8 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { InfiniteTrackScroll } from "@/components/InfiniteTrackScroll";
-import { Music, BarChart2, ListMusic, Settings, Sparkles, Mic, Library, Users } from "lucide-react";
+import { Music, BarChart2, ListMusic, Settings, Sparkles, Mic, Library, Users, Brain, Info } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
 
 interface DashboardViewProps {
   profile: any;
@@ -65,6 +66,12 @@ interface DashboardViewProps {
   onAddFriend: (name: string) => void;
   onUnfollowUser: (id: number) => void;
   genreLoading: boolean;
+  // Analysis Props
+  hasQuiz: boolean;
+  deepAnalysis: any;
+  analysisLoading: boolean;
+  analysisError: string | null;
+  onTriggerAnalysis: () => void;
 }
 
 export function DashboardView(props: DashboardViewProps) {
@@ -324,6 +331,114 @@ export function DashboardView(props: DashboardViewProps) {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Deep Analysis Spotlight */}
+      {props.hasQuiz && (
+        <section className="animate-in slide-in-from-bottom-4 duration-700">
+          <Card className="overflow-hidden border-2 border-green/20 bg-dark/40 shadow-2xl relative">
+            
+            <CardHeader className="border-b border-light/5 py-4 px-6 flex flex-row items-center justify-between bg-dark/20 backdrop-blur-sm relative z-10">
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-green/10 text-green">
+                  <BarChart2 size={20} />
+                </div>
+                <div>
+                  <CardTitle className="text-lg font-bold">Deep Music Analysis</CardTitle>
+                </div>
+              </div>
+              {!props.deepAnalysis && !props.analysisLoading && (
+                <Button 
+                   onClick={props.onTriggerAnalysis}
+                   className="bg-green hover:bg-green/90 text-dark font-bold rounded-full h-9 px-6 animate-pulse hover:animate-none"
+                >
+                  Reveal Insights
+                </Button>
+              )}
+            </CardHeader>
+
+            <CardContent className="p-0 relative z-10">
+              {props.analysisLoading ? (
+                <div className="p-12 flex flex-col items-center justify-center text-center space-y-4">
+                  <div className="relative">
+                    <div className="w-16 h-16 rounded-full border-4 border-green/20 border-t-green animate-spin" />
+                    <BarChart2 className="absolute inset-0 m-auto text-green animate-pulse" size={24} />
+                  </div>
+                  <p className="text-lg font-medium text-green animate-pulse">
+                    {props.analysisLoading && !props.deepAnalysis ? "Consulting the Music Psychologist..." : "Identifying your profile..."}
+                  </p>
+                  <p className="text-sm opacity-50 max-w-xs">
+                    {props.analysisLoading && !props.deepAnalysis 
+                      ? "Connecting your personality quiz responses with your listening patterns."
+                      : "We're syncing your Nordic vibe with your account data."}
+                  </p>
+                </div>
+              ) : props.analysisError ? (
+                 <div className="p-12 text-center">
+                    <p className="text-red-400 mb-4">{props.analysisError}</p>
+                    <Button variant="outline" onClick={props.onTriggerAnalysis}>Try Again</Button>
+                 </div>
+              ) : props.deepAnalysis ? (
+                <div className="p-6 grid gap-6 lg:grid-cols-[200px_1fr]">
+                  {/* Left: Archetype (Smaller) */}
+                  <div className="flex flex-col items-center justify-center text-center space-y-3 border-b lg:border-b-0 lg:border-r border-light/5 pb-6 lg:pb-0 lg:pr-6">
+                    <div className="w-24 h-24 rounded-full bg-green/10 flex items-center justify-center border-2 border-green/20">
+                       <Music size={32} className="text-green" />
+                    </div>
+                    <div>
+                      <h3 className="text-[10px] uppercase tracking-widest text-green font-bold">Archetype</h3>
+                      <p className="text-2xl font-black tracking-tight">
+                        {props.deepAnalysis.archetype}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Right: Metrics & Profile */}
+                  <div className="space-y-8">
+                    <div className="grid gap-6 sm:grid-cols-3">
+                      {props.deepAnalysis.metrics.map((m: any, idx: number) => (
+                        <div key={idx} className="space-y-3 p-4 rounded-xl bg-light/[0.03] border border-light/5 hover:bg-light/[0.05] transition-all group">
+                          <div className="flex justify-between items-center bg-transparent">
+                            <span className="text-xs font-bold text-light/40 group-hover:text-green transition-colors">{m.label}</span>
+                            <span className="text-sm font-black text-green">{m.value}%</span>
+                          </div>
+                          <Progress value={m.value} className="h-1 bg-dark/50" indicatorClassName="bg-green" />
+                          <p className="text-[10px] leading-relaxed opacity-50">{m.description}</p>
+                        </div>
+                      ))}
+                    </div>
+                    
+                    <div className="bg-green/5 border border-green/10 rounded-2xl p-6 relative overflow-hidden group">
+                      <Info className="absolute top-4 right-4 text-green/20 group-hover:text-green/40 transition-colors" size={24} />
+                      <h4 className="text-sm font-bold text-green mb-3 flex items-center gap-2">
+                         The Psychological Core
+                      </h4>
+                      <p className="text-sm lg:text-base leading-relaxed text-light/80 italic font-medium">
+                        "{props.deepAnalysis.profile}"
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="p-8 flex flex-col lg:flex-row items-center justify-between gap-6 border-t border-light/5">
+                  <div className="space-y-1 text-center lg:text-left">
+                     <h3 className="text-lg font-bold">Uncover your Hidden Profile</h3>
+                     <p className="text-xs text-light/50 max-w-sm">Comparing your Nordic vibe with your Spotify history.</p>
+                  </div>
+                  <div className="flex gap-4">
+                    <div className="hidden sm:flex -space-x-3">
+                       {[1,2,3].map(i => (
+                         <div key={i} className="w-10 h-10 rounded-full border-2 border-dark bg-dark/20 flex items-center justify-center">
+                            <Music size={14} className="opacity-40" />
+                         </div>
+                       ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </section>
       )}
 
       {/* Main content - Top tracks preview */}

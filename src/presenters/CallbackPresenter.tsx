@@ -7,6 +7,7 @@ import { getAccessToken } from "../api/spotifyAuth";
 import { getUserProfile, getUserTopArtists } from "../api/spotifySource";
 import { saveUserToDb } from "../actions/userActions";
 import { SuspenseView } from "../views/SuspenseView";
+import { loadQuizPersistence } from "../utils/quizUtils";
 // resolvePromise removed as we handle state locally for React compatibility
 
 /*
@@ -65,8 +66,12 @@ export function CallbackPresenter() {
           console.error("Failed to fetch top artists for persistence:", error);
         }
 
+        // Fetch quiz answers from persistence if any
+        const quizState = loadQuizPersistence();
+        const quizAnswers = quizState?.completed ? quizState.answers : null;
+
         // Persist user to database (Fire and forget, or await if critical)
-        await saveUserToDb(profile, topArtists);
+        await saveUserToDb(profile, topArtists, quizAnswers);
 
         dispatch(login({ profile }));
         // Redirect to dashboard on success

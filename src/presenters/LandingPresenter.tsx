@@ -1,4 +1,5 @@
 "use client";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import {
@@ -11,6 +12,12 @@ import { redirectToSpotifyAuth } from "../api/spotifyAuth";
 import { RootState } from "../store/store";
 import { LandingView } from "../views/LandingView";
 import { getCountryTracks } from "../data/nordicCharts";
+import { 
+  QUIZ_QUESTIONS, 
+  saveQuizPersistence, 
+  loadQuizPersistence, 
+  QuizAnswer 
+} from "../utils/quizUtils";
 
 /*
     LandingPresenter: connects Redux store to LandingView
@@ -37,8 +44,77 @@ export function LandingPresenter() {
     ? getCountryTracks(selectedCountry)
     : [];
 
+  // Quiz State
+  const [quizStep, setQuizStep] = useState(0); // 0 means not started
+  const [showQuiz, setShowQuiz] = useState(false);
+  const [quizAnswers, setQuizAnswers] = useState<QuizAnswer[]>([]);
+  const [quizCompleted, setQuizCompleted] = useState(false);
+  const [quizDismissed, setQuizDismissed] = useState(false);
+
+  // Load persistence on mount
+  useEffect(() => {
+    const saved = loadQuizPersistence();
+    if (saved) {
+      console.log("📝 Loading quiz persistence:", saved);
+      setQuizAnswers(saved.answers);
+      setQuizCompleted(saved.completed);
+      setQuizDismissed(!!saved.dismissed);
+      if (saved.answers.length > 0 && !saved.completed) {
+        setQuizStep(saved.answers.length + 1);
+      }
+    }
+  }, []);
+
+  // Sync persistence to localStorage
+  useEffect(() => {
+    if (quizAnswers.length > 0 || quizCompleted || quizDismissed) {
+      saveQuizPersistence({
+        answers: quizAnswers,
+        completed: quizCompleted,
+        selectedCountry,
+        dismissed: quizDismissed
+      });
+    }
+  }, [quizAnswers, quizCompleted, selectedCountry, quizDismissed]);
+
   function countryClickACB(countryCode) {
     dispatch(setSelectedCountry(countryCode));
+    
+    // Only trigger quiz if not already completed and not already browsing
+    if (!quizCompleted && !quizDismissed) {
+      setShowQuiz(true);
+      setQuizStep(1);
+    }
+  }
+  function handleQuizAnswerACB(answer: string) {
+    if (answer === "RECALL") {
+      setQuizDismissed(false);
+      if (!quizCompleted) {
+        setShowQuiz(true);
+        if (quizStep === 0) setQuizStep(1);
+      }
+      return;
+    }
+
+    const currentQuestion = QUIZ_QUESTIONS[quizStep - 1];
+    const newAnswers = [
+      ...quizAnswers.filter(a => a.questionId !== currentQuestion.id),
+      { questionId: currentQuestion.id, question: currentQuestion.question, answer }
+    ];
+    
+    setQuizAnswers(newAnswers);
+
+    if (quizStep < QUIZ_QUESTIONS.length) {
+      setQuizStep(prev => prev + 1);
+    } else {
+      setQuizCompleted(true);
+      setShowQuiz(false);
+    }
+  }
+
+  function handleQuizCloseACB() {
+    setShowQuiz(false);
+    setQuizDismissed(true);
   }
 
   function addToPlaylistACB(track) {
@@ -78,6 +154,16 @@ export function LandingPresenter() {
       onLoginClick={loginClickACB}
       onNavigateToDashboard={navigateToDashboardACB}
       onNavigateToAbout={navigateToAboutACB}
+      quizState={{
+        showQuiz,
+        currentQuestion: QUIZ_QUESTIONS[quizStep - 1],
+        step: quizStep,
+        totalSteps: QUIZ_QUESTIONS.length,
+        completed: quizCompleted && !quizDismissed && !isLoggedIn,
+        showRecallTab: (quizStep > 0 || quizCompleted) && quizDismissed && !isLoggedIn
+      }}
+      onQuizAnswer={handleQuizAnswerACB}
+      onQuizClose={handleQuizCloseACB}
     />
   );
 }

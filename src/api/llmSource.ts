@@ -218,3 +218,53 @@ export async function getAiRecommendations(topTracks, topArtists, topGenre) {
 
     return callGeminiJSON(prompt, useSearch);
 }
+
+/**
+ * Get a deep, personalized music analysis based on quiz answers and listening data
+ * @param {Array} topTracks - User's top tracks
+ * @param {Array} topArtists - User's top artists
+ * @param {Array} quizAnswers - User's answers from the landing page quiz
+ * @returns {Promise<Object>} - Object containing deep metrics and a persona-based description
+ */
+export async function getDeepAnalysis(topTracks, topArtists, quizAnswers) {
+    const tracksText = topTracks?.map(t => `${t.name} by ${t.artists[0].name}`).join(', ');
+    const artistsText = topArtists?.map(a => a.name).join(', ');
+    const quizText = quizAnswers?.map(q => `Q: ${q.question} A: ${q.answer}`).join('\n');
+    
+    const prompt = `
+        You are a Deep Music Psychologist. 
+        Your goal is to reveal something fundamental about the user by blending their explicit self-reflection (Quiz) with their actual subconscious behavior (Listening Data).
+        
+        User Reflection (Quiz):
+        ${quizText}
+
+        Listening Behavior:
+        - Top Tracks: ${tracksText}
+        - Top Artists: ${artistsText}
+
+        Task: 
+        1. Create a "Music Archetype" (a unique title).
+        2. Provide 3 "Hidden Metrics" (e.g., "Rhythm Seeker", "Melodic Empath", "Vibe Architect") with a % value and a 1-sentence explanation.
+        3. Write a 2-sentence "Deep Profile" that explains the core truth of their taste.
+
+        IMPORTANT RESPONSE RULES:
+        1. Output ONLY a valid JSON object. 
+        2. Do NOT use Markdown code blocks.
+        3. BE EXTREMELY CONCISE. Use brief, punchy language.
+        4. No fluff. No introductions. 
+        5. The "Deep Profile" MUST be exactly 2 sentences.
+
+        Output JSON format:
+        {
+            "archetype": "The Ethereal Voyager",
+            "metrics": [
+                { "label": "Sonic Curiosity", "value": 85, "description": "You crave textures that defy standard genres." },
+                { "label": "Emotional Resonance", "value": 92, "description": "Your tracks are mirrors of complex internal landscapes." },
+                { "label": "Pattern Disruption", "value": 64, "description": "You enjoy when rhythms challenge your expectations." }
+            ],
+            "profile": "Your deep profile description here..."
+        }
+    `;
+
+    return callGeminiJSON(prompt, false);
+}

@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 export interface UserState {
   isLoggedIn: boolean;
-  profile: any[] | null;
+  profile: any | null;
   topArtist: string | null;
   topTracks: any[] | null;
   topArtists: any[] | null;

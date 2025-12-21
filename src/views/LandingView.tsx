@@ -21,6 +21,9 @@
 */
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { InfiniteTrackScroll } from "@/components/InfiniteTrackScroll";
+import { Music } from "lucide-react";
+import { QuizModal } from "@/components/QuizModal";
 import { NordicMap } from "../components/NordicMap";
 import { SongCard } from "../components/SongCard";
 import { PlaylistDropZone } from "../components/PlaylistDropZone";
@@ -41,6 +44,17 @@ interface LandingViewProps {
   onLoginClick: () => void;
   onNavigateToDashboard: () => void;
   onNavigateToAbout: () => void;
+  // Quiz Props
+  quizState: {
+    showQuiz: boolean;
+    currentQuestion: any;
+    step: number;
+    totalSteps: number;
+    completed: boolean;
+    showRecallTab: boolean;
+  };
+  onQuizAnswer: (answer: string) => void;
+  onQuizClose: () => void;
 }
 
 export function LandingView({
@@ -55,6 +69,9 @@ export function LandingView({
   onLoginClick,
   onNavigateToDashboard,
   onNavigateToAbout,
+  quizState,
+  onQuizAnswer,
+  onQuizClose,
 }: LandingViewProps) {
   function loginClickHandlerACB() {
     onLoginClick();
@@ -130,7 +147,7 @@ export function LandingView({
         {/* Playlist Cards - Bottom/Right side */}
         <div className="w-full lg:w-1/2 flex flex-col gap-6 lg:gap-4 lg:h-full lg:min-h-0 ">
           {/* Country Songs List */}
-          <Card className="h-[400px] lg:h-0 lg:flex-1 flex flex-col border-light/40 bg-dark/40 min-h-0">
+          <Card className={`h-[400px] lg:h-0 lg:flex-1 flex flex-col border-light/40 bg-dark/40 min-h-0 transition-all duration-500 overflow-hidden relative ${quizState.completed ? 'opacity-40 blur-[2px] pointer-events-none' : ''}`}>
             <CardHeader className="py-2 lg:py-3 shrink-0">
               <div className="flex items-center gap-2">
                 <span className="flex items-center justify-center w-6 h-6 rounded-full bg-green/20 text-green text-xs font-bold">
@@ -158,9 +175,9 @@ export function LandingView({
                 <div className="h-full flex items-center justify-center text-light/50 text-sm">
                   <p>Click a country on the map</p>
                 </div>
-              )}
-            </CardContent>
-          </Card>
+                )}
+              </CardContent>
+            </Card>
 
           {/* Playlist Builder */}
           <Card className="h-[300px] lg:h-0 lg:flex-1 flex flex-col border-light/40 bg-dark/40 min-h-0">
@@ -216,6 +233,79 @@ export function LandingView({
           </button>
         </nav>
       </footer>
+
+      {/* Interactive Quiz Modal */}
+      {quizState.showQuiz && (
+        <QuizModal
+          question={quizState.currentQuestion}
+          step={quizState.step}
+          totalSteps={quizState.totalSteps}
+          onAnswer={onQuizAnswer}
+          onClose={onQuizClose}
+        />
+      )}
+
+      {/* Global Reveal Overlay */}
+      {quizState.completed && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/40 backdrop-blur-md animate-in fade-in zoom-in-95 duration-500"
+          onClick={onQuizClose}
+        >
+          <Card 
+            className="w-full max-w-md bg-dark border-light/10 shadow-xl p-8 text-center relative pointer-events-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+             <button 
+              onClick={onQuizClose}
+              className="absolute top-4 right-4 text-light/20 hover:text-light transition-colors p-2"
+            >
+              ✕
+            </button>
+
+            <div className="mb-6 inline-flex p-3 rounded-full bg-green/10 text-green">
+               <Music size={24} />
+            </div>
+            
+            <h2 className="text-2xl font-bold mb-2 text-white">
+              Analysis Ready!
+            </h2>
+            <p className="text-sm opacity-60 mb-8 leading-relaxed">
+              We've blended your Nordic vibe with the charts. <br/>
+              Ready to reveal your profile?
+            </p>
+
+            <Button 
+              onClick={onLoginClick}
+              className="w-full h-12 bg-green hover:bg-green/90 text-dark font-bold rounded-full transition-all"
+            >
+              Reveal Insights
+            </Button>
+
+            <button 
+              onClick={onQuizClose}
+              className="mt-6 text-xs uppercase tracking-widest opacity-40 hover:opacity-100 transition-opacity"
+            >
+              Explore the charts first
+            </button>
+          </Card>
+        </div>
+      )}
+
+      {/* Recall Handle - Visible when quiz is started but stashed */}
+      {quizState.showRecallTab && (
+        <button 
+          className="fixed left-0 top-1/2 -translate-y-1/2 z-40 group flex items-stretch h-24"
+          onClick={() => onQuizAnswer("RECALL")} 
+        >
+          {/* Subtle Handle */}
+          <div className="w-3 bg-green/40 group-hover:bg-green group-hover:w-2 transition-all duration-300 rounded-r" />
+          
+          {/* Sliding Content */}
+          <div className="bg-dark text-green px-2 py-4 rounded-r-lg font-bold text-[10px] [writing-mode:vertical-lr] uppercase tracking-widest flex items-center transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out border-y border-r border-light/10 bg-dark/80 backdrop-blur-sm">
+            Resume Analysis
+          </div>
+        </button>
+      )}
     </div>
   );
 }

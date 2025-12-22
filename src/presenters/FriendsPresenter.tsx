@@ -18,18 +18,24 @@ export function FriendsPresenter() {
   const [searchResults, setSearchResults] = useState([]);
   const [followedUsers, setFollowedUsers] = useState([]);
   const [searchLoading, setSearchLoading] = useState(false);
+  const [followedLoading, setFollowedLoading] = useState(true);
   const [followError, setFollowError] = useState("");
 
   // Load followed users on mount
   useEffect(() => {
     async function loadFollowed() {
       if (profile?.id) {
+        setFollowedLoading(true);
         try {
           const followed = await getFollowedUsers(profile.id);
           setFollowedUsers(followed || []);
         } catch (error) {
           console.error("Failed to load followed users:", error);
+        } finally {
+          setFollowedLoading(false);
         }
+      } else {
+        setFollowedLoading(false);
       }
     }
     loadFollowed();
@@ -95,6 +101,7 @@ export function FriendsPresenter() {
       searchResults={searchResults}
       followedUsers={followedUsers}
       searchLoading={searchLoading}
+      followedLoading={followedLoading}
       followError={followError}
       onSearchUsers={handleSearchUsers}
       onFollowUser={handleFollowUser}

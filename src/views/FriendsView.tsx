@@ -16,6 +16,7 @@ interface FriendsViewProps {
   searchResults: User[];
   followedUsers: User[];
   searchLoading: boolean;
+  followedLoading: boolean;
   followError: string;
   onSearchUsers: (e: React.FormEvent) => void;
   onFollowUser: (userId: string) => void;
@@ -28,6 +29,7 @@ export default function FriendsView({
   searchResults,
   followedUsers,
   searchLoading,
+  followedLoading,
   followError,
   onSearchUsers,
   onFollowUser,
@@ -128,7 +130,11 @@ export default function FriendsView({
                 Following ({followedUsers?.length || 0})
               </h3>
               <div className="space-y-2 max-h-[300px] overflow-y-auto pr-2">
-                {followedUsers && followedUsers.length > 0 ? (
+                {followedLoading ? (
+                  <p className="text-sm opacity-40 animate-pulse italic">
+                    Loading your friends...
+                  </p>
+                ) : followedUsers && followedUsers.length > 0 ? (
                   followedUsers.map((friend) => (
                     <div
                       key={friend.id}

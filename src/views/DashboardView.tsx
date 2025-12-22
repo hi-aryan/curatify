@@ -76,7 +76,7 @@ interface DashboardViewProps {
 
 export function DashboardView(props: DashboardViewProps) {
   return (
-    <div className="space-y-8 max-w-full w-full min-w-0 overflow-x-hidden">
+    <div className="space-y-8 max-w-full w-full min-w-0">
       {/* Header with user profile and favorite artist */}
       <header>
         <div className="flex flex-wrap gap-8 justify-between items-start mb-6">
@@ -139,9 +139,12 @@ export function DashboardView(props: DashboardViewProps) {
         {/* Favorite artist and genre row */}
         <div className="grid gap-4 md:grid-cols-2">
           {/* Favorite Artist */}
-          <div className="flex items-center gap-4 p-4 rounded-lg border border-light/10 bg-gradient-to-br from-white/[0.05] to-transparent group hover:border-green/30 hover:shadow-xl hover:shadow-green/[0.05] transition-all duration-300 relative overflow-hidden h-24">
-            <div className="absolute right-[-10px] top-[-10px] opacity-[0.02] group-hover:opacity-[0.07] transition-opacity duration-300 transform rotate-12 pointer-events-none">
-              <Mic size={100} />
+          <div className="flex items-center gap-4 p-4 rounded-lg border border-light/10 bg-gradient-to-br from-white/[0.05] to-transparent group hover:border-green/30 hover:shadow-xl hover:shadow-green/[0.05] transition-all duration-300 relative h-24">
+            {/* Background clipping layer for icon */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-lg">
+              <div className="absolute right-[-10px] top-[-10px] opacity-[0.02] group-hover:opacity-[0.07] transition-opacity duration-300 transform rotate-12">
+                <Mic size={100} />
+              </div>
             </div>
             <div className="relative z-10 flex items-center gap-4">
               {props.favoriteArtist?.image &&
@@ -187,9 +190,12 @@ export function DashboardView(props: DashboardViewProps) {
           </div>
 
           {/* Favorite Genre */}
-          <div className="flex items-center justify-center p-4 rounded-lg border border-light/10 bg-gradient-to-br from-white/[0.05] to-transparent group hover:border-green/30 hover:shadow-xl hover:shadow-green/[0.05] transition-all duration-300 relative overflow-hidden h-24">
-            <div className="absolute left-[-10px] bottom-[-10px] opacity-[0.02] group-hover:opacity-[0.07] transition-opacity duration-300 transform -rotate-12 pointer-events-none">
-              <Library size={100} />
+          <div className="flex items-center justify-center p-4 rounded-lg border border-light/10 bg-gradient-to-br from-white/[0.05] to-transparent group hover:border-green/30 hover:shadow-xl hover:shadow-green/[0.05] transition-all duration-300 relative h-24">
+            {/* Background clipping layer for icon */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-lg">
+              <div className="absolute left-[-10px] bottom-[-10px] opacity-[0.02] group-hover:opacity-[0.07] transition-opacity duration-300 transform -rotate-12">
+                <Library size={100} />
+              </div>
             </div>
             <div className="text-center relative z-10">
               <p className="text-[10px] uppercase tracking-widest opacity-50 mb-1">

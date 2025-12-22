@@ -55,10 +55,7 @@ interface LandingViewProps {
   };
   onQuizAnswer: (answer: string) => void;
   onQuizClose: () => void;
-  // Queue Props
   onQueueAll: () => void;
-  queueNotification: { type: "success" | "error"; message: string } | null;
-  onCloseQueueNotification: () => void;
 }
 
 export function LandingView({
@@ -77,8 +74,6 @@ export function LandingView({
   onQuizAnswer,
   onQuizClose,
   onQueueAll,
-  queueNotification,
-  onCloseQueueNotification,
 }: LandingViewProps) {
   function loginClickHandlerACB() {
     onLoginClick();
@@ -232,25 +227,6 @@ export function LandingView({
           </Card>
         </div>
       </section>
-
-      {/* Queue Notification Overlay (Global styles for consistency) */}
-      {queueNotification && (
-        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[100] animate-in slide-in-from-bottom-4 duration-300">
-          <div className={`px-6 py-3 rounded-full flex items-center gap-3 backdrop-blur-md border shadow-lg ${
-            queueNotification.type === "success" 
-            ? "bg-green/10 border-green/50 text-green" 
-            : "bg-pink/10 border-pink/50 text-pink"
-          }`}>
-            <span className="text-sm font-medium">{queueNotification.message}</span>
-            <button 
-              onClick={onCloseQueueNotification}
-              className="p-1 hover:opacity-70 transition-opacity"
-            >
-              ✕
-            </button>
-          </div>
-        </div>
-      )}
 
       {/* Footer - Minimal Navigation */}
       <footer className="px-4 py-3 lg:px-8 border-t border-light/5 bg-dark/20 flex flex-col md:flex-row items-center justify-between gap-4 text-xs lg:text-sm text-light/50">

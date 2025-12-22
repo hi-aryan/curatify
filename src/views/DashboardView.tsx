@@ -73,6 +73,8 @@ interface DashboardViewProps {
   analysisLoading: boolean;
   analysisError: string | null;
   onTriggerAnalysis: () => void;
+  queueNotification: { type: "success" | "error"; message: string } | null;
+  onCloseQueueNotification: () => void;
 }
 
 export function DashboardView(props: DashboardViewProps) {
@@ -558,6 +560,34 @@ export function DashboardView(props: DashboardViewProps) {
           </div>
         </div>
       </main>
+
+      {/* Queue Notification Overlay */}
+      {props.queueNotification && (
+        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[100] animate-in slide-in-from-bottom-4 duration-300">
+          <div
+            className={`flex items-center gap-3 px-6 py-3 rounded-full shadow-2xl border-2 backdrop-blur-md ${
+              props.queueNotification.type === "success"
+                ? "bg-green/10 border-green/50 text-green"
+                : "bg-red-500/10 border-red-500/50 text-red-500"
+            }`}
+          >
+            <div className={`p-1 rounded-full ${
+               props.queueNotification.type === "success" ? "bg-green/20" : "bg-red-500/20"
+            }`}>
+               {props.queueNotification.type === "success" ? <Sparkles size={16} /> : <Info size={16} />}
+            </div>
+            <p className="font-bold text-sm tracking-tight">
+              {props.queueNotification.message}
+            </p>
+            <button
+              onClick={props.onCloseQueueNotification}
+              className="ml-2 hover:opacity-70 transition-opacity"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

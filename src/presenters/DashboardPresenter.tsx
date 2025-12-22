@@ -9,6 +9,7 @@ import {
   setTopArtists,
   setTopGenre,
 } from "../store/userSlice";
+import { clearPlaylist } from "../store/chartsSlice";
 import { RootState } from "../store/store";
 import { clearTokenData, getValidAccessToken } from "../api/spotifyAuth";
 import { DashboardView } from "../views/DashboardView";
@@ -58,6 +59,7 @@ export function DashboardPresenter() {
   const topTracks = useSelector((state: RootState) => state.user.topTracks);
   const topArtists = useSelector((state: RootState) => state.user.topArtists);
   const topGenre = useSelector((state: RootState) => state.user.topGenre);
+  const dummyPlaylist = useSelector((state: RootState) => state.charts.dummyPlaylist);
 
   // Moodboard state - hook gets its own token internally
   const [playlists, setPlaylists] = useState([]);
@@ -90,6 +92,10 @@ export function DashboardPresenter() {
   const [analysisLoading, setAnalysisLoading] = useState(false);
   const [analysisError, setAnalysisError] = useState<string | null>(null);
   const [showAnalysisSpotlight, setShowAnalysisSpotlight] = useState(false);
+  const [queueNotification, setQueueNotification] = useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
 
   // Persistence for AI Analysis to avoid redo on every mount/subpage navigation
   useEffect(() => {
@@ -192,6 +198,66 @@ export function DashboardPresenter() {
     initializeDashboardACB();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile?.id, isLoggedIn, dispatch]);
+
+  // Effect to resume pending queue action on the Dashboard
+  useEffect(() => {
+    async function resumeQueueActionACB() {
+        const savedPlaylist = localStorage.getItem("dummyPlaylist");
+        let tracksToQueue = dummyPlaylist;
+
+        // Hydration: If Redux is empty (due to login redirect), load from localStorage
+        if (tracksToQueue.length === 0 && savedPlaylist) {
+          try {
+            tracksToQueue = JSON.parse(savedPlaylist);
+          } catch (e) {
+            console.error("Failed to parse playlist from storage:", e);
+          }
+        }
+
+        if (
+          isLoggedIn && 
+          tracksToQueue.length > 0 && 
+          localStorage.getItem("pendingQueueAction") === "true"
+        ) {
+          localStorage.removeItem("pendingQueueAction");
+          
+          try {
+            const accessToken = await getValidAccessToken();
+            if (!accessToken) return;
+
+            for (const track of tracksToQueue) {
+              await addItemToQueue(track.uri, accessToken);
+            }
+
+            setQueueNotification({
+              type: "success",
+              message: "Music added to queue! Enjoy!",
+            });
+            
+            // Clear both Redux and localStorage to ensure clean state
+            dispatch(clearPlaylist());
+            localStorage.removeItem("dummyPlaylist");
+            
+            setTimeout(() => setQueueNotification(null), 5000);
+          } catch (error: any) {
+          console.error("Dashboard queue resumption failed:", error);
+          if (error.message && error.message.includes("404")) {
+            setQueueNotification({
+              type: "error",
+              message: "No active device found. Start playing Spotify on a device first!",
+            });
+          } else {
+            setQueueNotification({
+              type: "error",
+              message: "Failed to add to queue. Please try again.",
+            });
+          }
+        }
+      }
+    }
+
+    resumeQueueActionACB();
+  }, [isLoggedIn, dummyPlaylist.length, dispatch]);
 
   function logoutACB() {
     clearTokenData();
@@ -313,6 +379,10 @@ export function DashboardPresenter() {
     }
   }
 
+  function closeQueueNotificationACB() {
+    setQueueNotification(null);
+  }
+
   return (
     <DashboardView
       profile={profile}
@@ -351,6 +421,8 @@ export function DashboardPresenter() {
       analysisLoading={analysisLoading}
       analysisError={analysisError}
       onTriggerAnalysis={handleTriggerAnalysisACB}
+      queueNotification={queueNotification}
+      onCloseQueueNotification={closeQueueNotificationACB}
     />
   );
 }

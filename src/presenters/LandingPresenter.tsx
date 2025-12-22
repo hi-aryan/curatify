@@ -9,8 +9,7 @@ import {
   reorderPlaylist,
   setDummyPlaylist,
 } from "../store/chartsSlice";
-import { redirectToSpotifyAuth, getValidAccessToken } from "../api/spotifyAuth";
-import { addItemToQueue } from "../api/spotifySource";
+import { redirectToSpotifyAuth } from "../api/spotifyAuth";
 import { RootState } from "../store/store";
 import { LandingView } from "../views/LandingView";
 import { getCountryTracks } from "../data/nordicCharts";
@@ -52,10 +51,6 @@ export function LandingPresenter() {
   const [quizAnswers, setQuizAnswers] = useState<QuizAnswer[]>([]);
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [quizDismissed, setQuizDismissed] = useState(false);
-  const [queueNotification, setQueueNotification] = useState<{
-    type: "success" | "error";
-    message: string;
-  } | null>(null);
   const [isPlaylistLoaded, setIsPlaylistLoaded] = useState(false);
 
   // Load persistence on mount
@@ -105,22 +100,6 @@ export function LandingPresenter() {
       localStorage.setItem("dummyPlaylist", JSON.stringify(dummyPlaylist));
     }
   }, [dummyPlaylist, isPlaylistLoaded]);
-
-  // Effect to resume pending queue action after login
-  useEffect(() => {
-    // Resumption criteria:
-    // 1. User is logged in
-    // 2. Playlist data is actually in the store (length > 0)
-    // 3. The pending action flag is in localStorage
-    if (
-      isLoggedIn && 
-      dummyPlaylist.length > 0 && 
-      localStorage.getItem("pendingQueueAction") === "true"
-    ) {
-      localStorage.removeItem("pendingQueueAction");
-      handleQueueAllACB();
-    }
-  }, [isLoggedIn, dummyPlaylist.length]);
 
   function countryClickACB(countryCode) {
     dispatch(setSelectedCountry(countryCode));
@@ -186,56 +165,17 @@ export function LandingPresenter() {
     router.push("/about");
   }
   
-  async function handleQueueAllACB() {
+  function handleQueueAllACB() {
     if (dummyPlaylist.length === 0) return;
 
+    // Set flag to resume action on the Dashboard
+    localStorage.setItem("pendingQueueAction", "true");
+
     if (!isLoggedIn) {
-      // Set flag to resume action after login
-      localStorage.setItem("pendingQueueAction", "true");
-      // Playlist is already persisted to localStorage via useEffect
       loginClickACB();
-      return;
+    } else {
+      router.push("/dashboard");
     }
-
-    try {
-      const accessToken = await getValidAccessToken();
-      if (!accessToken) {
-        setQueueNotification({
-          type: "error",
-          message: "Authentication expired. Please sign in again.",
-        });
-        return;
-      }
-
-      // Add each track to queue
-      // We do this sequentially to avoid overwhelming the API and for better error reporting
-      for (const track of dummyPlaylist) {
-        await addItemToQueue(track.uri, accessToken);
-      }
-
-      setQueueNotification({
-        type: "success",
-        message: "Added to queue! Check your Spotify app 👀",
-      });
-      setTimeout(() => setQueueNotification(null), 5000);
-    } catch (error: any) {
-      console.error("Failed to add to queue:", error);
-      if (error.message && error.message.includes("404")) {
-        setQueueNotification({
-          type: "error",
-          message: "No active device found. Start playing Spotify on a device first!",
-        });
-      } else {
-        setQueueNotification({
-          type: "error",
-          message: "Failed to add to queue. Please try again.",
-        });
-      }
-    }
-  }
-
-  function closeQueueNotificationACB() {
-    setQueueNotification(null);
   }
 
   return (
@@ -262,8 +202,6 @@ export function LandingPresenter() {
       onQuizAnswer={handleQuizAnswerACB}
       onQuizClose={handleQuizCloseACB}
       onQueueAll={handleQueueAllACB}
-      queueNotification={queueNotification}
-      onCloseQueueNotification={closeQueueNotificationACB}
     />
   );
 }

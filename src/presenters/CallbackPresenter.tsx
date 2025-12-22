@@ -68,10 +68,8 @@ export function CallbackPresenter() {
         await saveUserToDb({ profile, topArtists });
 
         dispatch(login({ profile }));
-        // Redirect logic: If there's a pending action on the landing page, go back there.
-        // Otherwise, go to dashboard as usual.
-        const hasPendingAction = localStorage.getItem("pendingQueueAction") === "true";
-        router.push(hasPendingAction ? "/" : "/dashboard");
+        // Redirect to dashboard on success
+        router.push("/dashboard");
         return profile;
       })();
 

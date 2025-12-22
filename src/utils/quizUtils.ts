@@ -57,27 +57,27 @@ export function markQuizDismissed(): void {
 export const QUIZ_QUESTIONS = [
   {
     id: "vibe",
-    question: "How would you describe your current mood?",
-    options: ["Chill & Melodic", "High Energy & Hype", "Moody & Deep", "Nostalgic"]
+    question: "How would you describe your music mood?",
+    options: ["Chill & Melodic", "High Energy & Hype", "Nostalgic"]
   },
   {
     id: "discovery",
     question: "When discovering music, do you prefer...",
-    options: ["Safe bets and hits", "Underground gems", "Experimental sounds", "Classic favorites"]
+    options: ["Safe bets and hits", "Underground gems", "Experimental sounds"]
   },
   {
     id: "setting",
     question: "Where do you listen to music most?",
-    options: ["Concentrating at work/study", "At the gym/active", "Commuting", "Relaxing at home"]
+    options: ["At work/study", "At the gym", "Commuting", "At home"]
   },
   {
     id: "social",
     question: "Do you like sharing your music taste?",
-    options: ["Always! I'm a curator", "Sometimes with close friends", "I'm a private listener", "Only if it's really unique"]
+    options: ["Always! I'm a curator", "Sometimes with close friends", "I'm a private listener"]
   },
   {
     id: "adventure",
-    question: "How adventurous is your taste today?",
-    options: ["Give me the usual", "Surprise me a bit", "I want something completely new", "Take me to another world"]
+    question: "How adventurous is your taste?",
+    options: ["Give me the usual", "Surprise me a bit", "Take me to another dimension"]
   }
 ];

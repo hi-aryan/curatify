@@ -31,6 +31,8 @@ import { loadQuizPersistence } from "../utils/quizUtils";
 import { addItemToQueue, getUserPlaylists } from "../api/spotifySource";
 import { useMoodboard } from "../hooks/useMoodboard";
 
+import { sanitizeArtistsForDb } from "../utils/userUtils";
+
 /*
     DashboardPresenter: connects Redux store to DashboardView
     
@@ -162,8 +164,18 @@ export function DashboardPresenter() {
               console.log("⏳ Waiting for top artists before sync...");
               currentTopArtists = await fetchTopArtists(accessToken, 50);
             }
+
+            // --- ROBUSTNESS: Client-side sanitization & Capping ---
+            // We use the shared utility to keep the Next.js RPC/Server Action log lean.
+            // This prevents the "GIGANTIC" terminal whitespace issue.
+            const leanArtists = sanitizeArtistsForDb(currentTopArtists);
+
             console.log("🔄 Syncing local quiz to DB with fresh data...");
-            await saveUserToDb(profile, currentTopArtists || [], localQuiz.answers);
+            await saveUserToDb({ 
+              profile, 
+              topArtists: leanArtists, 
+              quizAnswers: localQuiz.answers 
+            });
             const updatedUser = await getUserFromDb(profile.id);
             setDbUser(updatedUser);
           } else {

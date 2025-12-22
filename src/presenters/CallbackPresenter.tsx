@@ -8,7 +8,8 @@ import { getUserProfile, getUserTopArtists } from "../api/spotifySource";
 import { saveUserToDb } from "../actions/userActions";
 import { SuspenseView } from "../views/SuspenseView";
 import { loadQuizPersistence } from "../utils/quizUtils";
-// resolvePromise removed as we handle state locally for React compatibility
+
+import { sanitizeArtistsForDb } from "../utils/userUtils";
 
 /*
     CallbackPresenter: handles Spotify OAuth callback
@@ -56,19 +57,15 @@ export function CallbackPresenter() {
         let topArtists = [];
         try {
           const topArtistsResponse = await getUserTopArtists(accessToken, { limit: 1 });
-          // Refine: Only store the top one artist to keep DB lean
-          topArtists = (topArtistsResponse.items || []).slice(0, 1).map((artist: any) => ({
-            id: artist.id,
-            name: artist.name,
-            image: artist.images?.[0]?.url 
-          }));
+          // Refine: Use shared utility to ensure identical 1-artist persistence
+          topArtists = sanitizeArtistsForDb(topArtistsResponse.items);
         } catch (error) {
           console.error("Failed to fetch top artists for persistence:", error);
         }
 
         // Persist user to database (Core profile only)
         // Note: Quiz sync is handled by DashboardPresenter to trigger the "First-time" reward flow.
-        await saveUserToDb(profile, topArtists);
+        await saveUserToDb({ profile, topArtists });
 
         dispatch(login({ profile }));
         // Redirect to dashboard on success

@@ -42,19 +42,16 @@ export function AboutView(props) {
                 {
                   name: "Lukas",
                   role: "Developer",
-                  desc: "Short description here.",
                   image: lukasImg,
                 },
                 {
                   name: "Aryan",
                   role: "Developer",
-                  desc: "Short description here.",
                   image: aryanImg,
                 },
                 {
                   name: "Rafael",
                   role: "Developer",
-                  desc: "Short description here.",
                   image: rafaelImg,
                 },
               ].map((member, i) => (
@@ -78,7 +75,6 @@ export function AboutView(props) {
                     <h4 className="font-medium text-light">{member.name}</h4>
                     <p className="text-xs text-green">{member.role}</p>
                   </div>
-                  <p className="text-sm opacity-80">{member.desc}</p>
                 </div>
               ))}
             </div>

@@ -9,7 +9,6 @@
 */
 import { useState } from "react";
 import { motion, Reorder } from "motion/react";
-
 export function PlaylistDropZone({
   playlist,
   onAddTrack,
@@ -133,9 +132,8 @@ export function PlaylistDropZone({
       )}
 
       {playlist.length > 0 && (
-        <p className="mt-3 text-xs text-light/40 text-center">
-          {playlist.length} track{playlist.length !== 1 ? "s" : ""} • Drag to
-          reorder
+        <p className="mt-3 text-[10px] text-light/40 text-center uppercase tracking-widest font-bold">
+          {playlist.length} track{playlist.length !== 1 ? "s" : ""} • Drag to reorder
         </p>
       )}
     </div>

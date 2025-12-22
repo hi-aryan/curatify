@@ -46,6 +46,9 @@ const chartsSlice = createSlice({
     clearPlaylist(state) {
       state.dummyPlaylist = [];
     },
+    setDummyPlaylist(state, action) {
+      state.dummyPlaylist = action.payload;
+    },
   },
 });
 
@@ -56,5 +59,6 @@ export const {
   removeFromPlaylist,
   reorderPlaylist,
   clearPlaylist,
+  setDummyPlaylist,
 } = chartsSlice.actions;
 export default chartsSlice.reducer;

@@ -73,4 +73,5 @@ We use the following 3rd party tools to enhance the user experience. All are **u
 - **Social Layer**: Search and follow friends to see their top artists. Handled via `src/actions/friendActions.ts`.
 - **AI Moodboards**: AI-generated personality analysis of your playlists using Gemini API.
 - **Nordic Charts**: Interactive map of Nordic top tracks (DK, FI, NO, SE).
+- **Playlist Builder & Queue Sync**: Drag-and-drop functionality to create a custom playlist on the landing page. Features `localStorage` persistence and automatic Spotify queue sync upon authentication.
 - **User Persistence**: Automatic syncing of your Spotify profile and quiz results to our database via `src/utils/userUtils.ts` and `src/actions/userActions.ts`.

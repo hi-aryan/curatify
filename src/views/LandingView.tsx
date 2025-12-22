@@ -22,7 +22,7 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { InfiniteTrackScroll } from "@/components/InfiniteTrackScroll";
-import { Music } from "lucide-react";
+import { Music, ListPlus } from "lucide-react";
 import { QuizModal } from "@/components/QuizModal";
 import { NordicMap } from "../components/NordicMap";
 import { SongCard } from "../components/SongCard";
@@ -55,6 +55,10 @@ interface LandingViewProps {
   };
   onQuizAnswer: (answer: string) => void;
   onQuizClose: () => void;
+  // Queue Props
+  onQueueAll: () => void;
+  queueNotification: { type: "success" | "error"; message: string } | null;
+  onCloseQueueNotification: () => void;
 }
 
 export function LandingView({
@@ -72,6 +76,9 @@ export function LandingView({
   quizState,
   onQuizAnswer,
   onQuizClose,
+  onQueueAll,
+  queueNotification,
+  onCloseQueueNotification,
 }: LandingViewProps) {
   function loginClickHandlerACB() {
     onLoginClick();
@@ -182,18 +189,36 @@ export function LandingView({
           {/* Playlist Builder */}
           <Card className="h-[300px] lg:h-0 lg:flex-1 flex flex-col border-light/40 bg-dark/40 min-h-0">
             <CardHeader className="py-2 lg:py-3 shrink-0">
-              <div className="flex items-center gap-2">
-                <span className="flex items-center justify-center w-6 h-6 rounded-full bg-green/20 text-green text-xs font-bold">
-                  3
-                </span>
-                <CardTitle className="text-lg font-semibold">
-                  {dummyPlaylist.length > 0
-                    ? "Your Playlist"
-                    : "Tap + on songs to add"}
-                  <span className="hidden lg:inline ml-1">
-                    - Drop to create
+              <div className="flex items-center justify-between gap-2 w-full">
+                <div className="flex items-center gap-2">
+                  <span className="flex items-center justify-center w-6 h-6 rounded-full bg-green/20 text-green text-xs font-bold">
+                    3
                   </span>
-                </CardTitle>
+                  <CardTitle className="text-base lg:text-lg font-semibold">
+                    {dummyPlaylist.length > 0
+                      ? "Your Playlist"
+                      : "Tap + on songs to add"}
+                    <span className="hidden lg:inline ml-1">
+                      - Drop to create
+                    </span>
+                  </CardTitle>
+                </div>
+
+                {dummyPlaylist.length > 0 && (
+                  <Button
+                    onClick={onQueueAll}
+                    variant="outline"
+                    size="sm"
+                    className={`h-8 rounded-full font-bold text-[10px] lg:text-xs uppercase tracking-wider gap-2 transition-all duration-300 group/queue shadow-sm shrink-0 ${
+                      isLoggedIn 
+                        ? "bg-green text-dark border-transparent hover:bg-green/90 hover:text-dark hover:scale-[1.02] active:scale-[0.98]" 
+                        : "bg-green/10 text-green border-green/50 hover:bg-green/20 hover:text-green hover:scale-[1.02]"
+                    }`}
+                  >
+                    <ListPlus size={14} className="group-hover/queue:scale-110 transition-transform duration-300" />
+                    <span>{isLoggedIn ? "Add to Queue" : "Sign in to Queue"}</span>
+                  </Button>
+                )}
               </div>
             </CardHeader>
             <CardContent className="flex-1 min-h-0 pb-3 overflow-hidden flex flex-col">
@@ -207,6 +232,25 @@ export function LandingView({
           </Card>
         </div>
       </section>
+
+      {/* Queue Notification Overlay (Global styles for consistency) */}
+      {queueNotification && (
+        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[100] animate-in slide-in-from-bottom-4 duration-300">
+          <div className={`px-6 py-3 rounded-full flex items-center gap-3 backdrop-blur-md border shadow-lg ${
+            queueNotification.type === "success" 
+            ? "bg-green/10 border-green/50 text-green" 
+            : "bg-pink/10 border-pink/50 text-pink"
+          }`}>
+            <span className="text-sm font-medium">{queueNotification.message}</span>
+            <button 
+              onClick={onCloseQueueNotification}
+              className="p-1 hover:opacity-70 transition-opacity"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Footer - Minimal Navigation */}
       <footer className="px-4 py-3 lg:px-8 border-t border-light/5 bg-dark/20 flex flex-col md:flex-row items-center justify-between gap-4 text-xs lg:text-sm text-light/50">

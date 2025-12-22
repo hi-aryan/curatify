@@ -244,7 +244,7 @@ export function DashboardPresenter() {
           if (error.message && error.message.includes("404")) {
             setQueueNotification({
               type: "error",
-              message: "No active device found. Start playing Spotify on a device first!",
+              message: "No active device found. Please start playing music in Spotify on a device first!",
             });
           } else {
             setQueueNotification({

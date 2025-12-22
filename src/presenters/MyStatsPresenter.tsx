@@ -103,7 +103,7 @@ export function MyStatsPresenter() {
         setQueueNotification({
           type: "error",
           message:
-            "No active device found. Please start playing Spotify on a device to use this feature.",
+            "No active device found. Please start playing music in Spotify on a device to use this feature.",
         });
       } else {
         setQueueNotification({

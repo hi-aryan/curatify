@@ -22,7 +22,8 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { InfiniteTrackScroll } from "@/components/InfiniteTrackScroll";
-import { Music, ListPlus } from "lucide-react";
+import { Music, ListPlus, LayoutDashboard } from "lucide-react";
+import { IconBrandSpotify } from "@tabler/icons-react";
 import { QuizModal } from "@/components/QuizModal";
 import { NordicMap } from "../components/NordicMap";
 import { SongCard } from "../components/SongCard";
@@ -105,17 +106,19 @@ export function LandingView({
             <Button
               onClick={navigateToDashboardHandlerACB}
               variant="outline"
-              className="rounded-full border-green/50 text-green hover:bg-green/10 hover:scale-105 transition-all duration-200 shadow-sm"
+              className="rounded-full border-2 border-green/50 bg-green/10 text-green hover:bg-green/20 hover:scale-105 active:scale-95 transition-all duration-300 font-bold flex items-center gap-2 px-6 group/dash shadow-sm"
             >
-              Go to Dashboard
+              <LayoutDashboard size={18} className="group-hover/dash:scale-110 transition-transform duration-300" />
+              <span className="uppercase tracking-wider">Go to Dashboard</span>
             </Button>
           ) : (
             <Button
               onClick={loginClickHandlerACB}
               variant="outline"
-              className="rounded-full border-green/50 text-green hover:bg-green/10 hover:scale-105 transition-all duration-200 shadow-sm"
+              className="rounded-full border-2 border-green/50 bg-green/10 text-green hover:bg-green/20 hover:scale-105 active:scale-95 transition-all duration-300 font-bold flex items-center gap-2 px-6 group/spotify shadow-sm"
             >
-              Sign in with Spotify
+              <IconBrandSpotify size={20} className="group-hover/spotify:scale-110 transition-transform duration-300" />
+              <span className="uppercase tracking-wider">Sign in with Spotify</span>
             </Button>
           )}
         </div>

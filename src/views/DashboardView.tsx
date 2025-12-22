@@ -36,6 +36,7 @@ import { Button } from "@/components/ui/button";
 import { InfiniteTrackScroll } from "@/components/InfiniteTrackScroll";
 import { Music, BarChart2, ListMusic, Settings, Sparkles, Mic, Library, Users, Brain, Info, Wand2 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
+import Link from "next/link";
 
 interface DashboardViewProps {
   profile: any;
@@ -283,7 +284,12 @@ export function DashboardView(props: DashboardViewProps) {
                         <div className="w-6 h-6 rounded-full bg-green/20 flex items-center justify-center text-green text-[10px]">
                           {user.name?.charAt(0) || "?"}
                         </div>
-                        <span className="text-sm font-medium">{user.name}</span>
+                        <Link 
+                          href={`/dashboard/user/${user.id}`}
+                          className="text-sm font-medium hover:text-green transition-colors"
+                        >
+                          {user.name}
+                        </Link>
                       </div>
                       <Button
                         size="sm"
@@ -316,7 +322,12 @@ export function DashboardView(props: DashboardViewProps) {
                         {friend.name?.charAt(0) || "?"}
                       </div>
                       <div className="flex-1">
-                        <p className="font-medium">{friend.name}</p>
+                        <Link 
+                          href={`/dashboard/user/${friend.id}`}
+                          className="font-medium hover:text-green transition-colors"
+                        >
+                          {friend.name}
+                        </Link>
                       </div>
                       <Button
                         size="sm"

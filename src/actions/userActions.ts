@@ -86,3 +86,19 @@ export async function getUserFromDb(spotifyId: string) {
     return null;
   }
 }
+
+/**
+ * Fetch a user record from the database by internal numeric ID
+ * @param {number} userId - The user's internal database ID
+ */
+export async function getUserById(userId: number) {
+  try {
+    const user = await db.query.users.findFirst({
+      where: (users, { eq }) => eq(users.id, userId),
+    });
+    return user || null;
+  } catch (error) {
+    console.error("❌ DB Error in getUserById:", error);
+    return null;
+  }
+}

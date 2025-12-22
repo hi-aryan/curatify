@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Users, Search as SearchIcon } from "lucide-react";
+import Link from "next/link";
 
 interface User {
   id: string | number;
@@ -94,7 +95,12 @@ export default function FriendsView({
                           {user.name?.charAt(0) || "?"}
                         </div>
                         <div className="flex flex-col flex-1 min-w-0">
-                          <span className="text-sm font-medium truncate">{user.name}</span>
+                          <Link 
+                            href={`/dashboard/user/${user.id}`}
+                            className="text-sm font-medium truncate hover:text-green transition-colors"
+                          >
+                            {user.name}
+                          </Link>
                           {user.topArtists && user.topArtists.length > 0 && (
                             <span className="text-[10px] opacity-60 truncate">
                               Current Top Artist: {user.topArtists[0].name}
@@ -133,7 +139,12 @@ export default function FriendsView({
                           {friend.name?.charAt(0) || "?"}
                         </div>
                         <div className="flex flex-col flex-1 min-w-0">
-                          <span className="text-sm font-medium truncate">{friend.name}</span>
+                          <Link 
+                            href={`/dashboard/user/${friend.id}`}
+                            className="text-sm font-medium truncate hover:text-green transition-colors"
+                          >
+                            {friend.name}
+                          </Link>
                           {friend.topArtists && friend.topArtists.length > 0 && (
                             <span className="text-[10px] opacity-60 truncate">
                               Current Top Artist: {friend.topArtists[0].name}

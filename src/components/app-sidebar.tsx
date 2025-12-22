@@ -19,7 +19,6 @@ import {
   LogOut,
   ChevronUp,
   User2,
-  CreditCard,
   Bell,
   Disc3,
 } from "lucide-react";

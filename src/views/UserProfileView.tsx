@@ -59,22 +59,21 @@ export default function UserProfileView({ user, loading, error }: UserProfileVie
         <h1 className="text-3xl font-bold">User Profile</h1>
       </header>
 
-      <div className="grid gap-8 md:grid-cols-[1fr_2fr]">
+      <div className="grid gap-8 md:grid-cols-[1fr_2fr] items-stretch">
         {/* Left Col: Profile Basic Info */}
-        <div className="space-y-6">
-          <Card className="border-light/10 bg-gradient-to-br from-white/[0.05] to-transparent">
-            <CardContent className="pt-8 flex flex-col items-center text-center">
-              <div className="w-24 h-24 rounded-full bg-green/20 flex items-center justify-center text-green mb-4">
+        <div className="flex flex-col">
+          <Card className="border-light/10 bg-gradient-to-br from-white/[0.05] to-transparent h-full">
+            <CardContent className="pt-8 flex flex-col items-center justify-center text-center h-full">
+              <div className="w-24 h-24 rounded-full bg-green/20 flex items-center justify-center text-green mb-4 shrink-0">
                 <UserCircle size={48} />
               </div>
               <h2 className="text-2xl font-bold">{user.name || "Anonymous"}</h2>
-              <p className="text-sm opacity-50 mt-1">ID: {user.id}</p>
             </CardContent>
           </Card>
         </div>
 
         {/* Right Col: Detailed Stats */}
-        <div className="space-y-6">
+        <div className="flex flex-col gap-6">
           <Card className="border-light/10 bg-gradient-to-br from-white/[0.08] to-transparent overflow-hidden">
             <CardHeader>
               <CardTitle className="text-lg font-semibold flex items-center gap-2">
@@ -108,8 +107,8 @@ export default function UserProfileView({ user, loading, error }: UserProfileVie
           </Card>
 
           {/* More sections (top songs, playlists) can go here in the future */}
-          <div className="p-8 border border-dashed border-light/10 rounded-xl flex flex-col items-center justify-center text-center opacity-40">
-             <p className="text-sm">More listening insights coming soon...</p>
+          <div className="p-8 border border-dashed border-light/10 rounded-xl flex flex-col items-center justify-center text-center opacity-40 flex-1">
+             <p className="text-sm">More insights coming soon...</p>
           </div>
         </div>
       </div>

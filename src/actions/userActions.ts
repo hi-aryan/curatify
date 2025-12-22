@@ -31,22 +31,23 @@ export async function saveUserToDb({
       `💾 Saving user to DB: ${profile.id} (${profile.display_name}) with ${topArtists.length} input artists`
     );
 
-    // --- ROBUSTNESS: Data Volume Cap & Sanitization ---
-    // We use the centralized utility to ensure the database record remains tiny.
+    // only update topArtists or quizAnswers if they're actually provided (prevents partial updates, like just a quiz sync, from wiping existing artist data)
     const sanitizedArtists = sanitizeArtistsForDb(topArtists);
-
+    
     const updateSet: any = {
       name: profile.display_name,
-      topArtists: sanitizedArtists,
     };
+
+    if (sanitizedArtists.length > 0) {
+      updateSet.topArtists = sanitizedArtists;
+    }
     
-    // Only update quiz if answers were actually provided (don't wipe existing ones)
-    if (quizAnswers) {
+    if (quizAnswers && quizAnswers.length > 0) {
       updateSet.quizAnswers = quizAnswers;
     }
 
     // Upsert: Insert new user, or update if they already exist
-    // Using explicit object mapping ensures columns are NEVER swapped.
+    // only commit the fields present in updateSet.
     await db
       .insert(users)
       .values({
@@ -60,7 +61,8 @@ export async function saveUserToDb({
         set: updateSet,
       });
 
-    console.log("✅ User saved successfully");
+    console.log(`✅ User saved: committed ${sanitizedArtists.length} artists and ${quizAnswers?.length || 0} answers`);
+
     return { success: true };
   } catch (error) {
     console.error("❌ DB Error in saveUserToDb:", error);

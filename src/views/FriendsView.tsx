@@ -153,7 +153,7 @@ export default function FriendsView({
                   ))
                 ) : (
                   <p className="text-sm opacity-60">
-                    No friends yet. Search to add some!
+                    No friends yet. Search for their Spotify username to add them!
                   </p>
                 )}
               </div>

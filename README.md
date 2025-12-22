@@ -1,113 +1,76 @@
-_still boiling_
+## Deployed app: [Curatify.se](https://curatify.se)
 
 ## Local Development Setup
 
-## Deployed app: Curatify.se
+### 1. Requirements
+- **Node.js** (v18+)
+- **Spotify Premium Account** (for playback/certain API features)
+- **PostgreSQL Database** (local or cloud-hosted)
 
-Create a `.env` file in the project root with:
+### 2. Environment Variables
+Create a `.env` file in the root directory:
 
-```
-NEXT_PUBLIC_SPOTIFY_CLIENT_ID=your_spotify_client_id
+```bash
+# Spotify API
+NEXT_PUBLIC_SPOTIFY_CLIENT_ID=your_spotify_id
 NEXT_PUBLIC_SPOTIFY_REDIRECT_URI=http://127.0.0.1:3000/callback
-NEXT_PUBLIC_LLM_API_URL=your_gemini_api_url
-NEXT_PUBLIC_LLM_API_KEY=your_gemini_api_key
+
+# AI Analysis (Google Gemini)
+NEXT_PUBLIC_LLM_API_URL=https://generativelanguage.googleapis.com/...
+NEXT_PUBLIC_LLM_API_KEY=your_gemini_key
+
+# Database
+DATABASE_URL=postgresql://user:password@localhost:5432/curatify
 ```
 
-**Note**: `NEXT_PUBLIC_SPOTIFY_REDIRECT_URI` defaults to `http://127.0.0.1:3000/callback` if not set.
-**Note**: A Spotify Premium account is required. To get whitelisted, contact \_\_\_ and provide your Spotify account email.
+### 3. Installation & Database Sync
+```bash
+# Install dependencies
+npm install
 
-Project description:
-Spotify playlist curator. Includes moodboard for specific songs, filtering by countries, genres, emotions, release date, as well as editing and sorting user playlists.
+# Push database schema (Drizzle)
+npx drizzle-kit push
+```
 
-What we have done:
+### 4. Run the Dev Server
+```bash
+npm run dev
+```
 
-- **Migration to Next.js App Router** (v16)
-- Spotify authentication working (PKCE flow)
-- Personal stats page
-- Landing view with Nordic top 50
-- Playlist personality analysis using Gemini API
+---
 
-What we still plan to do:
+## Project Architecture (MVP Pattern)
 
-- **Database Integration (Postgres + Drizzle)** for user persistence
-- Sort playlist features + edit your own playlist
-- Recommendations based on a song, genre, mood
-- UI improvements (text, icons, layouts)
-- Navigation bar
+The project follows the **Model-View-Presenter (MVP)** pattern to separate logic from presentation:
 
-Project file structure:
+- **Presenters (`src/presenters/`)**: The "Brain." They handle side effects, fetch data (using Redux, Server Actions, or APIs), and pass props to Views. Examples: `DashboardPresenter.tsx`, `LandingPresenter.tsx`.
+- **Views (`src/views/`)**: The "Face." Pure components that only render UI based on props. Examples: `DashboardView.tsx`, `MyStatsView.tsx`.
+- **Model / Data Layer**:
+  - `src/actions/`: Server Actions for database persistence (Social follows, user profile sync).
+  - `src/db/`: Database schema and configuration via **Drizzle ORM**.
+  - `src/api/`: Interfaces for Spotify and Gemini LLM.
+  - `src/store/`: Redux Toolkit for global UI state.
 
-The project follows a Model-View-Presenter (MVP) architecture pattern adapted for Next.js.
+---
 
-**Core files:**
+## 3rd Party Components & Libraries
 
-- `src/app/layout.jsx` - Root layout with Redux StoreProvider
-- `src/app/page.jsx` - Main entry controller
-- `src/app/AppInitializer.jsx` - Handles session restoration on mount
-- `src/apiConfig.js` - Centralizes API configuration from environment variables
+We use the following 3rd party tools to enhance the user experience. All are **user-visible** unless noted.
 
-**MVP architecture:**
+| Category | Library | Usage / Location |
+| :--- | :--- | :--- |
+| **UI Framework** | **Shadcn UI** | Core UI components: Buttons, Cards, Modals, Progress bars (e.g., `src/components/ui/progress.tsx` used in `QuizModal.tsx`). |
+| **Visual Effects** | **Aceternity UI** | Premium effects: `Multi Step Loader` (during analysis) and `3D Card` (interactives). Located in `src/components/ui/`. |
+| **Animations** | **Framer Motion** | Used for smooth UI transitions, song card hover effects, and infinite scrolls (`InfiniteTrackScroll.tsx`). |
+| **Icons** | **Lucide / Tabler** | Integrated within Shadcn components for intuitive navigation. |
+| **Data Flow**| **Redux Toolkit** | (Internal) Manages user sessions and UI state across the App Router. |
 
-- `src/presenters/` - Client Components (`'use client'`) connecting Redux state to views
-  - `LandingPresenter.jsx` - Landing page presenter
-  - `DashboardPresenter.jsx` - Dashboard presenter
-  - `CallbackPresenter.jsx` - OAuth callback handler
-- `src/views/` - Pure presentation components
-  - `LandingView.jsx` - Landing page view
-  - `DashboardView.jsx` - Dashboard view
-  - `SuspenseView.jsx` - Loading/error state view
+---
 
-**API layer:**
+## Features and Core Utilities
 
-- `src/api/spotifyAuth.js` - OAuth PKCE flow and token management
-- `src/api/spotifySource.js` - Spotify API fetch functions
-- `src/api/llmSource.js` - Gemini API calls
-
-**State management:**
-
-- `src/store/userSlice.js` - Authentication and user data (profile, top artists/tracks/genre)
-- `src/store/chartsSlice.js` - Nordic charts state and dummy playlist
-- `src/store/index.js` - Redux store configuration
-
-**UI components:**
-
-- `src/components/` - Reusable components
-  - `MoodboardCard.jsx` - Playlist moodboard display
-  - `NordicMap.jsx` - Interactive Nordic countries map
-  - `SongCard.jsx` - Song display component
-  - `PlaylistDropZone.jsx` - Playlist drag-and-drop zone
-  - `ui/` - shadcn/ui components (cards, buttons, dropdowns, etc.)
-
-**Utilities and helpers:**
-
-- `src/utils/dashboardUtils.js` - Data fetching and calculations
-- `src/hooks/useMoodboard.js` - Custom hook for playlist analysis
-- `src/lib/utils.js` - Shared utility functions
-- `src/constants/moodboardPrompt.js` - LLM prompt templates
-
-**Data:**
-
-- `src/data/` - Static data files
-  - Nordic charts CSV files (regional charts for DK, FI, NO, SE)
-  - `nordicCharts.js` - CSV parser and data access
-
-## Used 3rd Party Components & Libraries
-
-### UI & Styling
-
-- **Shadcn UI**: Used for core UI components (Cards, Buttons, Sidebar, Dropdowns, etc.), built on Radix UI and Tailwind CSS.
-- **Aceternity UI**:
-  - `Multi Step Loader` (for analysis loading states)
-  - `3D Card` (visual effects in NordicMap)
-- **Framer Motion**: Used for fluid animations.
-- **Lucide React** & **Tabler Icons**: Icon sets.
-
-### Data & State
-
-- **Redux Toolkit**: Global state management.
-- **Drizzle ORM** & **PostgreSQL**: Backend database and ORM.
-
-### APIs
-
-- **Spotify Web API**: Music data and user authentication.
-- **Google Gemini API**: LLM for playlist mood analysis.
+- **Music Quiz & Personality**: Classifies your music taste. Logic handled in `src/utils/quizUtils.ts` and rendered via `QuizModal.tsx`.
+- **Social Layer**: Search and follow friends to see their top artists. Handled via `src/actions/friendActions.ts`.
+- **AI Moodboards**: AI-generated personality analysis of your playlists using Gemini API.
+- **Nordic Charts**: Interactive map of Nordic top tracks (DK, FI, NO, SE).
+- **User Persistence**: Automatic syncing of your Spotify profile and quiz results to our database via `src/utils/userUtils.ts` and `src/actions/userActions.ts`.

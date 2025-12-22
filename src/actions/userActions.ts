@@ -88,17 +88,25 @@ export async function getUserFromDb(spotifyId: string) {
 }
 
 /**
- * Fetch a user record from the database by internal numeric ID
- * @param {number} userId - The user's internal database ID
+ * Fetch a NON-PRIVATE user record from the database by Spotify ID.
+ * This ensures sensitive data like quizAnswers is NEVER leaked to other users.
+ * @param {string} spotifyId - The user's Spotify ID
  */
-export async function getUserById(userId: number) {
+export async function getPublicUserProfile(spotifyId: string) {
   try {
     const user = await db.query.users.findFirst({
-      where: (users, { eq }) => eq(users.id, userId),
+      where: (users, { eq }) => eq(users.spotifyId, spotifyId),
+      columns: {
+        id: true,
+        name: true,
+        topArtists: true,
+        spotifyId: true,
+        // quizAnswers: false // Explicitly excluded by only selecting the above
+      }
     });
     return user || null;
   } catch (error) {
-    console.error("❌ DB Error in getUserById:", error);
+    console.error("❌ DB Error in getPublicUserProfile:", error);
     return null;
   }
 }

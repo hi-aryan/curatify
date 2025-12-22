@@ -1,13 +1,13 @@
 "use client";
 
-import { UserProfilePresenter } from "@/presenters/UserProfilePresenter";
+import UserProfilePresenter from "@/presenters/UserProfilePresenter";
 import { useParams } from "next/navigation";
 
 export default function UserProfilePage() {
   const params = useParams();
-  const id = Number(params.id);
+  const id = params.id as string;
 
-  if (isNaN(id)) {
+  if (!id) {
     return (
       <div className="p-8 text-center text-pink">
         Invalid user reference.
@@ -15,5 +15,5 @@ export default function UserProfilePage() {
     );
   }
 
-  return <UserProfilePresenter userId={id} />;
+  return <UserProfilePresenter spotifyId={id} />;
 }

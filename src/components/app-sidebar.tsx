@@ -241,14 +241,16 @@ export function AppSidebar() {
                   <span>Upgrade to Pro</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/dashboard/settings" className="cursor-pointer">
+                  <Link href={profile?.id ? `/dashboard/user/${profile.id}` : "#"} className="cursor-pointer">
                     <User2 className="h-4 w-4" />
                     <span>Account</span>
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => {}}>
-                  <CreditCard className="h-4 w-4" />
-                  <span>Billing</span>
+                <DropdownMenuItem asChild>
+                  <Link href="/dashboard/settings" className="cursor-pointer">
+                    <Settings className="h-4 w-4" />
+                    <span>Settings</span>
+                  </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => {}}>
                   <Bell className="h-4 w-4" />

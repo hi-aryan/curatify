@@ -96,8 +96,8 @@ export default function FriendsView({
                         </div>
                         <div className="flex flex-col flex-1 min-w-0">
                           <Link 
-                            href={`/dashboard/user/${user.id}`}
-                            className="text-sm font-medium truncate hover:text-green transition-colors"
+                            href={`/dashboard/user/${user.spotifyId}`}
+                            className="font-bold hover:text-green transition-colors"
                           >
                             {user.name}
                           </Link>
@@ -140,8 +140,8 @@ export default function FriendsView({
                         </div>
                         <div className="flex flex-col flex-1 min-w-0">
                           <Link 
-                            href={`/dashboard/user/${friend.id}`}
-                            className="text-sm font-medium truncate hover:text-green transition-colors"
+                            href={`/dashboard/user/${friend.spotifyId}`}
+                            className="font-bold hover:text-green transition-colors"
                           >
                             {friend.name}
                           </Link>

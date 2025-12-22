@@ -285,7 +285,7 @@ export function DashboardView(props: DashboardViewProps) {
                           {user.name?.charAt(0) || "?"}
                         </div>
                         <Link 
-                          href={`/dashboard/user/${user.id}`}
+                          href={`/dashboard/user/${user.spotifyId}`}
                           className="text-sm font-medium hover:text-green transition-colors"
                         >
                           {user.name}
@@ -323,7 +323,7 @@ export function DashboardView(props: DashboardViewProps) {
                       </div>
                       <div className="flex-1">
                         <Link 
-                          href={`/dashboard/user/${friend.id}`}
+                          href={`/dashboard/user/${friend.spotifyId}`}
                           className="font-medium hover:text-green transition-colors"
                         >
                           {friend.name}

@@ -1,45 +1,51 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getUserById } from "../actions/userActions";
+import { getPublicUserProfile } from "../actions/userActions";
 import UserProfileView from "../views/UserProfileView";
 
 interface UserProfilePresenterProps {
-  userId: number;
+  spotifyId: string;
 }
 
-export function UserProfilePresenter({ userId }: UserProfilePresenterProps) {
+export default function UserProfilePresenter({ spotifyId }: UserProfilePresenterProps) {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    async function loadUser() {
-      if (!userId) {
-        setError("Invalid user ID");
-        setLoading(false);
-        return;
-      }
-
-      setLoading(true);
-      setError(null);
+    async function fetchUser() {
       try {
-        const userData = await getUserById(userId);
-        if (userData) {
+        setLoading(true);
+        setError(null);
+        const data = await getPublicUserProfile(spotifyId);
+        if (data) {
+          // Normalize the data for the view
+          const userData = {
+            id: data.id,
+            spotifyId: data.spotifyId,
+            name: data.name,
+            topArtists: data.topArtists as any[],
+          };
           setUser(userData);
         } else {
           setError("User not found");
         }
       } catch (err) {
-        console.error("Failed to load user profile:", err);
-        setError("An unexpected error occurred");
+        setError("Failed to fetch user profile");
+        console.error(err);
       } finally {
         setLoading(false);
       }
     }
 
-    loadUser();
-  }, [userId]);
+    if (spotifyId) {
+      fetchUser();
+    } else {
+      setError("Invalid Spotify ID");
+      setLoading(false);
+    }
+  }, [spotifyId]);
 
   return (
     <UserProfileView

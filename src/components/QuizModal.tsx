@@ -35,8 +35,7 @@ export function QuizModal({ question, step, totalSteps, onAnswer, onClose }: Qui
           ✕
         </button>
         
-        {/* Glow effect */}
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-green to-blue-500 opacity-50" />
+        <div className="absolute top-0 left-0 w-full h-1 bg-green/30" />
         
         <CardHeader className="pt-8 text-center pb-2">
           <div className="text-green text-xs font-bold tracking-widest uppercase mb-2">

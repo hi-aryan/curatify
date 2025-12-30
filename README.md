@@ -3,11 +3,13 @@
 ## Local Development Setup
 
 ### 1. Requirements
+
 - **Node.js** (v18+)
 - **Spotify Premium Account** (for playback/certain API features)
 - **PostgreSQL Database** (local or cloud-hosted)
 
 ### 2. Environment Variables
+
 Create a `.env` file in the root directory:
 
 ```bash
@@ -24,6 +26,7 @@ DATABASE_URL=postgresql://user:password@localhost:5432/curatify
 ```
 
 ### 3. Installation & Database Sync
+
 ```bash
 # Install dependencies
 npm install
@@ -33,6 +36,7 @@ npx drizzle-kit push
 ```
 
 ### 4. Run the Dev Server
+
 ```bash
 npm run dev
 ```
@@ -57,13 +61,14 @@ The project follows the **Model-View-Presenter (MVP)** pattern to separate logic
 
 We use the following 3rd party tools to enhance the user experience. All are **user-visible** unless noted.
 
-| Category | Library | Usage / Location |
-| :--- | :--- | :--- |
-| **UI Framework** | **Shadcn UI** | Core UI components: Buttons, Cards, Modals, Progress bars (e.g., `src/components/ui/progress.tsx` used in `QuizModal.tsx`). |
-| **Visual Effects** | **Aceternity UI** | Premium effects: `Multi Step Loader` (during analysis) and `3D Card` (interactives). Located in `src/components/ui/`. |
-| **Animations** | **Framer Motion** | Used for smooth UI transitions, song card hover effects, and infinite scrolls (`InfiniteTrackScroll.tsx`). |
-| **Icons** | **Lucide / Tabler** | Integrated within Shadcn components for intuitive navigation. |
-| **Data Flow**| **Redux Toolkit** | (Internal) Manages user sessions and UI state across the App Router. |
+| Category           | Library             | Usage / Location                                                                                                            |
+| :----------------- | :------------------ | :-------------------------------------------------------------------------------------------------------------------------- |
+| **Framework**      | **Next.js**         | React framework with App Router for server-side rendering, routing, and full-stack capabilities.                            |
+| **UI Framework**   | **Shadcn UI**       | Core UI components: Buttons, Cards, Modals, Progress bars (e.g., `src/components/ui/progress.tsx` used in `QuizModal.tsx`). |
+| **Visual Effects** | **Aceternity UI**   | Premium effects: `Multi Step Loader` (during analysis) and `3D Card` (interactives). Located in `src/components/ui/`.       |
+| **Animations**     | **Framer Motion**   | Used for smooth UI transitions, song card hover effects, and infinite scrolls (`InfiniteTrackScroll.tsx`).                  |
+| **Icons**          | **Lucide / Tabler** | Integrated within Shadcn components for intuitive navigation.                                                               |
+| **Data Flow**      | **Redux Toolkit**   | (Internal) Manages user sessions and UI state across the App Router.                                                        |
 
 ---
 

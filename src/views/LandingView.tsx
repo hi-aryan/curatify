@@ -112,14 +112,19 @@ export function LandingView({
               <span className="uppercase tracking-wider">Go to Dashboard</span>
             </Button>
           ) : (
-            <Button
-              onClick={loginClickHandlerACB}
-              variant="outline"
-              className="rounded-full border-2 border-green/50 bg-green/10 text-green hover:bg-green/20 hover:scale-105 active:scale-95 transition-all duration-300 font-bold flex items-center gap-2 px-6 group/spotify shadow-sm"
-            >
-              <IconBrandSpotify size={20} className="group-hover/spotify:scale-110 transition-transform duration-300" />
-              <span className="uppercase tracking-wider">Sign in with Spotify</span>
-            </Button>
+            <div className="relative group/login">
+              <Button
+                onClick={loginClickHandlerACB}
+                variant="outline"
+                className="rounded-full border-2 border-green/50 bg-green/10 text-green hover:bg-green/20 hover:scale-105 active:scale-95 transition-all duration-300 font-bold flex items-center gap-2 px-6 group/spotify shadow-sm"
+              >
+                <IconBrandSpotify size={20} className="group-hover/spotify:scale-110 transition-transform duration-300" />
+                <span className="uppercase tracking-wider">Sign in with Spotify</span>
+              </Button>
+              <span className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-3 py-1.5 text-[10px] uppercase tracking-widest bg-dark border border-light/10 rounded-lg text-light/70 font-medium whitespace-nowrap opacity-0 group-hover/login:opacity-100 transition-opacity duration-200 pointer-events-none backdrop-blur-sm">
+                ✦ whitelist only
+              </span>
+            </div>
           )}
         </div>
       </header>

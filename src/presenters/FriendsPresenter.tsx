@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import FriendsView from "../views/FriendsView";
@@ -13,7 +13,7 @@ import {
 
 export function FriendsPresenter() {
   const profile = useSelector((state: RootState) => state.user.profile);
-  
+
   const [friendInput, setFriendInput] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [followedUsers, setFollowedUsers] = useState([]);
@@ -21,49 +21,73 @@ export function FriendsPresenter() {
   const [followedLoading, setFollowedLoading] = useState(true);
   const [followError, setFollowError] = useState("");
 
+  // Debounce timer ref
+  const debounceRef = useRef<NodeJS.Timeout | null>(null);
+
   // Load followed users on mount
   useEffect(() => {
     async function loadFollowed() {
-      if (profile?.id) {
-        setFollowedLoading(true);
-        try {
-          const followed = await getFollowedUsers(profile.id);
-          setFollowedUsers(followed || []);
-        } catch (error) {
-          console.error("Failed to load followed users:", error);
-        } finally {
-          setFollowedLoading(false);
-        }
-      } else {
+      if (!profile?.id) {
+        setFollowedLoading(false);
+        return;
+      }
+
+      setFollowedLoading(true);
+      try {
+        const followed = await getFollowedUsers(profile.id);
+        setFollowedUsers(followed || []);
+      } catch (error) {
+        console.error("Failed to load followed users:", error);
+      } finally {
         setFollowedLoading(false);
       }
     }
     loadFollowed();
   }, [profile?.id]);
 
-  const handleSearchUsers = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!friendInput.trim() || !profile?.id) return;
+  // Debounced search effect
+  useEffect(() => {
+    // Clear previous timeout
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+    }
+
+    // Don't search if input is empty or no user
+    if (!friendInput.trim() || !profile?.id) {
+      setSearchResults([]);
+      setSearchLoading(false);
+      return;
+    }
 
     setSearchLoading(true);
+
+    // Debounce: wait 300ms before searching
+    debounceRef.current = setTimeout(async () => {
+      try {
+        const results = await searchUsers(profile.id, friendInput.trim());
+        setSearchResults(results || []);
+      } catch (error) {
+        console.error("Search failed:", error);
+        setSearchResults([]);
+      } finally {
+        setSearchLoading(false);
+      }
+    }, 300);
+
+    return () => {
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current);
+      }
+    };
+  }, [friendInput, profile?.id]);
+
+  // Called when user selects from combobox
+  const handleSelectUser = async (user: { spotifyId: string }) => {
+    if (!profile?.id) return;
+
     setFollowError("");
     try {
-      const results = await searchUsers(profile.id, friendInput.trim());
-      setSearchResults(results || []);
-      if (results && results.length === 0) {
-        setFollowError("No users found.");
-      }
-    } catch (error) {
-      setFollowError("Failed to search users");
-    } finally {
-      setSearchLoading(false);
-    }
-  };
-
-  const handleFollowUser = async (targetName: string) => {
-    if (!profile?.id) return;
-    try {
-      const result = await followUser(profile.id, targetName);
+      const result = await followUser(profile.id, user.spotifyId);
       if (result.success) {
         // Reload list
         const followed = await getFollowedUsers(profile.id);
@@ -103,8 +127,7 @@ export function FriendsPresenter() {
       searchLoading={searchLoading}
       followedLoading={followedLoading}
       followError={followError}
-      onSearchUsers={handleSearchUsers}
-      onFollowUser={handleFollowUser}
+      onSelectUser={handleSelectUser}
       onUnfollowUser={handleUnfollowUser}
     />
   );

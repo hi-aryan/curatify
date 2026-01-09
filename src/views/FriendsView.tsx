@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Users, Search as SearchIcon } from "lucide-react";
+import { Users } from "lucide-react";
 import Link from "next/link";
+import { FriendsCombobox } from "@/components/FriendsCombobox";
 
 interface User {
   id: string | number;
@@ -18,8 +19,7 @@ interface FriendsViewProps {
   searchLoading: boolean;
   followedLoading: boolean;
   followError: string;
-  onSearchUsers: (e: React.FormEvent) => void;
-  onFollowUser: (userId: string) => void;
+  onSelectUser: (user: User) => void;
   onUnfollowUser: (userId: string | number) => void;
 }
 
@@ -31,8 +31,7 @@ export default function FriendsView({
   searchLoading,
   followedLoading,
   followError,
-  onSearchUsers,
-  onFollowUser,
+  onSelectUser,
   onUnfollowUser,
 }: FriendsViewProps) {
   return (
@@ -53,76 +52,16 @@ export default function FriendsView({
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6 relative z-10">
-            {/* Search Form */}
-            <form onSubmit={onSearchUsers} className="flex gap-2">
-              <input
-                type="text"
-                value={friendInput}
-                onChange={(e) => onFriendInputChange(e.target.value)}
-                placeholder="Search username..."
-                className="flex-1 bg-light/5 border border-light/20 rounded px-3 py-2 text-sm focus:outline-none focus:border-green/50 transition-colors"
-              />
-              <Button
-                type="submit"
-                disabled={!friendInput.trim() || searchLoading}
-                className="bg-green text-dark font-bold flex items-center gap-2 px-6 shadow-lg shadow-green/10 transition-all duration-300 group/search"
-              >
-                {searchLoading ? (
-                  "..."
-                ) : (
-                  <>
-                    <SearchIcon size={18} className="group-hover/search:scale-110 transition-transform duration-300" />
-                    <span>Search</span>
-                  </>
-                )}
-              </Button>
-            </form>
+            {/* Friends Combobox */}
+            <FriendsCombobox
+              searchValue={friendInput}
+              onSearchChange={onFriendInputChange}
+              searchResults={searchResults}
+              isLoading={searchLoading}
+              onSelectUser={onSelectUser}
+            />
 
             {followError && <p className="text-pink text-xs">{followError}</p>}
-
-            {/* Search Results */}
-            {searchResults && searchResults.length > 0 && (
-              <div className="border-b border-light/10 pb-4">
-                <h3 className="text-sm uppercase tracking-wide opacity-50 mb-2">
-                  Search Results
-                </h3>
-                <div className="space-y-2">
-                  {searchResults.map((user) => (
-                    <div
-                      key={user.id}
-                      className="flex items-center justify-between p-2 rounded bg-light/5 border border-light/10"
-                    >
-                      <div className="flex items-center gap-2 flex-1 min-w-0">
-                        <div className="w-6 h-6 rounded-full bg-green/20 flex items-center justify-center text-green text-[10px] flex-shrink-0">
-                          {user.name?.charAt(0) || "?"}
-                        </div>
-                        <div className="flex flex-col flex-1 min-w-0">
-                          <Link 
-                            href={`/dashboard/user/${user.spotifyId}`}
-                            className="font-bold hover:text-green transition-colors"
-                          >
-                            {user.name}
-                          </Link>
-                          {user.topArtists && user.topArtists.length > 0 && (
-                            <span className="text-[10px] opacity-60 truncate">
-                              Current Top Artist: {user.topArtists[0].name}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        className="h-7 text-xs hover:bg-green/20 hover:text-green"
-                        onClick={() => onFollowUser(user.spotifyId)}
-                      >
-                        Add
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
 
             {/* Following List */}
             <div>

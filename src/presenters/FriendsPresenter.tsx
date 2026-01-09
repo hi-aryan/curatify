@@ -20,6 +20,8 @@ export function FriendsPresenter() {
   const [searchLoading, setSearchLoading] = useState(false);
   const [followedLoading, setFollowedLoading] = useState(true);
   const [followError, setFollowError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [confirmingUnfollow, setConfirmingUnfollow] = useState<string | number | null>(null);
 
   // Debounce timer ref
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
@@ -81,19 +83,26 @@ export function FriendsPresenter() {
     };
   }, [friendInput, profile?.id]);
 
-  // Called when user selects from combobox
-  const handleSelectUser = async (user: { spotifyId: string }) => {
+  // Auto-clear success message
+  useEffect(() => {
+    if (!successMessage) return;
+    const timer = setTimeout(() => setSuccessMessage(""), 3000);
+    return () => clearTimeout(timer);
+  }, [successMessage]);
+
+  const handleSelectUser = async (user: { spotifyId: string; name?: string }) => {
     if (!profile?.id) return;
 
     setFollowError("");
+    setSuccessMessage("");
     try {
       const result = await followUser(profile.id, user.spotifyId);
       if (result.success) {
-        // Reload list
         const followed = await getFollowedUsers(profile.id);
         setFollowedUsers(followed || []);
-        setSearchResults([]); // Reset search on success
+        setSearchResults([]);
         setFriendInput("");
+        setSuccessMessage(user.name || "User");
       } else {
         setFollowError(result.error || "Failed to follow user");
       }
@@ -102,14 +111,14 @@ export function FriendsPresenter() {
     }
   };
 
-  const handleUnfollowUser = async (targetUserId: number) => {
+  const handleUnfollowUser = async (targetUserId: string | number) => {
     if (!profile?.id) return;
-    if (!confirm("Are you sure you want to unfollow?")) return;
 
     try {
-      const result = await unfollowUser(profile.id, targetUserId);
+      const result = await unfollowUser(profile.id, Number(targetUserId));
       if (result.success) {
         setFollowedUsers((prev) => prev.filter((u) => u.id !== targetUserId));
+        setConfirmingUnfollow(null);
       } else {
         console.error(result.error);
       }
@@ -127,8 +136,12 @@ export function FriendsPresenter() {
       searchLoading={searchLoading}
       followedLoading={followedLoading}
       followError={followError}
+      successMessage={successMessage}
+      confirmingUnfollow={confirmingUnfollow}
       onSelectUser={handleSelectUser}
-      onUnfollowUser={handleUnfollowUser}
+      onRequestUnfollow={setConfirmingUnfollow}
+      onConfirmUnfollow={handleUnfollowUser}
+      onCancelUnfollow={() => setConfirmingUnfollow(null)}
     />
   );
 }

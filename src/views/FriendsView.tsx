@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Users } from "lucide-react";
+import { Users, Check, X } from "lucide-react";
 import Link from "next/link";
 import { FriendsCombobox } from "@/components/FriendsCombobox";
 
@@ -19,8 +19,12 @@ interface FriendsViewProps {
   searchLoading: boolean;
   followedLoading: boolean;
   followError: string;
+  successMessage: string;
+  confirmingUnfollow: string | number | null;
   onSelectUser: (user: User) => void;
-  onUnfollowUser: (userId: string | number) => void;
+  onRequestUnfollow: (userId: string | number) => void;
+  onConfirmUnfollow: (userId: string | number) => void;
+  onCancelUnfollow: () => void;
 }
 
 export default function FriendsView({
@@ -31,8 +35,12 @@ export default function FriendsView({
   searchLoading,
   followedLoading,
   followError,
+  successMessage,
+  confirmingUnfollow,
   onSelectUser,
-  onUnfollowUser,
+  onRequestUnfollow,
+  onConfirmUnfollow,
+  onCancelUnfollow,
 }: FriendsViewProps) {
   return (
     <div className="h-full md:p-8">
@@ -61,14 +69,25 @@ export default function FriendsView({
               onSelectUser={onSelectUser}
             />
 
-            {followError && <p className="text-pink text-xs">{followError}</p>}
+            {/* Success Message */}
+            {successMessage && (
+              <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-green/10 border border-green/20 text-green text-sm">
+                <Check size={16} />
+                <span>Added <strong>{successMessage}</strong> to your friends!</span>
+              </div>
+            )}
+
+            {/* Error Message */}
+            {followError && (
+              <p className="text-pink text-xs">{followError}</p>
+            )}
 
             {/* Following List */}
             <div>
               <h3 className="text-sm uppercase tracking-wide opacity-50 mb-3">
                 Following ({followedUsers?.length || 0})
               </h3>
-              <div className="space-y-2 max-h-[300px] overflow-y-auto pr-2">
+              <div className="space-y-2 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
                 {followedLoading ? (
                   <p className="text-sm opacity-40 animate-pulse italic">
                     Loading your friends...
@@ -77,14 +96,14 @@ export default function FriendsView({
                   followedUsers.map((friend) => (
                     <div
                       key={friend.id}
-                      className="flex items-center justify-between p-2 rounded bg-light/5 gap-4"
+                      className="flex items-center justify-between p-2 rounded-lg bg-light/5 gap-4 transition-colors"
                     >
                       <div className="flex items-center gap-3 flex-1 min-w-0">
                         <div className="w-8 h-8 rounded-full bg-green/20 flex items-center justify-center text-green text-xs flex-shrink-0">
                           {friend.name?.charAt(0) || "?"}
                         </div>
                         <div className="flex flex-col flex-1 min-w-0">
-                          <Link 
+                          <Link
                             href={`/dashboard/user/${friend.spotifyId}`}
                             className="font-bold hover:text-green transition-colors"
                           >
@@ -97,14 +116,38 @@ export default function FriendsView({
                           )}
                         </div>
                       </div>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => onUnfollowUser(friend.id)}
-                        className="text-xs text-pink hover:text-pink/80"
-                      >
-                        Unfollow
-                      </Button>
+                      
+                      {/* Unfollow button or confirmation */}
+                      {confirmingUnfollow === friend.id ? (
+                        <div className="flex items-center gap-1">
+                          <span className="text-xs text-light/60 mr-2">Unfollow?</span>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => onConfirmUnfollow(friend.id)}
+                            className="h-7 w-7 p-0 text-pink hover:bg-pink/20"
+                          >
+                            <Check size={14} />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={onCancelUnfollow}
+                            className="h-7 w-7 p-0 text-light/60 hover:bg-light/10"
+                          >
+                            <X size={14} />
+                          </Button>
+                        </div>
+                      ) : (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => onRequestUnfollow(friend.id)}
+                          className="text-xs text-light/50 hover:text-pink hover:bg-pink/10 transition-colors"
+                        >
+                          Unfollow
+                        </Button>
+                      )}
                     </div>
                   ))
                 ) : (
@@ -120,3 +163,4 @@ export default function FriendsView({
     </div>
   );
 }
+

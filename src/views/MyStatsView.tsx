@@ -227,9 +227,39 @@ export default function MyStatsView({
                         key={track.id}
                         className="flex items-center gap-4 p-4 rounded-lg border border-light/10 hover:border-green/30 hover:bg-green/5 transition-all duration-200"
                       >
-                        <span className="text-xl font-bold text-light/40 w-8 text-center flex-shrink-0">
-                          {index + 1}
-                        </span>
+                        <div className="flex flex-col items-center justify-center w-12 flex-shrink-0">
+                          <span className="text-xl font-bold text-light/40">
+                            {index + 1}
+                          </span>
+                          {track.trend === "up" && (
+                            <div className="flex flex-col items-center text-green leading-none">
+                              <span className="mt-1">▲</span>
+                              {track.change > 0 && (
+                                <span className="text-[10px] font-bold">
+                                  {track.change}
+                                </span>
+                              )}
+                            </div>
+                          )}
+                          {track.trend === "down" && (
+                            <div className="flex flex-col items-center text-red-500 leading-none">
+                              <span className="mt-1">▼</span>
+                              {track.change > 0 && (
+                                <span className="text-[10px] font-bold">
+                                  {track.change}
+                                </span>
+                              )}
+                            </div>
+                          )}
+                          {track.trend === "new" && (
+                            <span className="text-[10px] font-bold text-blue-400 mt-1 uppercase">
+                              New
+                            </span>
+                          )}
+                          {track.trend === "same" && (
+                            <span className="text-light/20 text-xs mt-1">-</span>
+                          )}
+                        </div>
 
                         {track.album?.images?.[2]?.url && (
                           <img

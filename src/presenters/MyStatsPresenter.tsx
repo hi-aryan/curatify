@@ -55,7 +55,25 @@ export function MyStatsPresenter() {
       if (!topTracks) {
         try {
           const tracks = await fetchTopTracks(accessToken, 50);
-          dispatch(setTopTracks(tracks));
+          // Add dummy trend data for testing
+          const tracksWithTrends = tracks.map((track: any) => {
+            const random = Math.random();
+            let trend: "up" | "down" | "same" | "new" = "same";
+            let change = 0;
+
+            if (random > 0.95) {
+              trend = "new";
+            } else if (random > 0.85) {
+              trend = "up";
+              change = Math.floor(Math.random() * 5) + 1;
+            } else if (random > 0.75) {
+              trend = "down";
+              change = Math.floor(Math.random() * 5) + 1;
+            }
+
+            return { ...track, trend, change };
+          });
+          dispatch(setTopTracks(tracksWithTrends));
         } catch (error) {
           console.error("Failed to fetch top tracks:", error);
         }

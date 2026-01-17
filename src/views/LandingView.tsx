@@ -30,6 +30,7 @@ import { SongCard } from "../components/SongCard";
 import { PlaylistDropZone } from "../components/PlaylistDropZone";
 import { COUNTRY_NAMES } from "../data/nordicCharts";
 import { CardBody, CardContainer, CardItem } from "../components/ui/3d-card";
+import { useState } from "react";
 
 
 
@@ -59,6 +60,46 @@ interface LandingViewProps {
   onQueueAll: () => void;
 }
 
+function DemoVideo() {
+  return (
+    <div className="w-[400px] aspect-video rounded-xl overflow-hidden border border-light/20 shadow-2xl bg-dark">
+      <iframe
+        width="100%"
+        height="100%"
+        src={`https://www.youtube.com/embed/AyMqBULE5wc?autoplay=1&mute=1&controls=0&loop=1&playlist=AyMqBULE5wc&modestbranding=1&rel=0`}
+        title="YouTube video player"
+        frameBorder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        className="object-cover"
+      ></iframe>
+    </div>
+  );
+}
+
+function VideoHover({ isVisible, variant = 'dropdown' }: { isVisible: boolean, variant?: 'dropdown' | 'side' }) {
+  if (variant === 'side') {
+    return (
+      <div className="absolute top-1/2 left-full ml-6 -translate-y-1/2 z-[60]">
+        <div className={`transition-all duration-500 origin-left ${
+          isVisible ? "opacity-100 scale-100 translate-x-0 pointer-events-auto" : "opacity-0 scale-90 -translate-x-4 pointer-events-none"
+        }`}>
+          <DemoVideo />
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div 
+      className={`absolute top-full right-0 origin-top-right pt-4 z-[60] transition-all duration-500 ${
+        isVisible ? "opacity-100 scale-100 translate-y-0 pointer-events-auto" : "opacity-0 scale-90 -translate-y-4 pointer-events-none"
+      }`}
+    >
+      <DemoVideo />
+    </div>
+  );
+}
+
 export function LandingView({
   selectedCountry,
   countryTracks,
@@ -76,6 +117,8 @@ export function LandingView({
   onQuizClose,
   onQueueAll,
 }: LandingViewProps) {
+  const [hoveredButton, setHoveredButton] = useState<string | null>(null);
+
   function loginClickHandlerACB() {
     onLoginClick();
   }
@@ -112,7 +155,11 @@ export function LandingView({
               <span className="uppercase tracking-wider">Go to Dashboard</span>
             </Button>
           ) : (
-            <div className="relative group/login">
+            <div 
+              className="relative group/login"
+              onMouseEnter={() => setHoveredButton('header')}
+              onMouseLeave={() => setHoveredButton(null)}
+            >
               <Button
                 onClick={loginClickHandlerACB}
                 variant="outline"
@@ -124,6 +171,7 @@ export function LandingView({
               <span className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-3 py-1.5 text-[10px] uppercase tracking-widest bg-dark border border-light/10 rounded-lg text-light/70 font-medium whitespace-nowrap opacity-0 group-hover/login:opacity-100 transition-opacity duration-200 pointer-events-none backdrop-blur-sm">
                 ✦ whitelist only
               </span>
+              <VideoHover isVisible={hoveredButton === 'header'} />
             </div>
           )}
         </div>
@@ -208,19 +256,28 @@ export function LandingView({
                 </div>
 
                 {dummyPlaylist.length > 0 && (
-                  <Button
-                    onClick={onQueueAll}
-                    variant="outline"
-                    size="sm"
-                    className={`h-8 rounded-full font-bold text-[10px] lg:text-xs uppercase tracking-wider gap-2 transition-all duration-300 group/queue shadow-sm shrink-0 ${
-                      isLoggedIn 
-                        ? "bg-green text-dark border-transparent hover:bg-green/90 hover:text-dark hover:scale-[1.02] active:scale-[0.98]" 
-                        : "bg-green/10 text-green border-green/50 hover:bg-green/20 hover:text-green hover:scale-[1.02]"
-                    }`}
+                  <div 
+                    className="relative"
+                    onMouseEnter={() => setHoveredButton('queue')}
+                    onMouseLeave={() => setHoveredButton(null)}
                   >
-                    <ListPlus size={14} className="group-hover/queue:scale-110 transition-transform duration-300" />
-                    <span>{isLoggedIn ? "Add to Queue" : "Sign in to Queue"}</span>
-                  </Button>
+                    <Button
+                      onClick={onQueueAll}
+                      variant="outline"
+                      size="sm"
+                      className={`h-8 rounded-full font-bold text-[10px] lg:text-xs uppercase tracking-wider gap-2 transition-all duration-300 group/queue shadow-sm shrink-0 ${
+                        isLoggedIn 
+                          ? "bg-green text-dark border-transparent hover:bg-green/90 hover:text-dark hover:scale-[1.02] active:scale-[0.98]" 
+                          : "bg-green/10 text-green border-green/50 hover:bg-green/20 hover:text-green hover:scale-[1.02]"
+                      }`}
+                    >
+                      <ListPlus size={14} className="group-hover/queue:scale-110 transition-transform duration-300" />
+                      <span>{isLoggedIn ? "Add to Queue" : "Sign in to Queue"}</span>
+                    </Button>
+                    {!isLoggedIn && (
+                       <VideoHover isVisible={hoveredButton === 'queue'} />
+                    )}
+                  </div>
                 )}
               </div>
             </CardHeader>
@@ -280,12 +337,14 @@ export function LandingView({
           onClick={onQuizClose}
         >
           <Card 
-            className="group w-full max-w-md bg-dark border-light/10 shadow-xl p-8 text-center relative pointer-events-auto animate-in slide-in-from-bottom-8 zoom-in-95 duration-500 overflow-hidden"
+            className="group w-full max-w-md bg-dark border-light/10 shadow-xl p-8 text-center relative pointer-events-auto animate-in slide-in-from-bottom-8 zoom-in-95 duration-500 visible"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Background Icon Asset */}
-            <div className="absolute -right-8 -top-8 text-green opacity-[0.03] group-hover:opacity-10 group-hover:rotate-12 group-hover:scale-110 transition-all duration-700 pointer-events-none">
-               <Music size={240} />
+            {/* Background Icon Asset - Clipped Container */}
+            <div className="absolute inset-0 overflow-hidden rounded-xl pointer-events-none">
+                <div className="absolute -right-8 -top-8 text-green opacity-[0.03] group-hover:opacity-10 group-hover:rotate-12 group-hover:scale-110 transition-all duration-700">
+                   <Music size={240} />
+                </div>
             </div>
 
              <button 
@@ -305,12 +364,22 @@ export function LandingView({
                 Ready to reveal your profile?
               </p>
   
-              <Button 
-                onClick={onLoginClick}
-                className="w-fit h-12 px-10 mx-auto bg-green hover:bg-green/90 text-dark font-bold rounded-full transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(30,215,96,0.2)] active:scale-95 flex items-center justify-center"
+              <div 
+                className="relative w-fit mx-auto"
+                onMouseEnter={() => setHoveredButton('quiz')}
+                onMouseLeave={() => setHoveredButton(null)}
               >
-                Reveal Insights
-              </Button>
+                <Button 
+                  onClick={onLoginClick}
+                  className="w-fit h-12 px-10 bg-green hover:bg-green/90 text-dark font-bold rounded-full transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(30,215,96,0.2)] active:scale-95 flex items-center justify-center"
+                >
+                  Reveal Insights
+                </Button>
+                <div className="absolute top-1/2 left-full ml-6 -translate-y-1/2">
+                   {/* Combined VideoHover component handles positioning and animation for 'side' variant */}
+                   <VideoHover isVisible={hoveredButton === 'quiz'} variant="side" />
+                </div>
+              </div>
   
               <button 
                 onClick={onQuizClose}
